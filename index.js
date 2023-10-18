@@ -8,8 +8,8 @@ async function initMap() {
     'marker'
   );
   const map = new google.maps.Map(document.getElementById('map'), {
-    zoom: 3,
-    center: { lat: -28.024, lng: 140.887 },
+    zoom: 15,
+    center: { lat: 10.762993690850745, lng: 106.68247166663183 },
     mapId: 'DEMO_MAP_ID'
   });
   const infoWindow = new google.maps.InfoWindow({
@@ -22,8 +22,11 @@ async function initMap() {
   // Reverse Geocoding
   map.addListener('click', function (e) {
     if(userMarker !== null) {
+      const mapElem = document.getElementById('map');
+      mapElem.style.width = '100%';
       userMarker.setMap(null);
       userMarker = null;
+      return;
     }
     const pos = e.latLng;
     console.log(JSON.stringify(pos));
@@ -32,6 +35,11 @@ async function initMap() {
       map: map
     });
     map.panTo(pos);
+    setTimeout(() => {
+      const mapElem = document.getElementById('map');
+      mapElem.style.width = '80%';
+    }, 300);
+    
   });
 
   // Create an array of alphabetical characters used to label the markers.
@@ -64,6 +72,9 @@ async function initMap() {
       cardInfo.appendChild(zoningStatus);
       infoWindow.setContent(cardInfo);
       infoWindow.open(map, marker);
+
+      const mapElem = document.getElementById('map');
+      mapElem.style.width = "80%";
     });
     return marker;
   });
