@@ -1,27 +1,26 @@
 import { MarkerClusterer } from "@googlemaps/markerclusterer";
 
-
 async function initMap() {
   // Request needed libraries.
-  const { Map, InfoWindow } = await google.maps.importLibrary('maps');
+  const { Map, InfoWindow } = await google.maps.importLibrary("maps");
   const { AdvancedMarkerElement, PinElement } = await google.maps.importLibrary(
-    'marker'
+    "marker"
   );
-  const map = new google.maps.Map(document.getElementById('map'), {
+  const map = new google.maps.Map(document.getElementById("map"), {
     zoom: 3,
     center: { lat: -28.024, lng: 140.887 },
-    mapId: 'DEMO_MAP_ID'
+    mapId: "DEMO_MAP_ID",
   });
   const infoWindow = new google.maps.InfoWindow({
-    content: '',
-    disableAutoPan: true
+    content: "",
+    disableAutoPan: true,
   });
 
-  let userMarker = null
+  let userMarker = null;
 
   // Reverse Geocoding
-  map.addListener('click', function (e) {
-    if(userMarker !== null) {
+  map.addListener("click", function (e) {
+    if (userMarker !== null) {
       userMarker.setMap(null);
       userMarker = null;
     }
@@ -29,41 +28,55 @@ async function initMap() {
     console.log(JSON.stringify(pos));
     userMarker = new google.maps.Marker({
       position: pos,
-      map: map
+      map: map,
     });
     map.panTo(pos);
   });
 
   // Create an array of alphabetical characters used to label the markers.
-  const labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  const labels = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
   // Add some markers to the map.
   const markers = locations.map((position, i) => {
     const label = labels[i % labels.length];
     const pinGlyph = new google.maps.marker.PinElement({
       glyph: label,
-      glyphColor: 'white'
+      glyphColor: "white",
     });
     const marker = new google.maps.marker.AdvancedMarkerElement({
       position,
-      content: pinGlyph.element
+      content: pinGlyph.element,
+      title: "Title text for the marker",
     });
 
     // markers can only be keyboard focusable when they have click listeners
     // open info window when marker is clicked
-    marker.addListener('click', () => {
-      const cardInfo = document.createElement('div');
-      const headerInfo = document.createElement('h3');
-      headerInfo.textContent = 'Biểu tình Hang Pác Pó';
-      const positionInfo = document.createElement('p');
+    marker.addListener("click", () => {
+      const cardInfo = document.createElement("div");
+      const headerInfo = document.createElement("h3");
+      headerInfo.textContent = "Biểu tình Hang Pác Pó";
+      const positionInfo = document.createElement("p");
       positionInfo.textContent =
-        'Đất công/Công viên/Hành lang an toàn giao thông';
-      const zoningStatus = document.createElement('p');
-      zoningStatus.textContent = 'Đã quy hoạch';
+        "Đất công/Công viên/Hành lang an toàn giao thông";
+      const zoningStatus = document.createElement("p");
+      zoningStatus.textContent = "Đã quy hoạch";
       cardInfo.appendChild(headerInfo);
       cardInfo.appendChild(positionInfo);
       cardInfo.appendChild(zoningStatus);
       infoWindow.setContent(cardInfo);
       infoWindow.open(map, marker);
+
+      const mapElement = document.getElementById("map");
+      mapElement.style.width = "80%";
+      const notiElement = document.getElementById("notifications");
+      notiElement.innerHTML = `
+      <div class="alert alert-primary d-flex align-items-center" role="alert">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-exclamation-triangle-fill flex-shrink-0 me-2" viewBox="0 0 16 16" role="img" aria-label="Warning:">
+          <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+        </svg>
+        <div>
+          Thông tin bảng quảng cáo
+        </div>
+      </div>`;
     });
     return marker;
   });
