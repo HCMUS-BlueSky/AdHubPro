@@ -1,9 +1,14 @@
 #map {
   height: 100%;
   width: 100%;
+}
+
+#notifications {
+  width: 0;
   -moz-transition: width 300ms ease-out;
   -o-transition: width 300ms ease-out;
   transition: width 300ms ease-out;
+  
 }
 
 html, body {
