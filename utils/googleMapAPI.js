@@ -1,21 +1,6 @@
-<html>
-  <head>
-    <title>AdHubPro</title>
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
-    <link href="/css/styles.css" rel="stylesheet" type="text/css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-  </head>
-  <body>
-    <!--The div element for the map -->
-    <div id="map"></div>
-    <div id="notifications"></div>
-  
-    <!-- prettier-ignore -->
-    <script>(g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})
-        ({key: "AIzaSyAthegrZVFp1pR0UqaMOvskmwZ7de2-wHk", v: "beta"});</script>
-    <script src="https://unpkg.com/@googlemaps/markerclusterer/dist/index.min.js"></script>
-    <script>
-      let geocoder;
+import { MarkerClusterer } from "@googlemaps/markerclusterer";
+
+let geocoder;
 
 async function initMap() {
   // Request needed libraries.
@@ -157,10 +142,8 @@ async function initMap() {
     return marker;
   });
 
-  const markerCluster = new markerClusterer.MarkerClusterer({ markers, map });
-
-  // // Add a marker clusterer to manage the markers.
-  // new MarkerClusterer({ markers, map });
+  // Add a marker clusterer to manage the markers.
+  new MarkerClusterer({ markers, map });
 }
 
 const locations = [
@@ -177,47 +160,6 @@ const locations = [
   { lat: 10.767741590813353, lng: 106.67477588068961 },
   { lat: 10.757143381322711, lng: 106.67823121034714 },
   { lat: 10.755561318767807, lng: 106.68144541698122 },
-  { lat: 10.757868, lng: 106.689743 }, 
-  { lat: 10.768549, lng:106.689913 }, 
-  { lat: 10.756503, lng:106.685001 }, 
-  { lat: 10.756708, lng:106.685207 }, 
-  { lat: 10.754889, lng:106.667199 }, 
-  { lat: 10.771504, lng:106.692947 }, 
-  { lat: 10.768866, lng:106.689193 },
-  { lat: 10.767618, lng:106.679826 }, 
-  { lat: 10.767383, lng:106.693982 }, 
-  { lat: 10.761071, lng:106.668448 }, 
-  { lat: 10.760629, lng:106.688597 }, 
-  { lat: 10.7722534, lng:106.6983660 }, 
-  { lat: 10.774835, lng:106.692735 }, 
-  { lat: 10.776686, lng:106.694861 }, 
-  { lat: 10.779161, lng:106.692386 }, 
-  { lat: 10.774014, lng:106.690148 }, 
-  { lat: 10.773814, lng:106.689421 }, 
-  { lat: 10.767889, lng:106.674735 }, 
-  { lat: 10.768060, lng:106.674406 }, 
-  { lat: 10.765816, lng:106.681558 }, 
-  { lat: 10.766926, lng:106.676044 }, 
-  { lat: 10.773571, lng:106.689043 }, 
-  { lat: 10.768532, lng:106.683994 }, 
-  { lat: 10.767454, lng:106.686392  }, 
-  { lat: 10.766534, lng:106.688275  }, 
-  { lat: 10.759390, lng:106.684167  }, 
-  { lat: 10.756287, lng:106.685117  }, 
-  { lat: 10.755891, lng:106.683859  }, 
-  { lat: 10.757464, lng:106.674281  }, 
-  { lat: 10.757906, lng:106.672210  }, 
-  { lat: 10.756104, lng:106.666262  }, 
-  { lat: 10.768222, lng:106.673732  }, 
-  { lat: 10.759748, lng:106.669303  }, 
-  { lat: 10.761248, lng:106.677239  }, 
-  { lat: 10.758683, lng:106.677922  }, 
-  { lat: 10.761242, lng:106.683093  }, 
-  { lat: 10.765107, lng:106.681336  }, 
 ];
 
 initMap();
-
-    </script>
-  </body>
-</html>
