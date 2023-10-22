@@ -11,6 +11,27 @@ const locationSchema = new mongoose.Schema(
       type: Number,
       required: true,
       alias: 'lng'
+    },
+    ward: {
+      type: String
+    },
+    district: {
+      type: String
+    },
+    address: {
+      type: String
+    },
+    type: {
+      type: String
+    },
+    images: [
+      {
+        type: String
+      }
+    ],
+    accepted: {
+      type: Boolean,
+      default: false
     }
   },
   {
