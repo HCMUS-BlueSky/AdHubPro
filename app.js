@@ -1,18 +1,26 @@
-const express = require("express");
+require('dotenv').config();
+const express = require('express');
+const { default: mongoose } = require('mongoose');
+const connectDB = require('./config/database');
 const app = express();
-const ejsMate = require("ejs-mate");
-const homeRoutes = require("./routes/home");
-const officer = require("./routes/officer");
+const ejsMate = require('ejs-mate');
+const homeRouter = require('./routes/home');
+const officerRouter = require('./routes/officer');
+const apiRouter = require("./routes/api");
+connectDB();
+app.engine('ejs', ejsMate);
 
-app.engine("ejs", ejsMate);
+app.set('views', __dirname + '/views');
+app.set('view engine', 'ejs');
 
-app.set("views", __dirname + "/views");
-app.set("view engine", "ejs");
+app.use(express.static(__dirname + '/public'));
+app.use('/', homeRouter);
+app.use('/api', apiRouter);
+app.use('/officer', officerRouter);
 
-app.use(express.static(__dirname + "/public"));
-app.use("/", homeRoutes);
-app.use("/officer", officer);
-
-app.listen(process.env.PORT || 5000, () => {
-  console.log("Listening on port", process.env.PORT || 5000);
-});
+mongoose.connection.once('open', () => {
+  console.log("Connected to DB")
+  app.listen(process.env.PORT || 4000, () => {
+    console.log('Listening on port', process.env.PORT || 4000);
+  });
+})
