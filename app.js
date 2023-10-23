@@ -10,6 +10,8 @@ const apiRouter = require("./routes/api");
 connectDB();
 app.engine('ejs', ejsMate);
 
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
 
