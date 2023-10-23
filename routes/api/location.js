@@ -12,4 +12,14 @@ router.get('/', async (req, res) => {
   }
 });
 
+// router.post('/', async (req, res) => {
+//   try {
+//     const location = new Location(req.body);
+//     await location.save();
+//     return res.send("SUCCESS")
+//   } catch (err) {
+//     return res.status(500).send(err.message);
+//   }
+// });
+
 module.exports = router;
