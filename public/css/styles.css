@@ -3,14 +3,31 @@
   width: 100%;
 }
 
-#notifications {
-  width: 0;
-  -moz-transition: width 300ms ease-out;
-  -o-transition: width 300ms ease-out;
-  transition: width 300ms ease-out;
+#sidebar {
+  height: 100vh;
+  position: relative;
+  z-index: 1;
+  background-color: #ffffff;
+  overflow-x: hidden;
+  transition: 0.5s;
 }
 
-html, body {
+.sidebar-btn {
+  width: 20px;
+  height: 40px;
+  position: absolute;
+  top: calc(50% - 20px);
+  cursor: pointer;
+  background-color: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid gray;
+  border-radius: 0 10px 10px 0;
+}
+
+html,
+body {
   height: 100%;
   width: 100%;
   margin: 0;
