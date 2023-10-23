@@ -5,7 +5,9 @@
 
 #sidebar {
   height: 100vh;
-  position: relative;
+  position: fixed;
+  right: 0;
+  top: 0;
   z-index: 1;
   background-color: #ffffff;
   overflow-x: hidden;
@@ -13,17 +15,19 @@
 }
 
 .sidebar-btn {
-  width: 20px;
-  height: 40px;
-  position: absolute;
+  width: 25px;
+  height: 60px;
+  position: fixed;
   top: calc(50% - 20px);
+  right: 30%;
   cursor: pointer;
-  background-color: #ffffff;
+  z-index: 2;
   display: flex;
   justify-content: center;
   align-items: center;
-  border: 1px solid gray;
-  border-radius: 0 10px 10px 0;
+  background-color: #ffffff;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  border-radius: 10px 0 0 10px;
 }
 
 html,
@@ -32,5 +36,4 @@ body {
   width: 100%;
   margin: 0;
   padding: 0;
-  display: flex;
 }

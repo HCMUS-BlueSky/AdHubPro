@@ -1,10 +1,8 @@
 const express = require("express");
 const router = express.Router();
+const Location = require("../models/Location");
 
-router.get("/", (req, res) => {
-  // const locations = await Location.find({}).exec();
-  // locations = json(locations);
-  // console.log(locations);
+router.get("/", async (req, res) => {
   res.render("index");
 });
 
