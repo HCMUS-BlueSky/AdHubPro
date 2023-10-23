@@ -1,4 +1,3 @@
-
 async function initMap() {
   const { Map, InfoWindow } = await google.maps.importLibrary('maps');
   const { AdvancedMarkerElement, PinElement } = await google.maps.importLibrary(
@@ -22,17 +21,16 @@ async function initMap() {
   map.addListener('click', function (e) {
     if (userMarker !== null) {
       const mapElement = document.getElementById('map');
-      mapElement.style.width = '100%';
-      const notiElement = document.getElementById('notifications');
-      notiElement.style.width = 0;
-      notiElement.innerHTML = '';
+      const sidebar = document.getElementById('sidebar');
+      sidebar.style.width = 0;
+      sidebar.innerHTML = '';
       userMarker.setMap(null);
       userMarker = null;
       return;
     }
     const pos = e.latLng;
     geocode({ location: pos });
-    console.log(JSON.stringify(pos));
+    // console.log(JSON.stringify(pos));
     userMarker = new google.maps.Marker({
       position: pos,
       map: map
@@ -45,25 +43,27 @@ async function initMap() {
       .geocode(request)
       .then((result) => {
         const { results } = result;
-        console.log(results);
-        const notiElement = document.getElementById('notifications');
+        // console.log(results);
+        const sidebar = document.getElementById('sidebar');
         setTimeout(() => {
-          notiElement.innerHTML = `
-            <div class="alert alert-success d-flex m-2" role="alert">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-check2-circle flex-shrink-0 me-2" viewBox="0 0 16 16" role="img" aria-label="Warning:">
-                <path d="M2.5 8a5.5 5.5 0 0 1 8.25-4.764.5.5 0 0 0 .5-.866A6.5 6.5 0 1 0 14.5 8a.5.5 0 0 0-1 0 5.5 5.5 0 1 1-11 0z"/>
-                <path d="M15.354 3.354a.5.5 0 0 0-.708-.708L8 9.293 5.354 6.646a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0l7-7z"/>
-              </svg>
-              <div>
-                <h5> Thông tin địa điểm </h5>
-                <p>
-                 ${results[0].formatted_address}
-                </p>
-              </div>
-              
-            </div>`;
+          sidebar.innerHTML = `
+                <div class="sidebar-btn" onclick="closeSidebar()">
+                    <i class="bi bi-arrow-right"></i>
+                </div>
+                  <div class="alert alert-success d-flex m-2" role="alert">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-check2-circle flex-shrink-0 me-2" viewBox="0 0 16 16" role="img" aria-label="Warning:">
+                      <path d="M2.5 8a5.5 5.5 0 0 1 8.25-4.764.5.5 0 0 0 .5-.866A6.5 6.5 0 1 0 14.5 8a.5.5 0 0 0-1 0 5.5 5.5 0 1 1-11 0z"/>
+                      <path d="M15.354 3.354a.5.5 0 0 0-.708-.708L8 9.293 5.354 6.646a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0l7-7z"/>
+                    </svg>
+                    <div>
+                      <h5> Thông tin địa điểm </h5>
+                      <p>
+                        ${results[0].formatted_address}
+                      </p>
+                    </div>
+                  </div>`;
         }, 300);
-        notiElement.style.width = '40%';
+        sidebar.style.width = '30%';
 
         var request = {
           query: results[0].formatted_address,
@@ -74,7 +74,7 @@ async function initMap() {
 
         service.findPlaceFromQuery(request, function (results, status) {
           if (status === google.maps.places.PlacesServiceStatus.OK) {
-            console.log(results);
+            // console.log(results);
             // for (var i = 0; i < results.length; i++) {
             //   createMarker(results[i]);
             // }
@@ -121,19 +121,22 @@ async function initMap() {
       infoWindow.setContent(cardInfo);
       infoWindow.open(map, marker);
 
-      const notiElement = document.getElementById('notifications');
+      const sidebar = document.getElementById('sidebar');
       setTimeout(() => {
-        notiElement.innerHTML = `
-        <div class="alert alert-primary d-flex align-items-center m-2" role="alert">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-exclamation-triangle-fill flex-shrink-0 me-2" viewBox="0 0 16 16" role="img" aria-label="Warning:">
-            <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
-          </svg>
-          <div>
-            Thông tin bảng quảng cáo
-          </div>
-        </div>`;
+        sidebar.innerHTML = `
+              <div class="sidebar-btn" onclick="closeSidebar()">
+                  <i class="bi bi-arrow-right"></i>
+              </div>
+              <div class="alert alert-primary d-flex align-items-center m-2" role="alert">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-exclamation-triangle-fill flex-shrink-0 me-2" viewBox="0 0 16 16" role="img" aria-label="Warning:">
+                  <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+                </svg>
+                <div>
+                  Thông tin bảng quảng cáo
+                </div>
+              </div>`;
       }, 300);
-      notiElement.style.width = '40%';
+      sidebar.style.width = '30%';
     });
     return marker;
   });
@@ -142,6 +145,12 @@ async function initMap() {
 
   // // Add a marker clusterer to manage the markers.
   // new MarkerClusterer({ markers, map });
+}
+
+function closeSidebar() {
+  const sidebar = document.getElementById('sidebar');
+  sidebar.style.width = 0;
+  sidebar.innerHTML = '';
 }
 
 const locations = [
