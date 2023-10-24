@@ -7,8 +7,7 @@ async function logLocations() {
 
 function closeSidebar() {
   const sidebar = document.getElementById("sidebar");
-  sidebar.style.width = 0;
-  sidebar.innerHTML = "";
+  sidebar.innerHTML = `<input id="pac-input" class="controls" type="text" placeholder="Search AdHubPro"/>`;
 }
 
 async function initMap() {
@@ -35,7 +34,7 @@ async function initMap() {
   // Create the search box and link it to the UI element.
   const input = document.getElementById("pac-input");
   const searchBox = new google.maps.places.SearchBox(input);
-  map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+  // map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
   // Bias the SearchBox results towards current map's viewport.
   map.addListener("bounds_changed", () => {
     searchBox.setBounds(map.getBounds());
@@ -84,8 +83,8 @@ async function initMap() {
     if (userMarker !== null) {
       const mapElement = document.getElementById("map");
       const sidebar = document.getElementById("sidebar");
-      sidebar.style.width = 0;
-      sidebar.innerHTML = "";
+      sidebar.style.backgroundColor = null;
+      sidebar.innerHTML = `<input id="pac-input" class="controls" type="text" placeholder="Search AdHubPro"/>`;
       userMarker.setMap(null);
       userMarker = null;
       return;
@@ -107,11 +106,10 @@ async function initMap() {
       .then((result) => {
         const { results } = result;
         const sidebar = document.getElementById("sidebar");
+        sidebar.style.backgroundColor = "#ffffff";
         setTimeout(() => {
           sidebar.innerHTML = `
-                <div class="sidebar-btn" onclick="closeSidebar()">
-                    <i class="bi bi-arrow-right"></i>
-                </div>
+                  <input id="pac-input" class="controls" type="text" placeholder="Search AdHubPro"/>
                   <div class="alert alert-success d-flex m-2" role="alert">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-check2-circle flex-shrink-0 me-2" viewBox="0 0 16 16" role="img" aria-label="Warning:">
                       <path d="M2.5 8a5.5 5.5 0 0 1 8.25-4.764.5.5 0 0 0 .5-.866A6.5 6.5 0 1 0 14.5 8a.5.5 0 0 0-1 0 5.5 5.5 0 1 1-11 0z"/>
@@ -125,7 +123,6 @@ async function initMap() {
                     </div>
                   </div>`;
         }, 300);
-        sidebar.style.width = "30%";
 
         var request = {
           query: results[0].formatted_address,
@@ -169,16 +166,21 @@ async function initMap() {
 
     // markers can only be keyboard focusable when they have click listeners
     // open info window when marker is clicked
-    marker.addListener("click", (e) => {
-      console.log(e);
+    marker.addListener("click", () => {
+      console.log(marker.position);
+      const position = locations.filter(
+        (location) =>
+          location.latitude === marker.position.h &&
+          location.longitude === marker.position.i
+      );
+      console.log(position);
       const cardInfo = document.createElement("div");
       const headerInfo = document.createElement("h3");
-      headerInfo.textContent = "Biểu tình Hang Pác Pó";
+      headerInfo.textContent = position[0].method;
       const positionInfo = document.createElement("p");
-      positionInfo.textContent =
-        "Đất công/Công viên/Hành lang an toàn giao thông";
+      positionInfo.textContent = position[0].type;
       const zoningStatus = document.createElement("p");
-      zoningStatus.textContent = "Đã quy hoạch";
+      zoningStatus.textContent = "Chưa quy hoạch";
       cardInfo.appendChild(headerInfo);
       cardInfo.appendChild(positionInfo);
       cardInfo.appendChild(zoningStatus);
@@ -186,20 +188,18 @@ async function initMap() {
       infoWindow.open(map, marker);
 
       const sidebar = document.getElementById("sidebar");
+      sidebar.style.backgroundColor = "#ffffff";
       setTimeout(() => {
         sidebar.innerHTML = `
-              <div class="sidebar-btn" onclick="closeSidebar()">
-                  <i class="bi bi-arrow-right"></i>
-              </div>
-              <div class="card bg-light mb-3" style="max-width: 18rem;">
-                <div class="card-header">Thông tin bảng quảng cáo</div>
-                <div class="card-body">
-                  <h5 class="card-title">Tra, cụm pano</h5>
-                  <p class="card-text">Hello</p>
-                </div>
-              </div>`;
+          <input id="pac-input" class="controls" type="text" placeholder="Search AdHubPro"/>
+          <div class="wrapper">
+            <h1 class="">${position[0].method}</h1>
+            <p>${position[0].address}</p>
+            <p>${position[0].type}</p>
+            <p>${position[0].ward}</p>
+          </div>
+        `;
       }, 300);
-      sidebar.style.width = "30%";
     });
     return marker;
   });
