@@ -19,17 +19,13 @@
       placeholder="Search AdHubPro"
       />
     </div>
-  <div class="modal fade" id="feedback"
-        data-bs-backdrop="static"
-        aria-hidden="true"
-        aria-labelledby="feedbackLabel"
-        tabindex="-1"> 
+    <div class="modal fade" id="feedback" data-bs-backdrop="static" aria-hidden="true" aria-labelledby="feedbackLabel" tabindex="-1"> 
         <div class="modal-dialog"> 
           <div class="modal-content"> 
             <div class="modal-header"> 
-              <h1 class="modal-title fs-5"
+              <h1 class="modal-title fs-5 text-center"
                 id="feedbackLabel"> 
-                Feedback (1/2)</h1> 
+                Báo cáo vi phạm</h1> 
               <button type="button"
                 class="btn-close"
                 data-bs-dismiss="modal"
@@ -38,28 +34,41 @@
             </div> 
             <div class="modal-body"> 
               <form> 
+                <h2>Thông tin người báo cáo</h2>
                 <div class="mb-3"> 
-                  <label for="name"
-                    class="col-form-label"> 
-                    Name: 
-                  </label> 
-                  <input type="text"
-                    class="form-control"
-                    id="text"> 
+                  <label for="name" class="col-form-label"></label> 
+                  <input type="text" class="form-control" id="text" placeholder="Họ và tên"> 
                 </div> 
                 <div class="mb-3"> 
-                  <label for="email"
-                    class="col-form-label"> 
-                    Email: 
-                  </label> 
-                  <input type="email"
-                    class="form-control"
-                    id="email"> 
-                </div> 
+                  <label for="email" class="col-form-label"></label> 
+                  <input type="email" class="form-control" id="email" placeholder="Email"> 
+                </div>
+                <div class="mb-3"> 
+                  <label for="tel" class="col-form-label"></label> 
+                  <input type="number" class="form-control" id="tel" placeholder="Số điện thoại"> 
+                </div>
+
+                <h2>Hình thức báo cáo</h2>
+                <div class="mb-3"> 
+                  <input type="radio" id="report1" name="age" value="30">
+                  <label for="report1">Tố giác tội phạm</label><br>
+                </div>
+                <div class="mb-3"> 
+                  <input type="radio" id="report2" name="age" value="60">
+                  <label for="report2">Đăng ký nội dung</label><br>  
+                </div>
+                <div class="mb-3"> 
+                  <input type="radio" id="report3" name="age" value="100">
+                  <label for="report3">Đóng góp ý kiến</label><br>
+                </div>
+                <div class="mb-3"> 
+                  <input type="radio" id="report4" name="age" value="100">
+                  <label for="report4">Giải đáp thắc mắc</label><br>
+                </div>
               </form> 
             </div> 
             <div class="modal-footer"> 
-              <button class="btn btn-success"
+              <button class="btn btn-primary"
                 data-bs-target="#feedback2"
                 data-bs-toggle="modal"> 
                 Next 
