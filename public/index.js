@@ -23,16 +23,63 @@ async function initMap() {
     zoom: 15,
     center: { lat: 10.762993690850745, lng: 106.68247166663183 },
     mapId: "DEMO_MAP_ID",
+    zoomControl: true,
+    // Disable Type Map Control in top left
+    mapTypeControl: false,
+    scaleControl: true,
+    streetViewControl: true,
+    rotateControl: true,
+    fullscreenControl: true,
   });
+
+  // Create the search box and link it to the UI element.
+  const input = document.getElementById("pac-input");
+  const searchBox = new google.maps.places.SearchBox(input);
+  map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+  // Bias the SearchBox results towards current map's viewport.
+  map.addListener("bounds_changed", () => {
+    searchBox.setBounds(map.getBounds());
+  });
+
+  //Listen for event fired
+  searchBox.addListener("places_changed", () => {
+    const places = searchBox.getPlaces();
+
+    if (places.length == 0) {
+      return;
+    }
+
+    const bounds = new google.maps.LatLngBounds();
+
+    places.forEach((place) => {
+      if (!place.geometry || !place.geometry.location) {
+        console.log("Returned place contains no geometry");
+        return;
+      }
+
+      userMarker = new google.maps.Marker({
+        position: place.geometry.location,
+        map: map,
+      });
+
+      if (place.geometry.viewport) {
+        // Only geocodes have viewport.
+        bounds.union(place.geometry.viewport);
+      } else {
+        bounds.extend(place.geometry.location);
+      }
+    });
+    map.fitBounds(bounds);
+  });
+
+  // Info Window
   const infoWindow = new google.maps.InfoWindow({
     content: "",
     disableAutoPan: true,
   });
-  let geocoder = new google.maps.Geocoder();
-
-  let userMarker = null;
 
   // Reverse Geocoding
+  let userMarker = null;
   map.addListener("click", function (e) {
     if (userMarker !== null) {
       const mapElement = document.getElementById("map");
@@ -52,6 +99,8 @@ async function initMap() {
     map.panTo(pos);
   });
 
+  // Geocoding
+  let geocoder = new google.maps.Geocoder();
   function geocode(request) {
     geocoder
       .geocode(request)
