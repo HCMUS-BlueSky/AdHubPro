@@ -13,7 +13,8 @@ function closeSidebar() {
 const sidebarFactory = (position) => {
   return `
   <input id="pac-input" class="controls" type="text" placeholder="Search AdHubPro"/>
-  <div class="container px-4 mt-5">
+  <img class="img-ads-sidebar" src="${position[0].images[1]}">
+  <div class="side-bar-card container px-4">
     <div class="row mb-3 border-bottom">
       <div class="col text-center">
         <button class="nav-btn">Thông tin</button>
@@ -22,11 +23,12 @@ const sidebarFactory = (position) => {
         <button class="nav-btn">Báo cáo</button>
       </div>
     </div>
-    
-    <h1 class="method">${position[0].method}</h1>
-    <p>${position[0].address}</p>
-    <p>${position[0].type}</p>
-    <p>${position[0].ward}</p>
+    <h1 class="method text-center">Tra cụm pano</h1>
+    <p>${position[0].location.address} (Sở Văn hóa và Thể thao)</p>
+    <p>Kích thước: 2.5m x 10m</p>
+    <p>Số lượng: 1 trụ/bảng </p>
+    <p>Hình thức: ${position[0].location.method}</p>
+    <p>Phân loại: ${position[0].location.type}</p>
   </div>
 `;
 };
@@ -156,12 +158,6 @@ async function initMap() {
           sidebar.innerHTML = locationInfoFactory(results);
         }, 300);
 
-        // const reportButton = document.getElementById("report-btn");
-        // const popupElement = document.getElementById("popup");
-        // reportButton.addEventListener("click", () => {
-        //   popupElement.innerHTML = reportPopupFactory();
-        // });
-
         var request = {
           query: results[0].formatted_address,
           fields: ["name", "geometry"],
@@ -191,7 +187,11 @@ async function initMap() {
   // Add some markers to the map.
   const markers = locations.map((location, i) => {
     const label = "QC";
-    const position = { lat: location.latitude, lng: location.longitude };
+    const position = {
+      _id: location._id,
+      lat: location.latitude,
+      lng: location.longitude,
+    };
     const pinGlyph = new google.maps.marker.PinElement({
       glyph: label,
       glyphColor: "white",
@@ -204,20 +204,25 @@ async function initMap() {
 
     // markers can only be keyboard focusable when they have click listeners
     // open info window when marker is clicked
-    marker.addListener("click", () => {
-      console.log(marker.position);
-      const position = locations.filter(
-        (location) =>
-          location.latitude === marker.position.h &&
-          location.longitude === marker.position.i
+    marker.addListener("click", async (e) => {
+      // console.log(location);
+      const response = await fetch(
+        `http://localhost:4000/api/ads/get-detail/${location._id}`
       );
+      const detailLocation = await response.json();
+      console.log(detailLocation);
       const cardInfo = document.createElement("div");
       const headerInfo = document.createElement("h3");
-      headerInfo.textContent = position[0].method;
+      headerInfo.textContent = detailLocation[0].location.method;
       const positionInfo = document.createElement("p");
-      positionInfo.textContent = position[0].type;
+      positionInfo.textContent = detailLocation[0].location.type;
       const zoningStatus = document.createElement("p");
-      zoningStatus.textContent = "Chưa quy hoạch";
+      const locationState = detailLocation[0].location.accepted;
+      if (locationState) {
+        zoningStatus.textContent = "Đã quy hoạch";
+      } else {
+        zoningStatus.textContent = "Chưa quy hoạch";
+      }
       cardInfo.appendChild(headerInfo);
       cardInfo.appendChild(positionInfo);
       cardInfo.appendChild(zoningStatus);
@@ -227,7 +232,7 @@ async function initMap() {
       const sidebar = document.getElementById("sidebar");
       sidebar.style.backgroundColor = "#ffffff";
       setTimeout(() => {
-        sidebar.innerHTML = sidebarFactory(position);
+        sidebar.innerHTML = sidebarFactory(detailLocation);
       }, 300);
     });
     return marker;
