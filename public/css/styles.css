@@ -22,7 +22,7 @@ body {
   overflow-x: hidden;
   transition: 0.5s;
   width: 460px;
-  z-index: 1;
+  /* z-index: 1; */
 }
 
 .sidebar-btn {
@@ -57,7 +57,7 @@ body {
   padding-left: 30px;
   position: fixed;
   position: relative;
-  z-index: 2;
+  /* z-index: 2; */
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 }
 
@@ -65,10 +65,27 @@ body {
   border-radius: 15px 15px 0 0;
 }
 
-.wrapper {
-  padding: 24px;
+.method {
+  font-size: 22px;
+  /* background: var(--gray-400, #ced4da); */
 }
 
-.method {
-  font-weight: 400;
+.nav-btn {
+  padding: 16px;
+  border: none;
+  background-color: #fff;
+  position: relative;
+}
+
+.nav-btn::after {
+  content: "";
+  border-bottom: 3px solid #000;
+  width: 60px;
+  position: absolute;
+  bottom: 0px;
+  display: block;
+}
+
+.nav-btn:hover {
+  background-color: #f5f7f8;
 }

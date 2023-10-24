@@ -10,6 +10,51 @@ function closeSidebar() {
   sidebar.innerHTML = `<input id="pac-input" class="controls" type="text" placeholder="Search AdHubPro"/>`;
 }
 
+const sidebarFactory = (position) => {
+  return `
+  <input id="pac-input" class="controls" type="text" placeholder="Search AdHubPro"/>
+  <div class="container px-4 mt-5">
+    <div class="row mb-3 border-bottom">
+      <div class="col text-center">
+        <button class="nav-btn">Thông tin</button>
+      </div>
+      <div class="col text-center">
+        <button class="nav-btn">Báo cáo</button>
+      </div>
+    </div>
+    
+    <h1 class="method">${position[0].method}</h1>
+    <p>${position[0].address}</p>
+    <p>${position[0].type}</p>
+    <p>${position[0].ward}</p>
+  </div>
+`;
+};
+
+const locationInfoFactory = (results) => {
+  return `<input id="pac-input" class="controls" type="text" placeholder="Search AdHubPro"/>
+    <div class="alert alert-success d-flex m-4" role="alert">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-check2-circle flex-shrink-0 me-2" viewBox="0 0 16 16" role="img" aria-label="Warning:">
+        <path d="M2.5 8a5.5 5.5 0 0 1 8.25-4.764.5.5 0 0 0 .5-.866A6.5 6.5 0 1 0 14.5 8a.5.5 0 0 0-1 0 5.5 5.5 0 1 1-11 0z"/>
+        <path d="M15.354 3.354a.5.5 0 0 0-.708-.708L8 9.293 5.354 6.646a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0l7-7z"/>
+      </svg>
+      <div>
+        <h5> Thông tin địa điểm </h5>
+        <p>
+          ${results[0].formatted_address}
+        </p>
+        <div class="d-flex justify-content-end">
+          <button type="button"
+            class="btn btn-danger"
+            data-bs-toggle="modal"
+            data-bs-target="#feedback"> 
+            Báo cáo vi phạm 
+          </button> 
+        </div>
+    </div>
+  </div>`;
+};
+
 async function initMap() {
   const locations = await logLocations();
 
@@ -108,21 +153,14 @@ async function initMap() {
         const sidebar = document.getElementById("sidebar");
         sidebar.style.backgroundColor = "#ffffff";
         setTimeout(() => {
-          sidebar.innerHTML = `
-                  <input id="pac-input" class="controls" type="text" placeholder="Search AdHubPro"/>
-                  <div class="alert alert-success d-flex m-2" role="alert">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-check2-circle flex-shrink-0 me-2" viewBox="0 0 16 16" role="img" aria-label="Warning:">
-                      <path d="M2.5 8a5.5 5.5 0 0 1 8.25-4.764.5.5 0 0 0 .5-.866A6.5 6.5 0 1 0 14.5 8a.5.5 0 0 0-1 0 5.5 5.5 0 1 1-11 0z"/>
-                      <path d="M15.354 3.354a.5.5 0 0 0-.708-.708L8 9.293 5.354 6.646a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0l7-7z"/>
-                    </svg>
-                    <div>
-                      <h5> Thông tin địa điểm </h5>
-                      <p>
-                        ${results[0].formatted_address}
-                      </p>
-                    </div>
-                  </div>`;
+          sidebar.innerHTML = locationInfoFactory(results);
         }, 300);
+
+        // const reportButton = document.getElementById("report-btn");
+        // const popupElement = document.getElementById("popup");
+        // reportButton.addEventListener("click", () => {
+        //   popupElement.innerHTML = reportPopupFactory();
+        // });
 
         var request = {
           query: results[0].formatted_address,
@@ -173,7 +211,6 @@ async function initMap() {
           location.latitude === marker.position.h &&
           location.longitude === marker.position.i
       );
-      console.log(position);
       const cardInfo = document.createElement("div");
       const headerInfo = document.createElement("h3");
       headerInfo.textContent = position[0].method;
@@ -190,15 +227,7 @@ async function initMap() {
       const sidebar = document.getElementById("sidebar");
       sidebar.style.backgroundColor = "#ffffff";
       setTimeout(() => {
-        sidebar.innerHTML = `
-          <input id="pac-input" class="controls" type="text" placeholder="Search AdHubPro"/>
-          <div class="wrapper">
-            <h1 class="">${position[0].method}</h1>
-            <p>${position[0].address}</p>
-            <p>${position[0].type}</p>
-            <p>${position[0].ward}</p>
-          </div>
-        `;
+        sidebar.innerHTML = sidebarFactory(position);
       }, 300);
     });
     return marker;
