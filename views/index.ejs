@@ -41,6 +41,14 @@
         type="text"
         placeholder="Search AdHubPro"
       />
+      <button
+        type="button"
+        class="btn btn-danger"
+        data-bs-toggle="modal"
+        data-bs-target="#feedback"
+      >
+        Báo cáo vi phạm
+      </button>
     </div>
     <div
       class="modal fade"
@@ -53,9 +61,6 @@
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header">
-            <h1 class="modal-title fs-5 text-center" id="feedbackLabel">
-              Báo cáo vi phạm
-            </h1>
             <button
               type="button"
               class="btn-close"
@@ -118,11 +123,11 @@
                   </div>
                 </div>
               </div>
-              <div class="row">
-                <h2 class="mb-3">Nội dung báo cáo</h2>
+              <div class="row mt-3">
+                <h2>Nội dung báo cáo</h2>
                 <textarea id="mytextarea"></textarea>
               </div>
-              <div class="row my-2">
+              <div class="row mt-3">
                 <h2>Hình ảnh minh họa</h2>
                 <div class="form-file">
                   <div class="form-file-left">
@@ -130,7 +135,7 @@
                     <p>Độ lớn tối đa: 10M</p>
                   </div>
                   <label for="file-upload" class="custom-file-upload">
-                    Chọn một file
+                    <p>Chọn một file</p>
                     <input id="file-upload" type="file" multiple />
                   </label>
                 </div>
@@ -138,55 +143,7 @@
             </form>
           </div>
           <div class="modal-footer">
-            <button
-              class="btn btn-primary"
-              data-bs-target="#feedback2"
-              data-bs-toggle="modal"
-            >
-              Next
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div
-      class="modal fade"
-      id="feedback2"
-      data-bs-backdrop="static"
-      aria-hidden="true"
-      aria-labelledby="feedbackLabel2"
-      tabindex="-1"
-    >
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title fs-5" id="feedbackLabel2">Feedback (2/2)</h5>
-            <button
-              type="button"
-              class="btn-close"
-              data-bs-dismiss="modal"
-              aria-label="Close"
-            ></button>
-          </div>
-          <div class="modal-body">
-            <div class="mb-3">
-              <label for="feedback-box" class="col-form-label">
-                Feedback:
-              </label>
-              <textarea class="form-control" id="feedback-box"> </textarea>
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button
-              class="btn btn-outline-success"
-              data-bs-target="#feedback"
-              data-bs-toggle="modal"
-            >
-              Previous
-            </button>
-            <button class="btn btn-success" data-bs-dismiss="modal">
-              Success
-            </button>
+            <button class="btn btn-primary" type="submit">Submit</button>
           </div>
         </div>
       </div>

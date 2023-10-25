@@ -10,7 +10,36 @@ function closeSidebar() {
   sidebar.innerHTML = `<input id="pac-input" class="controls" type="text" placeholder="Search AdHubPro"/>`;
 }
 
+const AdsCardFactory = (position) => {
+  return `
+  <div class="card bg-light mb-3" style="max-width: 26rem;">
+    <div class="card-header text-center fw-bold fs-4">Tra cụm pano</div>
+    <div class="card-body">
+      <h5 class="card-title">${position[0].location.address}</h5>
+      <p class="card-text">Kích thước: 2.5m x 10m</p>
+      <p class="card-text">Số lượng: 1 trụ/bảng</p>
+      <p class="card-text">Hình thức: ${position[0].location.method}</p>
+      <p class="card-text">Phân loại: ${position[0].location.type}</p>
+      <div class="d-flex">
+        <div class="me-auto p-2">
+          <i class="bi bi-info-circle" style="font-size:24px;"></i>
+        </div>
+        <div class="p-2">
+          <button type="button"
+            class="btn btn-danger"
+            data-bs-toggle="modal"
+            data-bs-target="#feedback"> 
+            Báo cáo vi phạm 
+          </button> 
+        </div>
+      </div>
+    </div>
+  </div>
+  `;
+};
+
 const sidebarFactory = (position) => {
+  const AdsCard = AdsCardFactory(position);
   return `
   <input id="pac-input" class="controls" type="text" placeholder="Search AdHubPro"/>
   <img class="img-ads-sidebar" src="${position[0].images[1]}">
@@ -23,12 +52,8 @@ const sidebarFactory = (position) => {
         <button class="nav-btn">Báo cáo</button>
       </div>
     </div>
-    <h1 class="method text-center">Tra cụm pano</h1>
-    <p>${position[0].location.address} (Sở Văn hóa và Thể thao)</p>
-    <p>Kích thước: 2.5m x 10m</p>
-    <p>Số lượng: 1 trụ/bảng </p>
-    <p>Hình thức: ${position[0].location.method}</p>
-    <p>Phân loại: ${position[0].location.type}</p>
+    ${AdsCard}
+    ${AdsCard}
   </div>
 `;
 };
