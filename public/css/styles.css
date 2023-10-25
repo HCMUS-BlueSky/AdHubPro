@@ -149,3 +149,7 @@ input[type="file"] {
   border: 1px solid #212529;
   background-color: #fff;
 }
+
+.bi-info-circle {
+  cursor: pointer;
+}
