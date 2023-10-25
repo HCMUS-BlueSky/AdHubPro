@@ -48,6 +48,7 @@
       href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.css"
       type="text/css"
     />
+
     <div id="map"></div>
 
     <script>
@@ -84,8 +85,6 @@
           geojson.features.push(feature);
         });
 
-        console.log(geojson.features);
-
         const map = new mapboxgl.Map({
           container: "map",
           style: "mapbox://styles/mapbox/streets-v12",
@@ -93,25 +92,132 @@
           zoom: 15,
         });
 
-        // add markers to map
-        for (const feature of geojson.features) {
-          const el = document.createElement("div");
-          el.className = "marker";
+        map.on("load", () => {
+          map.addSource("AdsLocations", {
+            type: "geojson",
+            data: geojson,
+            cluster: true,
+            clusterMaxZoom: 35,
+            clusterRadius: 50,
+          });
 
-          // make a marker for each feature and add it to the map
-          new mapboxgl.Marker(el)
-            .setLngLat(feature.geometry.coordinates)
-            .setPopup(
-              new mapboxgl.Popup() // add popups
-                .setHTML(
-                  `<h2>${feature.properties.method}</h2>
-                <p>${feature.properties.type}</p>
-                <p>${feature.properties.address}</p>
-                <h2>${feature.properties.status}</h2>`
-                )
-            )
-            .addTo(map);
-        }
+          map.addLayer({
+            id: "clusters",
+            type: "circle",
+            source: "AdsLocations",
+            filter: ["has", "point_count"],
+            paint: {
+              "circle-color": [
+                "step",
+                ["get", "point_count"],
+                "#51bbd6",
+                10,
+                "#f1f075",
+                30,
+                "#f28cb1",
+              ],
+              "circle-radius": [
+                "step",
+                ["get", "point_count"],
+                20,
+                100,
+                30,
+                750,
+                40,
+              ],
+            },
+          });
+
+          map.addLayer({
+            id: "cluster-count",
+            type: "symbol",
+            source: "AdsLocations",
+            filter: ["has", "point_count"],
+            layout: {
+              "text-field": ["get", "point_count_abbreviated"],
+              "text-font": ["DIN Offc Pro Medium", "Arial Unicode MS Bold"],
+              "text-size": 12,
+            },
+          });
+
+          map.addLayer({
+            id: "unclustered-point",
+            type: "circle",
+            source: "AdsLocations",
+            filter: ["!", ["has", "point_count"]],
+            paint: {
+              "circle-color": "#11b4da",
+              "circle-radius": 15,
+              "circle-stroke-width": 1,
+              "circle-stroke-color": "#fff",
+            },
+          });
+
+          map.addLayer({
+            id: "cluster-ads",
+            type: "symbol",
+            source: "AdsLocations",
+            filter: ["!", ["has", "point_count"]],
+            layout: {
+              "text-field": "QC",
+              "text-font": ["DIN Offc Pro Medium", "Arial Unicode MS Bold"],
+              "text-size": 12,
+            },
+          });
+
+          map.on("click", "clusters", (e) => {
+            const features = map.queryRenderedFeatures(e.point, {
+              layers: ["clusters"],
+            });
+            const clusterId = features[0].properties.cluster_id;
+            map
+              .getSource("AdsLocations")
+              .getClusterExpansionZoom(clusterId, (err, zoom) => {
+                if (err) return;
+
+                map.easeTo({
+                  center: features[0].geometry.coordinates,
+                  zoom: zoom,
+                });
+              });
+          });
+
+          const popup = new mapboxgl.Popup({
+            closeButton: false,
+            closeOnClick: false,
+          });
+
+          map.on("mouseenter", "unclustered-point", (e) => {
+            map.getCanvas().style.cursor = "pointer";
+            const coordinates = e.features[0].geometry.coordinates.slice();
+
+            while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+              coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+            }
+
+            popup
+              .setLngLat(coordinates)
+              .setHTML(
+                `<h2>${e.features[0].properties.method}</h2>
+                <p>${e.features[0].properties.type}</p>
+                <p>${e.features[0].properties.address}</p>
+                <h2>${e.features[0].properties.status}</h2>`
+              )
+              .addTo(map);
+          });
+
+          map.on("mouseleave", "unclustered-point", () => {
+            map.getCanvas().style.cursor = "";
+            popup.remove();
+          });
+
+          map.on("mouseenter", "clusters", () => {
+            map.getCanvas().style.cursor = "pointer";
+          });
+          map.on("mouseleave", "clusters", () => {
+            map.getCanvas().style.cursor = "";
+          });
+        });
 
         // Add the control to the map and search bar.
         map.addControl(
@@ -123,107 +229,6 @@
       }
 
       initMap();
-
-      // map.on("load", () => {
-      //   map.addSource("earthquakes", {
-      //     type: "geojson",
-      //     data: "https://docs.mapbox.com/mapbox-gl-js/assets/earthquakes.geojson",
-      //     cluster: true,
-      //     clusterMaxZoom: 14,
-      //     clusterRadius: 50,
-      //   });
-
-      //   map.addLayer({
-      //     id: "clusters",
-      //     type: "circle",
-      //     source: "earthquakes",
-      //     filter: ["has", "point_count"],
-      //     paint: {
-      //       "circle-color": [
-      //         "step",
-      //         ["get", "point_count"],
-      //         "#51bbd6",
-      //         100,
-      //         "#f1f075",
-      //         750,
-      //         "#f28cb1",
-      //       ],
-      //       "circle-radius": [
-      //         "step",
-      //         ["get", "point_count"],
-      //         20,
-      //         100,
-      //         30,
-      //         750,
-      //         40,
-      //       ],
-      //     },
-      //   });
-
-      //   map.addLayer({
-      //     id: "cluster-count",
-      //     type: "symbol",
-      //     source: "earthquakes",
-      //     filter: ["has", "point_count"],
-      //     layout: {
-      //       "text-field": ["get", "point_count_abbreviated"],
-      //       "text-font": ["DIN Offc Pro Medium", "Arial Unicode MS Bold"],
-      //       "text-size": 12,
-      //     },
-      //   });
-
-      //   map.addLayer({
-      //     id: "unclustered-point",
-      //     type: "circle",
-      //     source: "earthquakes",
-      //     filter: ["!", ["has", "point_count"]],
-      //     paint: {
-      //       "circle-color": "#11b4da",
-      //       "circle-radius": 4,
-      //       "circle-stroke-width": 1,
-      //       "circle-stroke-color": "#fff",
-      //     },
-      //   });
-
-      //   map.on("click", "clusters", (e) => {
-      //     const features = map.queryRenderedFeatures(e.point, {
-      //       layers: ["clusters"],
-      //     });
-      //     const clusterId = features[0].properties.cluster_id;
-      //     map
-      //       .getSource("earthquakes")
-      //       .getClusterExpansionZoom(clusterId, (err, zoom) => {
-      //         if (err) return;
-
-      //         map.easeTo({
-      //           center: features[0].geometry.coordinates,
-      //           zoom: zoom,
-      //         });
-      //       });
-      //   });
-
-      //   map.on("click", "unclustered-point", (e) => {
-      //     const coordinates = e.features[0].geometry.coordinates.slice();
-      //     const mag = e.features[0].properties.mag;
-      //     const tsunami = e.features[0].properties.tsunami === 1 ? "yes" : "no";
-
-      //     while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
-      //       coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
-      //     }
-
-      //     new mapboxgl.Popup()
-      //       .setLngLat(coordinates)
-      //       .setHTML(`magnitude: ${mag}<br>Was there a tsunami?: ${tsunami}`)
-      //       .addTo(map);
-      //   });
-
-      //   map.on("mouseenter", "clusters", () => {
-      //     map.getCanvas().style.cursor = "pointer";
-      //   });
-      //   map.on("mouseleave", "clusters", () => {
-      //     map.getCanvas().style.cursor = "";
-      //   });
-      // });
     </script>
   </body>
 </html>
