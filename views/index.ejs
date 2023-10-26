@@ -293,13 +293,6 @@
         return locations;
       }
 
-      // const map = new mapboxgl.Map({
-      //   container: "map",
-      //   style: "mapbox://styles/mapbox/streets-v12",
-      //   center: [106.68247166663183, 10.762993690850745],
-      //   zoom: 15,
-      // });
-
       const AdsCardFactory = (position) => {
         return `
           <div class="card-header text-center fw-bold fs-4 font-weight-bold py-3">Tra cụm pano</div>
@@ -317,11 +310,48 @@
                 <button type="button"
                   class="btn btn-danger"
                   data-bs-toggle="modal"
-                  data-bs-target="#feedback"> 
-                  Báo cáo vi phạm 
-                </button> 
+                  data-bs-target="#feedback">
+                  Báo cáo vi phạm
+                </button>
               </div>
             </div>
+          </div>
+        `;
+      };
+
+      const locationCardFactory = (result) => {
+        return `
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-check2-circle flex-shrink-0 me-2" viewBox="0 0 16 16" role="img" aria-label="Warning:">
+            <path d="M2.5 8a5.5 5.5 0 0 1 8.25-4.764.5.5 0 0 0 .5-.866A6.5 6.5 0 1 0 14.5 8a.5.5 0 0 0-1 0 5.5 5.5 0 1 1-11 0z"/>
+            <path d="M15.354 3.354a.5.5 0 0 0-.708-.708L8 9.293 5.354 6.646a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0l7-7z"/>
+          </svg>
+          <div>
+            <h5 class="font-weight-bold"> Thông tin địa điểm </h5>
+            <h5 class="font-weight-bold">
+              ${result.text}  
+            </h5>
+            <h5>
+              ${result.place_name ? result.place_name : ""}
+            </h5>
+            <div class="d-flex justify-content-end">
+              <button type="button"
+                class="btn btn-danger"
+                data-bs-toggle="modal"
+                data-bs-target="#feedback">
+                Báo cáo vi phạm
+              </button>
+            </div>
+        </div>`;
+      };
+
+      const clearSidebar = () => {
+        const sidebarContent = document.querySelector(".sidebar-content");
+        sidebarContent.innerHTML = `
+          <div
+            class="sidebar-toggle rounded-rect left"
+            onclick="toggleSidebar('left')"
+          >
+            &rarr;
           </div>
         `;
       };
@@ -472,9 +502,7 @@
               });
           });
 
-          
-
-          map.on("click", "unclustered-point", () => {
+          map.on("click", "unclustered-point", (e) => {
             e.clickOnLayer = true;
           });
 
@@ -517,24 +545,26 @@
             let m = e.lngLat.wrap();
             geocoder.query(`${m.lng}, ${m.lat}`);
           });
-          geocoder.on("result", (event) => {
-            // console.log(event)
+          geocoder.on("result", (e) => {
+            clearSidebar();
+            const sidebarContent = document.querySelector(".sidebar-content");
+            const locationCard = locationCardFactory(e.result);
+            const card = document.createElement("div");
+            card.className = "alert alert-success d-flex m-4";
+            card.innerHTML = locationCard;
+            sidebarContent.appendChild(card);
           });
         });
 
         map.on("click", "unclustered-point", (e) => {
+          clearSidebar();
           const sidebarContent = document.querySelector(".sidebar-content");
           const adsCardContent = AdsCardFactory(e.features[0].properties);
           const card = document.createElement("div");
           card.className = "card bg-light my-3";
           card.style = "max-width: 20rem;";
           card.innerHTML = adsCardContent;
-          const card2 = document.createElement("div");
-          card2.className = "card bg-light my-3";
-          card2.style = "max-width: 20rem;";
-          card2.innerHTML = adsCardContent;
           sidebarContent.appendChild(card);
-          sidebarContent.appendChild(card2);
         });
 
         // Add the control to the map and search bar.
