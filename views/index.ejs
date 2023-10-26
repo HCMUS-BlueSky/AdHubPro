@@ -258,7 +258,34 @@
     <script>
       mapboxgl.accessToken =
         "pk.eyJ1Ijoibm1raG9pMjEiLCJhIjoiY2xvMno5ZzhyMGQzdTJ2bGVkbTc4bGZ5dSJ9.9ljGVzjte5iqJXpbOiAN1Q";
-
+      const map = new mapboxgl.Map({
+        container: "map",
+        style: "mapbox://styles/mapbox/streets-v12",
+        center: [106.68247166663183, 10.762993690850745],
+        zoom: 15,
+      });
+      const geocoder = new MapboxGeocoder({
+        accessToken: mapboxgl.accessToken,
+        mapboxgl: mapboxgl,
+        reverseGeocode: true,
+        flipCoordinates: true,
+        marker: {
+          color: "red",
+        },
+        flyTo: {
+          bearing: 0,
+          animate: true,
+          duration: 750,
+          speed: 1,
+          essential: true,
+          curve: 1,
+          easing: function (t) {
+            return Math.sin((t * Math.PI) / 2);
+          },
+        },
+      });
+      map.addControl(geocoder);
+      let currentMarker = null;
       // Fetch locations data
       async function logLocations() {
         const response = await fetch("http://localhost:4000/api/location");
@@ -266,12 +293,12 @@
         return locations;
       }
 
-      const map = new mapboxgl.Map({
-        container: "map",
-        style: "mapbox://styles/mapbox/streets-v12",
-        center: [106.68247166663183, 10.762993690850745],
-        zoom: 15,
-      });
+      // const map = new mapboxgl.Map({
+      //   container: "map",
+      //   style: "mapbox://styles/mapbox/streets-v12",
+      //   center: [106.68247166663183, 10.762993690850745],
+      //   zoom: 15,
+      // });
 
       const AdsCardFactory = (position) => {
         return `
@@ -299,6 +326,14 @@
         `;
       };
 
+      async function addMarker(x, y) {
+        if (currentMarker) {
+          currentMarker.remove();
+        }
+        const el = document.createElement("div");
+        el.className = "marker";
+        currentMarker = new mapboxgl.Marker(el).setLngLat([x, y]).addTo(map);
+      }
       // Side bar
       function toggleSidebar(id) {
         const elem = document.getElementById(id);
@@ -336,10 +371,6 @@
             },
           };
           geojson.features.push(feature);
-        });
-
-        map.on("load", () => {
-          toggleSidebar("left");
         });
 
         map.on("load", () => {
@@ -416,6 +447,7 @@
           });
 
           map.on("click", "clusters", (e) => {
+            e.clickOnLayer = true;
             const features = map.queryRenderedFeatures(e.point, {
               layers: ["clusters"],
             });
@@ -467,6 +499,18 @@
           map.on("mouseleave", "clusters", () => {
             map.getCanvas().style.cursor = "";
           });
+
+          // Reverse geocoding
+          map.on("click", (e) => {
+            if (e.clickOnLayer) {
+              return;
+            }
+            let m = e.lngLat.wrap();
+            geocoder.query(`${m.lng}, ${m.lat}`);
+          });
+          geocoder.on("result", (event) => {
+            // console.log(event)
+          });
         });
 
         map.on("click", "unclustered-point", (e) => {
@@ -485,12 +529,12 @@
         });
 
         // Add the control to the map and search bar.
-        map.addControl(
-          new MapboxGeocoder({
-            accessToken: mapboxgl.accessToken,
-            mapboxgl: mapboxgl,
-          })
-        );
+        // map.addControl(
+        //   new MapboxGeocoder({
+        //     accessToken: mapboxgl.accessToken,
+        //     mapboxgl: mapboxgl,
+        //   })
+        // );
 
         // Add geolocate control to the map.
         map.addControl(
