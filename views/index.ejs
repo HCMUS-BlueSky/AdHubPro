@@ -113,6 +113,7 @@
         display: flex;
         justify-content: center;
         align-items: center;
+        transition: .5s transform ease-in-out;
       }
 
       .sidebar-toggle.left {
@@ -138,18 +139,23 @@
       .left.collapsed {
         transform: translateX(-395px);
       }
+      .sidebar-toggle.rotated {
+        transform: rotate(-180deg);
+      }
     </style>
 
     <div id="map">
-      <div id="left" class="sidebar flex-center left collapsed">
+      <div id="sidebar" class="sidebar flex-center left collapsed">
         <div
           class="sidebar-content rounded-rect d-flex flex-column align-items-center"
         >
           <div
             class="sidebar-toggle rounded-rect left"
-            onclick="toggleSidebar('left')"
+            onclick="toggleSidebar()"
           >
-            &rarr;
+            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-arrow-right" viewBox="0 0 16 16">
+              <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
+            </svg>
           </div>
         </div>
       </div>
@@ -285,6 +291,9 @@
         },
       });
       map.addControl(geocoder);
+      const sidebar =  document.querySelector(".sidebar-content");
+      const sidebarItems = [];
+
       let currentMarker = null;
       // Fetch locations data
       async function logLocations() {
@@ -294,7 +303,8 @@
       }
 
       const AdsCardFactory = (position) => {
-        return `
+        const elm = document.createElement("div");
+        elm.innerHTML = `
           <div class="card-header text-center fw-bold fs-4 font-weight-bold py-3">Tra cụm pano</div>
           <div class="card-body">
             <h5 class="card-title fw-bold">${position.address}</h5>
@@ -317,10 +327,14 @@
             </div>
           </div>
         `;
+        elm.className = "card bg-light my-3";
+        elm.style = "max-width: 20rem;";
+        return elm;
       };
 
       const locationCardFactory = (result) => {
-        return `
+        const elm = document.createElement("div");
+        elm.innerHTML = `
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-check2-circle flex-shrink-0 me-2" viewBox="0 0 16 16" role="img" aria-label="Warning:">
             <path d="M2.5 8a5.5 5.5 0 0 1 8.25-4.764.5.5 0 0 0 .5-.866A6.5 6.5 0 1 0 14.5 8a.5.5 0 0 0-1 0 5.5 5.5 0 1 1-11 0z"/>
             <path d="M15.354 3.354a.5.5 0 0 0-.708-.708L8 9.293 5.354 6.646a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0l7-7z"/>
@@ -341,20 +355,21 @@
                 Báo cáo vi phạm
               </button>
             </div>
-        </div>`;
+          </div>`;
+        elm.className = "alert alert-success d-flex m-4";
+        return elm;
       };
 
       const clearSidebar = () => {
-        const sidebarContent = document.querySelector(".sidebar-content");
-        sidebarContent.innerHTML = `
-          <div
-            class="sidebar-toggle rounded-rect left"
-            onclick="toggleSidebar('left')"
-          >
-            &rarr;
-          </div>
-        `;
+        while (sidebarItems.length) {
+          sidebarItems.pop().remove()
+        }
       };
+      
+      const addToSideBar = (elm) => {
+        sidebarItems.push(elm);
+        sidebar.appendChild(elm);
+      }
 
       async function addMarker(x, y) {
         if (currentMarker) {
@@ -365,17 +380,15 @@
         currentMarker = new mapboxgl.Marker(el).setLngLat([x, y]).addTo(map);
       }
       // Side bar
-      function toggleSidebar(id) {
-        const elem = document.getElementById(id);
-        // Add or remove the 'collapsed' CSS class from the sidebar element.
-        // Returns boolean "true" or "false" whether 'collapsed' is in the class list.
+      function toggleSidebar() {
+        const elem = document.getElementById("sidebar");
+
+        const arrow = document.querySelector(".sidebar-toggle");
+        arrow.classList.toggle("rotated");
         const collapsed = elem.classList.toggle("collapsed");
-        const padding = {};
-        // 'id' is 'right' or 'left'. When run at start, this object looks like: '{left: 300}';
-        padding[id] = collapsed ? 0 : 300; // 0 if collapsed, 300 px if not. This matches the width of the sidebars in the .sidebar CSS class.
-        // Use `map.easeTo()` with a padding option to adjust the map's center accounting for the position of sidebars.
+
         map.easeTo({
-          padding: padding,
+          padding: collapsed ? 0 : 300,
           essential: true,
           duration: 1000, // In ms. This matches the CSS transition duration property.
         });
@@ -545,26 +558,18 @@
             let m = e.lngLat.wrap();
             geocoder.query(`${m.lng}, ${m.lat}`);
           });
-          geocoder.on("result", (e) => {
-            clearSidebar();
-            const sidebarContent = document.querySelector(".sidebar-content");
-            const locationCard = locationCardFactory(e.result);
-            const card = document.createElement("div");
-            card.className = "alert alert-success d-flex m-4";
-            card.innerHTML = locationCard;
-            sidebarContent.appendChild(card);
-          });
+        });
+
+        geocoder.on("result", (e) => {
+          clearSidebar();
+          const locationCard = locationCardFactory(e.result);
+          addToSideBar(locationCard)
         });
 
         map.on("click", "unclustered-point", (e) => {
           clearSidebar();
-          const sidebarContent = document.querySelector(".sidebar-content");
-          const adsCardContent = AdsCardFactory(e.features[0].properties);
-          const card = document.createElement("div");
-          card.className = "card bg-light my-3";
-          card.style = "max-width: 20rem;";
-          card.innerHTML = adsCardContent;
-          sidebarContent.appendChild(card);
+          const adsCard = AdsCardFactory(e.features[0].properties);
+          addToSideBar(adsCard)
         });
 
         // Add the control to the map and search bar.
