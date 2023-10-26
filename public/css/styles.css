@@ -1,6 +1,11 @@
 /* Modal */
 .modal-header {
   background-color: #f8f9fa;
+  padding: 16px 50px !important;
+}
+
+.modal-content h2 {
+  padding: 0 !important;
 }
 
 .modal-body {
@@ -13,27 +18,20 @@
 }
 
 /* Form File */
-.form-file {
-  display: flex;
-  justify-content: space-between;
-  border: 1px dashed var(--gray-800, #343a40);
-  background-color: #e9ecef;
-  border-radius: 8px;
-  padding-top: 16px;
-  padding-bottom: 8px;
-}
-
 input[type="file"] {
-  display: none;
+  border: 1px solid #ced4da;
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 0;
 }
 
-.custom-file-upload {
-  color: #0056db;
-  border-radius: 4px;
-  border: 1px solid var(--community-blue-blue-600, #0056db);
-  margin: 16px 0;
-  display: inline-block;
-  padding: 6px 12px 0 12px;
+input[type="file"]::file-selector-button {
+  margin-right: 20px;
+  border: 1px solid #ced4da;
+  background: #ced4da;
+  padding: 10px 20px;
+  border-radius: 10px 0 0 10px;
+  color: #000;
   cursor: pointer;
 }
 

@@ -113,7 +113,7 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        transition: .5s transform ease-in-out;
+        transition: 0.5s transform ease-in-out;
       }
 
       .sidebar-toggle.left {
@@ -153,8 +153,18 @@
             class="sidebar-toggle rounded-rect left"
             onclick="toggleSidebar()"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-arrow-right" viewBox="0 0 16 16">
-              <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="25"
+              height="25"
+              fill="currentColor"
+              class="bi bi-arrow-right"
+              viewBox="0 0 16 16"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"
+              />
             </svg>
           </div>
         </div>
@@ -173,6 +183,7 @@
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header">
+            <h3 class="">BÁO CÁO VI PHẠM</h3>
             <button
               type="button"
               class="btn-close"
@@ -186,7 +197,7 @@
                 <div class="col-7 d-flex flex-column">
                   <h2>Thông tin người báo cáo</h2>
                   <div class="mb-2">
-                    <label for="name" class="col-form-label"></label>
+                    <label for="name" class="col-form-label">Họ và tên</label>
                     <input
                       type="text"
                       class="form-control"
@@ -195,7 +206,9 @@
                     />
                   </div>
                   <div class="mb-2">
-                    <label for="email" class="col-form-label"></label>
+                    <label for="email" class="col-form-label"
+                      >Số điện thoại</label
+                    >
                     <input
                       type="email"
                       class="form-control"
@@ -204,7 +217,7 @@
                     />
                   </div>
                   <div class="mb-2">
-                    <label for="tel" class="col-form-label"></label>
+                    <label for="tel" class="col-form-label">Email</label>
                     <input
                       type="number"
                       class="form-control"
@@ -236,21 +249,13 @@
                 </div>
               </div>
               <div class="row mt-3">
-                <h2>Nội dung báo cáo</h2>
+                <h2 class="mb-3">Nội dung báo cáo</h2>
                 <textarea id="mytextarea"></textarea>
               </div>
               <div class="row mt-3">
-                <h2>Hình ảnh minh họa</h2>
-                <div class="form-file">
-                  <div class="form-file-left">
-                    <p>Kéo thả hình vào đây (tối đa 2 hình)</p>
-                    <p>Độ lớn tối đa: 10M</p>
-                  </div>
-                  <label for="file-upload" class="custom-file-upload">
-                    <p>Chọn một file</p>
-                    <input id="file-upload" type="file" multiple />
-                  </label>
-                </div>
+                <h2 class="mb-3">Hình ảnh minh họa</h2>
+                <input type="file" name="file" id="file" class="inputfile" />
+                <label for="file"></label>
               </div>
             </form>
           </div>
@@ -291,7 +296,7 @@
         },
       });
       map.addControl(geocoder);
-      const sidebar =  document.querySelector(".sidebar-content");
+      const sidebar = document.querySelector(".sidebar-content");
       const sidebarItems = [];
 
       let currentMarker = null;
@@ -362,14 +367,14 @@
 
       const clearSidebar = () => {
         while (sidebarItems.length) {
-          sidebarItems.pop().remove()
+          sidebarItems.pop().remove();
         }
       };
-      
+
       const addToSideBar = (elm) => {
         sidebarItems.push(elm);
         sidebar.appendChild(elm);
-      }
+      };
 
       async function addMarker(x, y) {
         if (currentMarker) {
@@ -563,13 +568,13 @@
         geocoder.on("result", (e) => {
           clearSidebar();
           const locationCard = locationCardFactory(e.result);
-          addToSideBar(locationCard)
+          addToSideBar(locationCard);
         });
 
         map.on("click", "unclustered-point", (e) => {
           clearSidebar();
           const adsCard = AdsCardFactory(e.features[0].properties);
-          addToSideBar(adsCard)
+          addToSideBar(adsCard);
         });
 
         // Add the control to the map and search bar.
