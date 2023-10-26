@@ -35,4 +35,37 @@ router.get('/get-detail/:location_id', async (req, res) => {
   }
 });
 
+// router.post('/test' ,async (req, res) => {
+//   try {
+//     // console.log(req.files);
+//     // const urls = []
+//     // for(let file of req.files) {
+//     //   const url = await uploadFile(`adhubpro/ads`, file);
+//     //   urls.push(url);
+//     // }
+//     // console.log(urls);
+//     const ads = await Ads.find({}).exec();
+//     const types = [
+//       'Trụ bảng hiflex',
+//       'Trụ màn hình điện tử LED',
+//       'Trụ hộp đèn',
+//       'Bảng hiflex ốp tường',
+//       'Màn hình điện tử ốp tường',
+//       'Trụ treo băng rôn dọc',
+//       'Trụ treo băng rôn ngang',
+//       'Trụ/Cụm pano',
+//       'Cổng chào',
+//       'Trung tâm thương mại'
+//     ];
+//     for(let ad of ads) {
+//       const type = types[Math.floor(Math.random() * types.length)];
+//       const size = '2.5m x 10m';
+//       await Ads.findByIdAndUpdate(ad.id, {type, size}).exec();
+//     }
+//     return res.send("SUCCESS")
+//   } catch (err) {
+//     return res.status(500).send(err.message);
+//   }
+// });
+
 module.exports = router;
