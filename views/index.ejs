@@ -346,6 +346,7 @@
         // Use `map.easeTo()` with a padding option to adjust the map's center accounting for the position of sidebars.
         map.easeTo({
           padding: padding,
+          essential: true,
           duration: 1000, // In ms. This matches the CSS transition duration property.
         });
       }
@@ -374,6 +375,11 @@
         });
 
         map.on("load", () => {
+          const popup = new mapboxgl.Popup({
+            closeButton: false,
+            closeOnClick: false,
+          });
+
           map.addSource("AdsLocations", {
             type: "geojson",
             data: geojson,
@@ -459,14 +465,17 @@
 
                 map.easeTo({
                   center: features[0].geometry.coordinates,
+                  duration: 500,
+                  essential: true,
                   zoom: zoom,
                 });
               });
           });
 
-          const popup = new mapboxgl.Popup({
-            closeButton: false,
-            closeOnClick: false,
+          
+
+          map.on("click", "unclustered-point", () => {
+            e.clickOnLayer = true;
           });
 
           map.on("mouseenter", "unclustered-point", (e) => {
