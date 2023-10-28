@@ -333,6 +333,7 @@
       });
       map.addControl(geocoder);
       const sidebar = document.querySelector(".sidebar-content");
+      const sidebarItems = [];
 
       let currentMarker = null;
       // Fetch locations data
@@ -345,28 +346,28 @@
       const AdsCardFactory = (position) => {
         const elm = document.createElement("div");
         elm.innerHTML = `
-          <div class="card-header text-center fw-bold fs-4 font-weight-bold py-3">Tra cụm pano</div>
-          <div class="card-body">
-            <h5 class="card-title fw-bold">${position.address}</h5>
-            <h5 class="card-text">Kích thước: 2.5m x 10m</h5>
-            <h5 class="card-text">Số lượng: 1 trụ/bảng</h5>
-            <h5 class="card-text">Hình thức: ${position.method}</h5>
-            <h5 class="card-text">Phân loại: ${position.type}</h5>
-            <div class="d-flex">
-              <div class="me-auto p-2 d-flex align-items-center">
-                <i class="bi bi-info-circle" style="font-size:24px;"></i>
-              </div>
-              <div class="p-2">
-                <button type="button"
-                  class="btn btn-danger"
-                  data-bs-toggle="modal"
-                  data-bs-target="#feedback">
-                  Báo cáo vi phạm
-                </button>
-              </div>
-            </div>
-          </div>
-        `;
+                <div class="card-header text-center fw-bold fs-4 font-weight-bold py-3">Tra cụm pano</div>
+                <div class="card-body">
+                  <h5 class="card-title fw-bold">${position.address}</h5>
+                  <h5 class="card-text">Kích thước: 2.5m x 10m</h5>
+                  <h5 class="card-text">Số lượng: 1 trụ/bảng</h5>
+                  <h5 class="card-text">Hình thức: ${position.method}</h5>
+                  <h5 class="card-text">Phân loại: ${position.type}</h5>
+                  <div class="d-flex">
+                    <div class="me-auto p-2 d-flex align-items-center">
+                      <i class="bi bi-info-circle" style="font-size:24px;"></i>
+                    </div>
+                    <div class="p-2">
+                      <button type="button"
+                        class="btn btn-danger"
+                        data-bs-toggle="modal"
+                        data-bs-target="#feedback">
+                        Báo cáo vi phạm
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              `;
         elm.className = "ads-card card bg-light my-3";
         elm.style = "max-width: 20rem;";
         return elm;
@@ -375,32 +376,54 @@
       const locationCardFactory = (result) => {
         const elm = document.createElement("div");
         elm.innerHTML = `
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-check2-circle flex-shrink-0 me-2" viewBox="0 0 16 16" role="img" aria-label="Warning:">
-            <path d="M2.5 8a5.5 5.5 0 0 1 8.25-4.764.5.5 0 0 0 .5-.866A6.5 6.5 0 1 0 14.5 8a.5.5 0 0 0-1 0 5.5 5.5 0 1 1-11 0z"/>
-            <path d="M15.354 3.354a.5.5 0 0 0-.708-.708L8 9.293 5.354 6.646a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0l7-7z"/>
-          </svg>
-          <div>
-            <h5 class="font-weight-bold"> Thông tin địa điểm </h5>
-            <h5 class="font-weight-bold">
-              ${result.text}
-            </h5>
-            <h5>
-              ${result.place_name ? result.place_name : ""}
-            </h5>
-            <div class="d-flex justify-content-end">
-              <button type="button"
-                class="btn btn-danger"
-                data-bs-toggle="modal"
-                data-bs-target="#feedback">
-                Báo cáo vi phạm
-              </button>
-            </div>
-          </div>`;
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-check2-circle flex-shrink-0 me-2" viewBox="0 0 16 16" role="img" aria-label="Warning:">
+                  <path d="M2.5 8a5.5 5.5 0 0 1 8.25-4.764.5.5 0 0 0 .5-.866A6.5 6.5 0 1 0 14.5 8a.5.5 0 0 0-1 0 5.5 5.5 0 1 1-11 0z"/>
+                  <path d="M15.354 3.354a.5.5 0 0 0-.708-.708L8 9.293 5.354 6.646a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0l7-7z"/>
+                </svg>
+                <div>
+                  <h5 class="font-weight-bold"> Thông tin địa điểm </h5>
+                  <h5 class="font-weight-bold">
+                    ${result.text}
+                  </h5>
+                  <h5>
+                    ${result.place_name ? result.place_name : ""}
+                  </h5>
+                  <div class="d-flex justify-content-end">
+                    <button type="button"
+                      class="btn btn-danger"
+                      data-bs-toggle="modal"
+                      data-bs-target="#feedback">
+                      Báo cáo vi phạm
+                    </button>
+                  </div>
+                </div>`;
         elm.className = "alert alert-success d-flex m-4";
         return elm;
       };
 
+      const reportCardFactory = () => {
+        const elem = document.createElement("div");
+        elem.innerHTML = `
+          <div class="card-header text-center fw-bold fs-4 font-weight-bold py-3">Đóng góp ý kiến</div>
+            <div class="card-body">
+              <h5 class="card-text">Báo cáo bởi: Minh Khôi</h5>
+              <h5 class="card-text">Nội dung báo cáo: Trụ pano hiển thị nội dung sai, nội dung chưa phù hợp với vị trí đặt</h5>
+            </div>
+          </div>
+        `;
+        elem.className = "report-card card text-white bg-danger my-3";
+        elem.style = "max-width: 18rem;";
+        return elem;
+      };
+
+      const clearSidebar = () => {
+        while (sidebarItems.length) {
+          sidebarItems.pop().remove();
+        }
+      };
+
       const addToSideBar = (elm) => {
+        sidebarItems.push(elm);
         sidebar.appendChild(elm);
       };
 
@@ -621,9 +644,9 @@
               .setLngLat(coordinates)
               .setHTML(
                 `<h6 class="fw-bold">${e.features[0].properties.method}</h6>
-                <p>${e.features[0].properties.type}</p>
-                <p>${e.features[0].properties.address}</p>
-                <h5 class="fw-bold fst-italic text-uppercase">${e.features[0].properties.status}</h5>`
+                  <p>${e.features[0].properties.type}</p>
+                  <p>${e.features[0].properties.address}</p>
+                  <h5 class="fw-bold fst-italic text-uppercase">${e.features[0].properties.status}</h5>`
               )
               .addTo(map);
           });
@@ -651,12 +674,14 @@
         });
 
         geocoder.on("result", (e) => {
+          clearSidebar();
           const locationCard = locationCardFactory(e.result);
           addToSideBar(locationCard);
         });
 
         map.on("click", ["unclustered-point", "report-point"], (e) => {
           const features = e.features[0];
+          clearSidebar();
           const infoButton = document.querySelector(".info-btn");
           infoButton.addEventListener("click", () => {
             removeOutSideBar(".report-card");
@@ -666,10 +691,8 @@
           const reportButton = document.querySelector(".report-btn");
           reportButton.addEventListener("click", () => {
             removeOutSideBar(".ads-card");
-            const elem = document.createElement("h5");
-            elem.textContent = "Report";
-            elem.className = "report-card";
-            addToSideBar(elem);
+            const reportCard = reportCardFactory();
+            addToSideBar(reportCard);
           });
           const adsCard = AdsCardFactory(features.properties);
           addToSideBar(adsCard);
