@@ -149,6 +149,18 @@
         <div
           class="sidebar-content rounded-rect d-flex flex-column align-items-center"
         >
+          <div class="nav-table row my-3 border-bottom">
+            <div class="col text-center">
+              <button class="info-btn nav-btn">
+                <h6 class="text-muted">Thông tin</h6>
+              </button>
+            </div>
+            <div class="col text-center">
+              <button class="report-btn nav-btn">
+                <h6 class="text-muted">Báo cáo</h6>
+              </button>
+            </div>
+          </div>
           <div
             class="sidebar-toggle rounded-rect left"
             onclick="toggleSidebar()"
@@ -321,7 +333,6 @@
       });
       map.addControl(geocoder);
       const sidebar = document.querySelector(".sidebar-content");
-      const sidebarItems = [];
 
       let currentMarker = null;
       // Fetch locations data
@@ -356,7 +367,7 @@
             </div>
           </div>
         `;
-        elm.className = "card bg-light my-3";
+        elm.className = "ads-card card bg-light my-3";
         elm.style = "max-width: 20rem;";
         return elm;
       };
@@ -389,15 +400,14 @@
         return elm;
       };
 
-      const clearSidebar = () => {
-        while (sidebarItems.length) {
-          sidebarItems.pop().remove();
-        }
+      const addToSideBar = (elm) => {
+        sidebar.appendChild(elm);
       };
 
-      const addToSideBar = (elm) => {
-        sidebarItems.push(elm);
-        sidebar.appendChild(elm);
+      const removeOutSideBar = (className) => {
+        const sidebarContent = document.querySelector(".sidebar-content");
+        const elem = document.querySelector(className);
+        sidebarContent.removeChild(elem);
       };
 
       async function addMarker(x, y) {
@@ -595,11 +605,11 @@
               });
           });
 
-          map.on("click", ["unclustered-point", "report-point"], (e) => {
+          map.on("click", ["unclustered-point"], (e) => {
             e.clickOnLayer = true;
           });
 
-          map.on("mouseenter", ["unclustered-point", "report-point"], (e) => {
+          map.on("mouseenter", ["unclustered-point"], (e) => {
             map.getCanvas().style.cursor = "pointer";
             const coordinates = e.features[0].geometry.coordinates.slice();
 
@@ -641,15 +651,27 @@
         });
 
         geocoder.on("result", (e) => {
-          clearSidebar();
           const locationCard = locationCardFactory(e.result);
           addToSideBar(locationCard);
         });
 
         map.on("click", ["unclustered-point", "report-point"], (e) => {
-          clearSidebar();
           const features = e.features[0];
-          const adsCard = AdsCardFactory(e.features[0].properties);
+          const infoButton = document.querySelector(".info-btn");
+          infoButton.addEventListener("click", () => {
+            removeOutSideBar(".report-card");
+            const adsCard = AdsCardFactory(features.properties);
+            addToSideBar(adsCard);
+          });
+          const reportButton = document.querySelector(".report-btn");
+          reportButton.addEventListener("click", () => {
+            removeOutSideBar(".ads-card");
+            const elem = document.createElement("h5");
+            elem.textContent = "Report";
+            elem.className = "report-card";
+            addToSideBar(elem);
+          });
+          const adsCard = AdsCardFactory(features.properties);
           addToSideBar(adsCard);
           const detailIcon = document.querySelector(".bi-info-circle");
           detailIcon.addEventListener("click", () => {
