@@ -371,7 +371,7 @@
           <div>
             <h5 class="font-weight-bold"> Thông tin địa điểm </h5>
             <h5 class="font-weight-bold">
-              ${result.text}  
+              ${result.text}
             </h5>
             <h5>
               ${result.place_name ? result.place_name : ""}
@@ -420,6 +420,54 @@
           padding: collapsed ? 0 : 300,
           essential: true,
           duration: 1000, // In ms. This matches the CSS transition duration property.
+        });
+      }
+
+      function addReportLayer(map) {
+        map.addLayer({
+          id: "report-point",
+          type: "circle",
+          source: "AdsLocations",
+          filter: ["==", ["get", "status"], "Đã quy hoạch"],
+          paint: {
+            "circle-radius": 15,
+            "circle-opacity": 0,
+            "circle-stroke-width": 2,
+            "circle-stroke-color": "red",
+          },
+        });
+      }
+
+      function addAdsLayer(map) {
+        map.addLayer({
+          id: "unclustered-point",
+          type: "circle",
+          source: "AdsLocations",
+          filter: ["!", ["has", "point_count"]],
+          paint: {
+            "circle-color": "#11b4da",
+            "circle-radius": 15,
+          },
+        });
+      }
+
+      function addTextLayer(map, content) {
+        let filterType = [];
+        if (content == "BC") {
+          filterType = ["==", ["get", "status"], "Đã quy hoạch"];
+        } else {
+          filterType = ["!", ["has", "point_count"]];
+        }
+        map.addLayer({
+          id: "text-point",
+          type: "symbol",
+          source: "AdsLocations",
+          filter: filterType,
+          layout: {
+            "text-field": content,
+            "text-font": ["DIN Offc Pro Medium", "Arial Unicode MS Bold"],
+            "text-size": 12,
+          },
         });
       }
 
@@ -499,41 +547,33 @@
             },
           });
 
-          map.addLayer({
-            id: "unclustered-point",
-            type: "circle",
-            source: "AdsLocations",
-            filter: ["==", ["get", "status"], "Chưa quy hoạch"],
-            paint: {
-              "circle-color": "#11b4da",
-              "circle-radius": 15,
-            },
+          addAdsLayer(map);
+
+          const adsSwitch = document.querySelector("#adsSwitch");
+          adsSwitch.addEventListener("change", () => {
+            if (adsSwitch.checked) {
+              map.removeLayer("text-point");
+              addAdsLayer(map);
+              addTextLayer(map, "QC");
+            } else {
+              map.removeLayer("unclustered-point");
+              map.removeLayer("text-point");
+              addTextLayer(map, "BC");
+            }
           });
 
-          map.addLayer({
-            id: "report-point",
-            type: "circle",
-            source: "AdsLocations",
-            filter: ["==", ["get", "status"], "Đã quy hoạch"],
-            paint: {
-              "circle-color": "#11b4da",
-              "circle-radius": 15,
-              "circle-stroke-width": 2,
-              "circle-stroke-color": "red",
-            },
+          addReportLayer(map);
+
+          const reportSwitch = document.querySelector("#reportSwitch");
+          reportSwitch.addEventListener("change", () => {
+            if (reportSwitch.checked) {
+              addReportLayer(map);
+            } else {
+              map.removeLayer("report-point");
+            }
           });
 
-          map.addLayer({
-            id: "cluster-ads",
-            type: "symbol",
-            source: "AdsLocations",
-            filter: ["!", ["has", "point_count"]],
-            layout: {
-              "text-field": "QC",
-              "text-font": ["DIN Offc Pro Medium", "Arial Unicode MS Bold"],
-              "text-size": 12,
-            },
-          });
+          addTextLayer(map, "QC");
 
           map.on("click", "clusters", (e) => {
             e.clickOnLayer = true;
