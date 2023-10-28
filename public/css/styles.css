@@ -48,3 +48,25 @@ input[type="file"]::file-selector-button {
 .bi-info-circle {
   cursor: pointer;
 }
+
+.mapboxgl-popup-content {
+  text-align: left !important;
+}
+
+.switch-table {
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  position: fixed;
+  bottom: 20px;
+  right: 10px;
+  background-color: #fff;
+  padding: 8px 16px 0 16px;
+  border-radius: 10px;
+}
+
+.form-check-label {
+  font-size: 16px;
+}

@@ -169,6 +169,30 @@
           </div>
         </div>
       </div>
+      <div class="switch-table">
+        <div class="form-check form-switch">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            role="switch"
+            id="adsSwitch"
+            checked
+          />
+          <label class="form-check-label" for="adsSwitch">Bảng quảng cáo</label>
+        </div>
+        <div class="form-check form-switch">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            role="switch"
+            id="reportSwitch"
+            checked
+          />
+          <label class="form-check-label" for="reportSwitch"
+            >Báo cáo vi phạm</label
+          >
+        </div>
+      </div>
     </div>
 
     <!-- Modal section -->
@@ -479,12 +503,23 @@
             id: "unclustered-point",
             type: "circle",
             source: "AdsLocations",
-            filter: ["!", ["has", "point_count"]],
+            filter: ["==", ["get", "status"], "Chưa quy hoạch"],
             paint: {
               "circle-color": "#11b4da",
               "circle-radius": 15,
-              "circle-stroke-width": 1,
-              "circle-stroke-color": "#fff",
+            },
+          });
+
+          map.addLayer({
+            id: "report-point",
+            type: "circle",
+            source: "AdsLocations",
+            filter: ["==", ["get", "status"], "Đã quy hoạch"],
+            paint: {
+              "circle-color": "#11b4da",
+              "circle-radius": 15,
+              "circle-stroke-width": 2,
+              "circle-stroke-color": "red",
             },
           });
 
@@ -520,11 +555,11 @@
               });
           });
 
-          map.on("click", "unclustered-point", (e) => {
+          map.on("click", ["unclustered-point", "report-point"], (e) => {
             e.clickOnLayer = true;
           });
 
-          map.on("mouseenter", "unclustered-point", (e) => {
+          map.on("mouseenter", ["unclustered-point", "report-point"], (e) => {
             map.getCanvas().style.cursor = "pointer";
             const coordinates = e.features[0].geometry.coordinates.slice();
 
@@ -535,15 +570,15 @@
             popup
               .setLngLat(coordinates)
               .setHTML(
-                `<h2>${e.features[0].properties.method}</h2>
+                `<h6 class="fw-bold">${e.features[0].properties.method}</h6>
                 <p>${e.features[0].properties.type}</p>
                 <p>${e.features[0].properties.address}</p>
-                <h2>${e.features[0].properties.status}</h2>`
+                <h5 class="fw-bold fst-italic text-uppercase">${e.features[0].properties.status}</h5>`
               )
               .addTo(map);
           });
 
-          map.on("mouseleave", "unclustered-point", () => {
+          map.on("mouseleave", ["unclustered-point", "report-point"], () => {
             map.getCanvas().style.cursor = "";
             popup.remove();
           });
@@ -571,19 +606,16 @@
           addToSideBar(locationCard);
         });
 
-        map.on("click", "unclustered-point", (e) => {
+        map.on("click", ["unclustered-point", "report-point"], (e) => {
           clearSidebar();
+          const features = e.features[0];
           const adsCard = AdsCardFactory(e.features[0].properties);
           addToSideBar(adsCard);
+          const detailIcon = document.querySelector(".bi-info-circle");
+          detailIcon.addEventListener("click", () => {
+            console.log(features);
+          });
         });
-
-        // Add the control to the map and search bar.
-        // map.addControl(
-        //   new MapboxGeocoder({
-        //     accessToken: mapboxgl.accessToken,
-        //     mapboxgl: mapboxgl,
-        //   })
-        // );
 
         // Add geolocate control to the map.
         map.addControl(
@@ -597,6 +629,9 @@
             showUserHeading: true,
           })
         );
+
+        // Add zoom and rotation controls to the map.
+        map.addControl(new mapboxgl.NavigationControl());
       }
 
       initMap();
