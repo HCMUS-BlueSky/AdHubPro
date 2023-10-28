@@ -12,17 +12,16 @@
       rel="stylesheet"
     />
     <!-- Bootstrap -->
-    <link
+    <!-- <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
       rel="stylesheet"
       integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
       crossorigin="anonymous"
+    /> -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
     />
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
-      crossorigin="anonymous"
-    ></script>
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"
@@ -302,6 +301,30 @@
       </div>
     </div>
 
+    <div
+      class="modal fade"
+      id="ads-detail"
+      data-bs-backdrop="static"
+      aria-hidden="true"
+      aria-labelledby="asdDetailLabel"
+      tabindex="-1"
+    >
+      <div class="modal-dialog modal-md">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3 class="">THÔNG TIN CHI TIẾT</h3>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body modal-info-detail"></div>
+        </div>
+      </div>
+    </div>
+
     <script>
       mapboxgl.accessToken =
         "pk.eyJ1Ijoibm1raG9pMjEiLCJhIjoiY2xvMno5ZzhyMGQzdTJ2bGVkbTc4bGZ5dSJ9.9ljGVzjte5iqJXpbOiAN1Q";
@@ -355,7 +378,7 @@
                   <h5 class="card-text">Phân loại: ${position.type}</h5>
                   <div class="d-flex">
                     <div class="me-auto p-2 d-flex align-items-center">
-                      <i class="bi bi-info-circle" style="font-size:24px;"></i>
+                        <i data-bs-toggle="modal" data-bs-target="#ads-detail" class="bi bi-info-circle"></i>
                     </div>
                     <div class="p-2">
                       <button type="button"
@@ -413,6 +436,47 @@
         `;
         elem.className = "report-card card text-white bg-danger my-3";
         elem.style = "max-width: 18rem;";
+        return elem;
+      };
+
+      const detailCardFactory = () => {
+        const elem = document.createElement("div");
+        elem.innerHTML = `
+          <!-- Carousel -->
+          <div id="demo" class="carousel slide" data-bs-ride="carousel">
+
+            <!-- Indicators/dots -->
+            <div class="carousel-indicators">
+              <button type="button" data-bs-target="#demo" data-bs-slide-to="0" class="active"></button>
+              <button type="button" data-bs-target="#demo" data-bs-slide-to="1"></button>
+              <button type="button" data-bs-target="#demo" data-bs-slide-to="2"></button>
+            </div>
+            
+            <!-- The slideshow/carousel -->
+            <div class="carousel-inner">
+              <div class="carousel-item active">
+                <img src="images/ads1.jpg" alt="ads-1" class="d-block" style="width:100%;">
+              </div>
+              <div class="carousel-item">
+                <img src="images/ads2.jpg" alt="ads-2" class="d-block" style="width:100%">
+              </div>
+              <div class="carousel-item">
+                <img src="images/ads3.jpg" alt="ads-3" class="d-block" style="width:100%">
+              </div>
+            </div>
+            
+            <!-- Left and right controls/icons -->
+            <button class="carousel-control-prev" type="button" data-bs-target="#demo" data-bs-slide="prev">
+              <span class="carousel-control-prev-icon"></span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#demo" data-bs-slide="next">
+              <span class="carousel-control-next-icon"></span>
+            </button>
+          </div>
+          <div class="container-fluid mt-3">
+            <p class="text-center">Ngày hết hạn hợp đồng: 28/10/2023</p>
+          </div>
+        `;
         return elem;
       };
 
@@ -699,6 +763,10 @@
           const detailIcon = document.querySelector(".bi-info-circle");
           detailIcon.addEventListener("click", () => {
             console.log(features);
+            const infoDetailModal =
+              document.querySelector(".modal-info-detail");
+            const infoDetailCard = detailCardFactory();
+            infoDetailModal.appendChild(infoDetailCard);
           });
         });
 
@@ -721,5 +789,11 @@
 
       initMap();
     </script>
+    <!-- <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+      crossorigin="anonymous"
+    ></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   </body>
 </html>
