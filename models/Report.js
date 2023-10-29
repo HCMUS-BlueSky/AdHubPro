@@ -15,6 +15,9 @@ const reportSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Ads'
     },
+    content: {
+      type: String
+    },
     reporter: {
       name: {
         type: String,
