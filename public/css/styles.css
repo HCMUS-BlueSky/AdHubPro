@@ -78,15 +78,12 @@ input[type="file"]::file-selector-button {
 
 .nav-link:hover{
   background-color:#525252 !important;
-  color: #f78af1 !important;
+  color: white !important;
+
 }
 
 .nav-link .fa{
   transition:all 1s;
-}
-
-.nav-link:hover .fa{
-  transform:rotate(360deg);
 }
 /* This is Kiet's part */
 
