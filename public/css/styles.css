@@ -77,13 +77,28 @@ input[type="file"]::file-selector-button {
 }
 
 .nav-link:hover{
-  background-color:#525252 !important;
-  color: white !important;
-
+  color: white;
 }
 
-.nav-link .fa{
-  transition:all 1s;
+li, a {
+  width: 100%;
+  margin-bottom: 2px;
+}
+
+li a i{
+  margin-left: 5px;
+}
+
+li a:hover {
+  background-color:rgb(54, 52, 52);
+}
+
+li a:active {
+  color: #000000;
+}
+
+col-lg-7 {
+  vertical-align: top;
 }
 /* This is Kiet's part */
 
