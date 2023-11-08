@@ -1,5 +1,10 @@
 body {
-  font-family: 'Montserrat';
+  font-family: 'Be Vietnam Pro', sans-serif;
+}
+
+a {
+  text-decoration: none;
+  color: black;
 }
 
 .current-nav-item {
