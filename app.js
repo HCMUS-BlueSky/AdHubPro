@@ -15,8 +15,8 @@ app.use(express.urlencoded({ extended: false }));
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
 
-app.use(express.static(__dirname + '/public'));
-app.use('/', homeRouter);
+app.use(express.static(__dirname + '/static'));
+// app.use('/', homeRouter);
 app.use('/api', apiRouter);
 app.use('/officer', officerRouter);
 

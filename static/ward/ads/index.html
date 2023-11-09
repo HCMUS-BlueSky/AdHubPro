@@ -12,13 +12,10 @@
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"
     />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="/css/global.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700&family=Rubik&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/global.css">
   </head>
   <body>
     <div class="container-fluid bg-light">
@@ -28,8 +25,8 @@
           <div
             class="d-flex flex-column align-items-center pt-2 min-vh-100 pt-5"
           >
-            <a href="/html" class="pb-5 mb-md-0">
-              <img src="/images/AdHubPro.png" alt="" />
+            <a href="../../index.html" class="pb-5 mb-md-0">
+              <img src="../../images/AdHubPro.png" alt="" />
             </a>
             <ul
               class="nav nav-pills flex-column gap-2 mb-sm-auto mb-0 w-100"
@@ -57,7 +54,7 @@
                   >
                 </a>
               </li>
-              <li class="nav-item w-100 p-2 rounded">
+              <li class="nav-item w-100 p-2 rounded current-nav-item">
                 <a
                   href="../ads"
                   class="d-flex flex-row gap-1 align-items-center text-decoration-none text-light"
@@ -68,7 +65,7 @@
                   ></a
                 >
               </li>
-              <li class="nav-item w-100 p-2 rounded current-nav-item">
+              <li class="nav-item w-100 p-2 rounded">
                 <a
                   href="../report"
                   class="d-flex flex-row gap-1 align-items-center text-decoration-none text-light"
@@ -107,7 +104,9 @@
           <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
               <li class="breadcrumb-item">
-                <a href=".." class="text-decoration-none text-muted">Báo cáo</a>
+                <a href=".." class="text-decoration-none text-muted"
+                  >Bảng quảng cáo</a
+                >
               </li>
               <li
                 class="breadcrumb-item active text-dark fw-semibold"
@@ -118,7 +117,7 @@
             </ol>
           </nav>
           <hr />
-          <h2 class="fw-semibold">THÔNG TIN CÁC BÁO CÁO</h2>
+          <h2 class="fw-semibold">THÔNG TIN CÁC BẢNG QUẢNG CÁO</h2>
           <div class="row justify-content-center">
             <div class="col-3">
               <input
@@ -137,64 +136,81 @@
           <table class="table border border-2 rounded py-3 mt-3">
             <thead>
               <tr>
-                <th scope="col">THỜI GIAN</th>
-                <th scope="col">ĐỊA CHỈ</th>
-                <th scope="col">LOẠI</th>
-                <th scope="col">NGƯỜI GỬI</th>
-                <th scope="col">TRẠNG THÁI</th>
+                <th scope="col">STT</th>
+                <th scope="col">Địa chỉ</th>
+                <th scope="col">Hình thức</th>
+                <th scope="col">Ngày bắt đầu</th>
+                <th scope="col">Ngày hết hạn</th>
+                <th scope="col"></th>
                 <th scope="col"></th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <th scope="row">01/01/2000</th>
+                <th scope="row">1</th>
                 <td class="">227 Nguyễn Văn Cừ, Phường 4, Quận 5</td>
-                <td class="">Bảng quảng cáo</td>
-                <td class="">Nguyễn Văn A - 0123456789</td>
-                <td class="">
-                  <span class="badge bg-danger">Đang xử lý</span>
-                </td>
+                <td class="">Cổ động chính trị</td>
+                <td class="">01/01/2999</td>
+                <td class="">01/01/2999</td>
                 <td class="">
                   <a href="./detail.html">
                     <i class="bi bi-eye-fill"></i>
                   </a>
                 </td>
+                <td class="">
+                  <a href="./update_info.html">
+                    <i class="bi bi-pencil-square"></i>
+                  </a>
+                </td>
               </tr>
               <tr>
-                <th scope="row">01/01/2000</th>
+                <th scope="row">2</th>
                 <td class="">227 Nguyễn Văn Cừ, Phường 4, Quận 5</td>
-                <td class="">Bảng quảng cáo</td>
-                <td class="">Nguyễn Văn A - 0123456789</td>
-                <td class="">
-                  <span class="badge bg-danger">Đang xử lý</span>
-                </td>
+                <td class="">Cổ động chính trị</td>
+                <td class="">01/01/2999</td>
+                <td class="">01/01/2999</td>
                 <td class="">
                   <a href="./detail.html">
                     <i class="bi bi-eye-fill"></i>
                   </a>
                 </td>
+                <td class="">
+                  <a href="./update_info.html">
+                    <i class="bi bi-pencil-square"></i>
+                  </a>
+                </td>
               </tr>
               <tr>
-                <th scope="row">01/01/2000</th>
+                <th scope="row">3</th>
                 <td class="">227 Nguyễn Văn Cừ, Phường 4, Quận 5</td>
-                <td class="">Bảng quảng cáo</td>
-                <td class="">Nguyễn Văn A - 0123456789</td>
-                <td class=""><span class="badge bg-success">Đã xử lý</span></td>
+                <td class="">Cổ động chính trị</td>
+                <td class="">01/01/2999</td>
+                <td class="">01/01/2999</td>
                 <td class="">
                   <a href="./detail.html">
                     <i class="bi bi-eye-fill"></i>
                   </a>
                 </td>
+                <td class="">
+                  <a href="./update_info.html">
+                    <i class="bi bi-pencil-square"></i>
+                  </a>
+                </td>
               </tr>
               <tr>
-                <th scope="row">01/01/2000</th>
+                <th scope="row">4</th>
                 <td class="">227 Nguyễn Văn Cừ, Phường 4, Quận 5</td>
-                <td class="">Bảng quảng cáo</td>
-                <td class="">Nguyễn Văn A - 0123456789</td>
-                <td class=""><span class="badge bg-success">Đã xử lý</span></td>
+                <td class="">Cổ động chính trị</td>
+                <td class="">01/01/2999</td>
+                <td class="">01/01/2999</td>
                 <td class="">
                   <a href="./detail.html">
                     <i class="bi bi-eye-fill"></i>
+                  </a>
+                </td>
+                <td class="">
+                  <a href="./update_info.html">
+                    <i class="bi bi-pencil-square"></i>
                   </a>
                 </td>
               </tr>
