@@ -115,9 +115,9 @@
                 </div>
               </div>
 
-              <div class="d-flex px-3 mb-2 gap-4"> 
+              <div class="d-flex px-3 mb-3 gap-5"> 
                 <div class="">
-                  <label for="" class="form-label">Loại vị trí<span class="text-danger"> *</span></label>
+                  <label for="" class="form-label">Hình thức quảng cáo<span class="text-danger"> *</span></label>
                   <select class="form-select text-secondary w-auto" name="" id="method_select">
                     <option selected>Vui lòng chọn</option>
                     <option value="">Cổ động chính trị</option>
@@ -126,7 +126,7 @@
                   </select>
                 </div>
                 <div class="">
-                  <label for="" class="form-label">Hình thức quảng cáo<span class="text-danger"> *</span></label>
+                  <label for="" class="form-label">Loại vị trí<span class="text-danger"> *</span></label>
                   <select class="form-select text-secondary w-auto" name="" id="method_select">
                     <option selected>Vui lòng chọn</option>
                     <option value="">Đất công</option>
@@ -136,11 +136,39 @@
                   </select>
                 </div>
               </div>
-                
-                <div class="d-flex flex-row justify-content-center align-items-center gap-4 pt-5">
-                  <a name="" id="" class="btn btn-secondary px-4" href="." role="button">Trở về danh sách</a>
-                  <a name="" id="" class="btn btn-primary px-4" href="#" role="button">Cập nhật thông tin</a>
+              
+              <div class="d-flex px-3 gap-5">
+                <div>
+                  <label for="" class="form-label">Trạng thái quy hoạch<span class="text-danger"> *</span></label>
+                  <div class="form-check pb-1">
+                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
+                    <label class="form-check-label text-secondary" for="flexRadioDefault1">
+                      Chưa quy hoạch
+                    </label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" checked>
+                    <label class="form-check-label text-secondary" for="flexRadioDefault2">
+                      Đã quy hoạch
+                    </label>
+                  </div>
                 </div>
+                <div>
+                  <label for="" class="form-label">Số lượng điểm đặt quảng cáo<span class="text-danger"> *</span></label>
+                  <input type="text"
+                    class="form-control w-auto" required id="" aria-describedby="helpId" placeholder="1">
+                </div>
+              </div>
+              <div class="px-3 gap-5">
+                <label for="file_inp" class="form-label pt-3">Hình ảnh thực tế<span class="text-danger"> *</span></label>
+                <div class="input-group input-daterange">
+                    <input type="file" class="form-control text-secondary" id="file_inp" placeholder="Chưa có file được chọn" aria-describedby="fileHelpId" multiple>
+                </div>
+              </div>
+              <div class="d-flex flex-row justify-content-center align-items-center gap-4 pt-5">
+                <a name="" id="" class="btn btn-secondary px-4" href="." role="button">Trở về danh sách</a>
+                <a name="" id="" class="btn btn-primary px-4" href="#" role="button">Cập nhật thông tin</a>
+              </div>
               </div>
             </div>
           </div>

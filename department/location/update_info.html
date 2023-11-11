@@ -33,13 +33,7 @@
               class="nav nav-pills flex-column gap-2 mb-sm-auto mb-0 w-100"
               id="menu"
             >
-              <li class="nav-item w-100 p-2 rounded">
-                <a href=".." class="d-flex flex-row gap-1 align-items-center text-decoration-none text-light">
-                  <i class="fs-4 bi-house"></i>
-                  <span class="ms-1 d-none d-sm-inline fw-semibold">Trang chủ</span>
-                </a>
-              </li>
-              <li class="nav-item w-100 p-2 rounded">
+              <li class="nav-item w-100 p-2 rounded current-nav-item">
                 <a
                   href="../location"
                   class="d-flex flex-row gap-1 align-items-center text-decoration-none text-light"
@@ -50,28 +44,28 @@
                   >
                 </a >
               </li>
-              <li class="nav-item w-100 p-2 rounded current-nav-item">
-                <a href="../ads" class="d-flex flex-row gap-1 align-items-center text-decoration-none text-light">
-                  <i class="fs-4 bi-badge-ad"></i>
-                  <span class="ms-1 d-none d-sm-inline fw-semibold">Bảng quảng cáo</span></a
+              <li class="nav-item w-100 p-2 rounded">
+                <a href="../request" class="d-flex flex-row gap-1 align-items-center text-decoration-none text-light">
+                  <i class="fs-4 bi bi-envelope"></i>
+                  <span class="ms-1 d-none d-sm-inline fw-semibold">Yêu cầu cấp phép</span></a
                 >
               </li>
               <li class="nav-item w-100 p-2 rounded">
                 <a
-                  href="../report"
+                  href="../statistic"
                   class="d-flex flex-row gap-1 align-items-center text-decoration-none text-light"
                 >
-                  <i class="fs-4 bi-exclamation-octagon"></i>
-                  <span class="ms-1 d-none d-sm-inline fw-semibold">Báo cáo</span></a
+                  <i class="fs-4 bi bi-bar-chart"></i>
+                  <span class="ms-1 d-none d-sm-inline fw-semibold">Thống kê</span></a
                 >
               </li>
               <li class="nav-item w-100 p-2 rounded">
                 <a
-                  href="../request"
+                  href="../account"
                   class="d-flex flex-row gap-1 align-items-center text-decoration-none text-light"
                 >
-                  <i class="fs-4 bi-envelope"></i>
-                  <span class="ms-1 d-none d-sm-inline fw-semibold">Yêu cầu cấp phép</span>
+                  <i class="fs-4 bi bi-people"></i>
+                  <span class="ms-1 d-none d-sm-inline fw-semibold">Quản lí tài khoản</span>
                 </a>
               </li>
             </ul>
@@ -92,7 +86,7 @@
             <ol class="breadcrumb">
               <li class="breadcrumb-item">
                 <a href=".." class="text-decoration-none text-muted"
-                  >Bảng quảng cáo</a
+                  >Điểm đặt quảng cáo</a
                 >
               </li>
               <li class="breadcrumb-item active text-dark fw-semibold" aria-current="page">
@@ -101,12 +95,12 @@
             </ol>
           </nav>
           <hr />
-          <div class="card bg-light mb-3">
-            <div class="card-body p-4">
-              <h4 class="card-title py-2 fw-semibold">Cập nhật thông tin</h4>
-              <div class="d-flex flex-column pb-4 px-3">
+          <div class="card bg-light mb-1">
+            <div class="card-body p-3">
+              <h4 class="card-title py-3 fw-semibold">Cập nhật thông tin</h4>
+              <div class="d-flex flex-column px-3 mb-3">
                 <label for="" class="form-label">Địa điểm<span class="text-danger"> *</span></label>
-                <div class="d-flex flex-row gap-3 align-items-start text-secondary w-75"> 
+                <div class="d-flex flex-row gap-4 align-items-start text-secondary w-100"> 
                   <input type="text"
                     class="form-control w-auto flex-grow-1" required id="" aria-describedby="helpId" placeholder="Địa chỉ">
                   <input type="text"
@@ -114,36 +108,68 @@
                   <input type="text"
                     class="form-control w-auto" required id="" aria-describedby="helpId" placeholder="Quận">
                 </div>
-                <label for="method_select" class="form-label pt-3">Hình thức quảng cáo<span class="text-danger"> *</span></label>
-                <div>
-                  <select class="form-select text-secondary w-50" name="" id="method_select">
+              </div>
+
+              <div class="d-flex px-3 mb-3 gap-5"> 
+                <div class="">
+                  <label for="" class="form-label">Loại vị trí<span class="text-danger"> *</span></label>
+                  <select class="form-select text-secondary w-auto" name="" id="method_select">
+                    <option selected>Vui lòng chọn</option>
+                    <option value="">Đất công</option>
+                    <option value="">Công viên</option>
+                    <option value="">Hành lang an toàn giao thông, Đất tư nhân</option>
+                    <option value="">Nhà ở riêng lẻ, Trung tâm thương mại, Chợ, Cây xăng, Nhà chờ xe buýt</option>
+                  </select>
+                </div>
+                <div class="">
+                  <label for="" class="form-label">Hình thức quảng cáo<span class="text-danger"> *</span></label>
+                  <select class="form-select text-secondary w-auto" name="" id="method_select">
                     <option selected>Vui lòng chọn</option>
                     <option value="">Cổ động chính trị</option>
                     <option value="">Quảng cáo thương mại</option>
                     <option value="">Xã hội hoá</option>
                   </select>
                 </div>
-                <label for="method_select" class="form-label pt-3">Thời hạn hợp đồng<span class="text-danger"> *</span></label>
-                <div class="input-group input-daterange w-50">
-                    <input type="date" class="form-control text-secondary">
-                    <div class="input-group-text">to</div>
-                    <input type="date" class="form-control text-secondary">
+              </div>
+              
+              <div class="d-flex px-3 gap-5">
+                <div>
+                  <label for="" class="form-label">Hình thức quảng cáo<span class="text-danger"> *</span></label>
+                  <div class="form-check pb-1">
+                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
+                    <label class="form-check-label text-secondary" for="flexRadioDefault1">
+                      Chưa quy hoạch
+                    </label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" checked>
+                    <label class="form-check-label text-secondary" for="flexRadioDefault2">
+                      Đã quy hoạch
+                    </label>
+                  </div>
                 </div>
+                <div>
+                  <label for="" class="form-label">Số lượng điểm đặt quảng cáo<span class="text-danger"> *</span></label>
+                  <input type="text"
+                    class="form-control w-auto" required id="" aria-describedby="helpId" placeholder="1">
+                </div>
+              </div>
+              <div class="px-3 gap-5">
                 <label for="file_inp" class="form-label pt-3">Hình ảnh thực tế<span class="text-danger"> *</span></label>
                 <div class="input-group input-daterange">
                     <input type="file" class="form-control text-secondary" id="file_inp" placeholder="Chưa có file được chọn" aria-describedby="fileHelpId" multiple>
                 </div>
-                <div class="d-flex flex-row justify-content-center align-items-center gap-4 pt-5">
-                  <a name="" id="" class="btn btn-secondary px-4" href="." role="button">Trở về danh sách</a>
-                  <button type="button" name="" id="" class="btn btn-primary px-4" data-bs-toggle="modal" data-bs-target="#updateAds">Cập nhật thông tin</button>
-                </div>
+              </div>
+              <div class="d-flex flex-row justify-content-center align-items-center gap-4 pt-5">
+                <a name="" id="" class="btn btn-secondary px-4" href="." role="button">Trở về danh sách</a>
+                <button type="button" name="" id="" class="btn btn-primary px-4" data-bs-toggle="modal" data-bs-target="#updateLocation">Cập nhật thông tin</button>
               </div>
             </div>
           </div>
         </div>
 
         <!-- Modal -->
-        <div class="modal fade" id="updateAds" aria-hidden="true" aria-labelledby="updateAds" tabindex="-1">
+        <div class="modal fade" id="updateLocation" aria-hidden="true" aria-labelledby="updateLocation" tabindex="-1">
           <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
               <div class="modal-content">
