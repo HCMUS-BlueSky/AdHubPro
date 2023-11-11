@@ -16,6 +16,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700&family=Rubik&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../../css/global.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
   </head>
   <body>
     <div class="container-fluid bg-light">
@@ -134,14 +135,34 @@
                 </div>
                 <div class="d-flex flex-row justify-content-center align-items-center gap-4 pt-5">
                   <a name="" id="" class="btn btn-secondary px-4" href="." role="button">Trở về danh sách</a>
-                  <a name="" id="" class="btn btn-primary px-4" href="#" role="button">Cập nhật thông tin</a>
+                  <button type="button" name="" id="" class="btn btn-primary px-4" data-bs-toggle="modal" data-bs-target="#updateAds">Cập nhật thông tin</button>
                 </div>
-              
               </div>
-
             </div>
           </div>
         </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="updateAds" aria-hidden="true" aria-labelledby="updateAds" tabindex="-1">
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">Xác nhận</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <p>Bạn có chắc chắn muốn cập nhật những thay đổi này?</p>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                  <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Có</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
   </body>
