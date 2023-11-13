@@ -33,8 +33,8 @@
           <div
             class="d-flex flex-column align-items-center pt-2 min-vh-100 pt-5"
           >
-            <a href="../../index.html" class="pb-5 mb-md-0">
-              <img src="../../images/AdHubPro.png" alt="" />
+            <a href="/html" class="pb-5 mb-md-0">
+              <img src="/images/AdHubPro.png" alt="" />
             </a>
             <ul
               class="nav nav-pills flex-column gap-2 mb-sm-auto mb-0 w-100"
@@ -53,7 +53,7 @@
               </li>
               <li class="nav-item w-100 p-2 rounded">
                 <a
-                  href="../request"
+                  href="../ads"
                   class="d-flex flex-row gap-1 align-items-center text-decoration-none text-light"
                 >
                   <i class="fs-4 bi bi-envelope"></i>
@@ -64,7 +64,7 @@
               </li>
               <li class="nav-item w-100 p-2 rounded">
                 <a
-                  href="../statistic"
+                  href="../report"
                   class="d-flex flex-row gap-1 align-items-center text-decoration-none text-light"
                 >
                   <i class="fs-4 bi bi-bar-chart"></i>
@@ -109,139 +109,122 @@
                 class="breadcrumb-item active text-dark fw-semibold"
                 aria-current="page"
               >
-                Thông tin chung
+                Cập nhật tài khoản
               </li>
             </ol>
           </nav>
           <hr />
-          <h2 class="fw-semibold">QUẢN LÍ TÀI KHOẢN CÁN BỘ PHƯỜNG, QUẬN</h2>
-          <div class="row justify-content-center">
-            <div class="col-3">
-              <input
-                class="form-control mr-sm-2"
-                type="search"
-                placeholder="Tìm kiếm"
-                aria-label="Search"
-              />
-            </div>
-            <div class="col-3">
-              <select class="form-select" aria-label="Default select example">
-                <option selected>Sắp xếp</option>
-              </select>
-            </div>
-            <div class="col-3">
-              <a href="./create.html">
-                <button class="btn btn-primary px-4" type="button">
-                  Thêm tài khoản
-                </button>
-              </a>
+          <div class="card bg-light mb-3">
+            <div class="card-body p-4">
+              <h4 class="card-title py-2 fw-semibold">Cập nhật tài khoản</h4>
+              <div class="d-flex flex-column pb-4">
+                <div class="row py-3">
+                  <div class="col-5">
+                    <label for="" class="form-label"
+                      >Họ tên<span class="text-danger"> *</span></label
+                    >
+                    <input
+                      type="text"
+                      class="form-control"
+                      placeholder="Họ tên"
+                    />
+                  </div>
+                  <div class="col-3">
+                    <label for="" class="form-label"
+                      >Ngày sinh<span class="text-danger"> *</span></label
+                    >
+                    <input type="date" class="form-control text-secondary" />
+                  </div>
+                  <div class="col-3">
+                    <label for="" class="form-label d-block"
+                      >Giới tính<span class="text-danger"> *</span></label
+                    >
+                    <div class="form-check form-check-inline">
+                      <input
+                        class="form-check-input"
+                        type="radio"
+                        name="inlineRadioOptions"
+                        id="inlineRadio1"
+                        value="option1"
+                      />
+                      <label class="form-check-label" for="inlineRadio1"
+                        >Nam</label
+                      >
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input
+                        class="form-check-input"
+                        type="radio"
+                        name="inlineRadioOptions"
+                        id="inlineRadio2"
+                        value="option2"
+                      />
+                      <label class="form-check-label" for="inlineRadio2"
+                        >Nữ</label
+                      >
+                    </div>
+                  </div>
+                </div>
+                <div class="row py-3">
+                  <div class="col-5">
+                    <label for="" class="form-label"
+                      >Email<span class="text-danger"> *</span></label
+                    >
+                    <input
+                      type="email"
+                      class="form-control"
+                      required
+                      id=""
+                      aria-describedby="helpId"
+                      placeholder="Email"
+                    />
+                  </div>
+                  <div class="col-5">
+                    <label for="" class="form-label"
+                      >Password<span class="text-danger"> *</span></label
+                    >
+                    <input
+                      type="password"
+                      class="form-control"
+                      required
+                      id=""
+                      aria-describedby="helpId"
+                      placeholder="Password"
+                    />
+                  </div>
+                </div>
+
+                <div
+                  class="d-flex flex-row justify-content-center align-items-center gap-4 pt-5"
+                >
+                  <a
+                    name=""
+                    id=""
+                    class="btn btn-secondary px-4"
+                    href="."
+                    role="button"
+                    >Trở về</a
+                  >
+                  <a
+                    name=""
+                    id=""
+                    class="btn btn-primary px-4"
+                    role="button"
+                    data-bs-toggle="modal"
+                    data-bs-target="#updateAccount"
+                    >Cập nhật</a
+                  >
+                </div>
+              </div>
             </div>
           </div>
-          <table class="table border border-2 rounded py-3 mt-3">
-            <thead>
-              <tr>
-                <th scope="col">STT</th>
-                <th scope="col">EMAIL</th>
-                <th scope="col">HỌ TÊN</th>
-                <th scope="col">CHỨC VỤ</th>
-                <th scope="col">SĐT</th>
-                <th scope="col"></th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <th scope="row">1</th>
-                <td class="">abc@gmail.com</td>
-                <td class="">Nguyễn Văn A</td>
-                <td class="">Cán bộ Phường</td>
-                <td class="">09 043 422 69</td>
-                <td class="d-flex gap-4 fs-5">
-                  <a href="./detail.html">
-                    <i class="bi bi-eye-fill"></i>
-                  </a>
-                  <a href="./update.html">
-                    <i class="bi bi-pencil-square"></i>
-                  </a>
-                  <i
-                    role="button"
-                    class="bi bi-x-circle-fill bi-cursor"
-                    data-bs-toggle="modal"
-                    data-bs-target="#removeAccount"
-                  ></i>
-                </td>
-              </tr>
-              <tr>
-                <th scope="row">2</th>
-                <td class="">abc@gmail.com</td>
-                <td class="">Nguyễn Văn A</td>
-                <td class="">Cán bộ Phường</td>
-                <td class="">09 043 422 69</td>
-                <td class="d-flex gap-4 fs-5">
-                  <a href="./detail.html">
-                    <i class="bi bi-eye-fill"></i>
-                  </a>
-                  <a href="./update.html">
-                    <i class="bi bi-pencil-square"></i>
-                  </a>
-                  <i
-                    role="button"
-                    class="bi bi-x-circle-fill bi-cursor"
-                    data-bs-toggle="modal"
-                    data-bs-target="#removeAccount"
-                  ></i>
-                </td>
-              </tr>
-              <tr>
-                <th scope="row">3</th>
-                <td class="">abc@gmail.com</td>
-                <td class="">Nguyễn Văn A</td>
-                <td class="">Cán bộ Phường</td>
-                <td class="">09 043 422 69</td>
-                <td class="d-flex gap-4 fs-5">
-                  <a href="./detail.html">
-                    <i class="bi bi-eye-fill"></i>
-                  </a>
-                  <a href="./detail.html">
-                    <i class="bi bi-pencil-square"></i>
-                  </a>
-                  <i
-                    role="button"
-                    class="bi bi-x-circle-fill bi-cursor"
-                    data-bs-toggle="modal"
-                    data-bs-target="#removeAccount"
-                  ></i>
-                </td>
-              </tr>
-              <tr>
-                <th scope="row">4</th>
-                <td class="">abc@gmail.com</td>
-                <td class="">Nguyễn Văn A</td>
-                <td class="">Cán bộ Phường</td>
-                <td class="">09 043 422 69</td>
-                <td class="d-flex gap-4 fs-5">
-                  <a href="./detail.html">
-                    <i class="bi bi-eye-fill"></i>
-                  </a>
-                  <a href="./detail.html">
-                    <i class="bi bi-pencil-square"></i>
-                  </a>
-                  <i
-                    role="button"
-                    class="bi bi-x-circle-fill bi-cursor"
-                    data-bs-toggle="modal"
-                    data-bs-target="#removeAccount"
-                  ></i>
-                </td>
-              </tr>
-            </tbody>
-          </table>
         </div>
-        <!-- Remove Account Modal -->
+        <!-- Update Account Modal -->
         <div
           class="modal fade"
-          id="removeAccount"
+          id="updateAccount"
           aria-hidden="true"
-          aria-labelledby="removeAccount"
+          aria-labelledby="updateAccount"
           tabindex="-1"
         >
           <div class="modal-dialog modal-dialog-centered">
@@ -257,7 +240,7 @@
                   ></button>
                 </div>
                 <div class="modal-body">
-                  <p>Bạn có chắc chắn muốn xóa người dùng này?</p>
+                  <p>Bạn có chắc chắn muốn cập nhật những thay đổi này?</p>
                 </div>
                 <div class="modal-footer">
                   <button
@@ -269,10 +252,10 @@
                   </button>
                   <button
                     type="button"
-                    class="btn btn-danger"
+                    class="btn btn-primary"
                     data-bs-dismiss="modal"
                   >
-                    Xóa
+                    Lưu thay đổi
                   </button>
                 </div>
               </div>
