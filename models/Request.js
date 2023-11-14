@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const proposalSchema = new mongoose.Schema(
+const requestSchema = new mongoose.Schema(
   {
     type: {
       type: String,
@@ -70,7 +70,7 @@ const proposalSchema = new mongoose.Schema(
     }
   },
   {
-    collection: 'proposals',
+    collection: 'requests',
     virtuals: {
       id: {
         get() {
@@ -86,4 +86,4 @@ const proposalSchema = new mongoose.Schema(
 );
 
 //Export the model
-module.exports = mongoose.model('Proposal', proposalSchema);
+module.exports = mongoose.model('Request', requestSchema);
