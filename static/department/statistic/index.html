@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AdHubPro</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700&family=Rubik&display=swap"
+      rel="stylesheet"
+    />
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+      crossorigin="anonymous"
+    ></script>
+    <style>
+      g:nth-child(2) rect {
+        fill: rgb(248, 249, 250);
+      }
+    </style>
+    <link rel="stylesheet" href="../../css/global.css" />
+  </head>
+  <body>
+    <div class="container-fluid bg-light">
+      <div class="row flex-nowrap">
+        <!-- Sidebar -->
+        <div class="col-auto col-md-3 col-xl-2 px-sm-3 px-0 bg-dark">
+          <div
+            class="d-flex flex-column align-items-center pt-2 min-vh-100 pt-5"
+          >
+            <a href="../../index.html" class="pb-5 mb-md-0">
+              <img src="../../images/AdHubPro.png" alt="" />
+            </a>
+            <ul
+              class="nav nav-pills flex-column gap-2 mb-sm-auto mb-0 w-100"
+              id="menu"
+            >
+              <li class="nav-item w-100 p-2 rounded">
+                <a
+                  href="../location"
+                  class="d-flex flex-row gap-1 align-items-center text-decoration-none text-light"
+                >
+                  <i class="fs-4 bi-geo-alt"></i>
+                  <span class="ms-1 d-none d-sm-inline fw-semibold"
+                    >Điểm đặt quảng cáo</span
+                  >
+                </a>
+              </li>
+              <li class="nav-item w-100 p-2 rounded">
+                <a
+                  href="../request"
+                  class="d-flex flex-row gap-1 align-items-center text-decoration-none text-light"
+                >
+                  <i class="fs-4 bi bi-envelope"></i>
+                  <span class="ms-1 d-none d-sm-inline fw-semibold"
+                    >Yêu cầu cấp phép</span
+                  ></a
+                >
+              </li>
+              <li class="nav-item w-100 p-2 rounded current-nav-item">
+                <a
+                  href="../statistic"
+                  class="d-flex flex-row gap-1 align-items-center text-decoration-none text-light"
+                >
+                  <i class="fs-4 bi bi-bar-chart"></i>
+                  <span class="ms-1 d-none d-sm-inline fw-semibold"
+                    >Thống kê</span
+                  ></a
+                >
+              </li>
+              <li class="nav-item w-100 p-2 rounded">
+                <a
+                  href="../account"
+                  class="d-flex flex-row gap-1 align-items-center text-decoration-none text-light"
+                >
+                  <i class="fs-4 bi bi-people"></i>
+                  <span class="ms-1 d-none d-sm-inline fw-semibold"
+                    >Quản lí tài khoản</span
+                  >
+                </a>
+              </li>
+            </ul>
+            <hr />
+          </div>
+        </div>
+
+        <!-- Right Part -->
+        <div class="col p-3 border-start">
+          <div class="user-info d-flex justify-content-end">
+            <i class="bi bi-person-circle" style="font-size: 36px"></i>
+            <div class="user-text ms-3">
+              <h6>Elijah Scott</h6>
+              <p class="text-muted">elijarscott@gmail.com</p>
+            </div>
+          </div>
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item">
+                <a href="." class="text-decoration-none text-muted">Thống kê</a>
+              </li>
+              <li
+                class="breadcrumb-item active text-dark fw-semibold"
+                aria-current="page"
+              >
+                Tổng quan
+              </li>
+            </ol>
+          </nav>
+          <hr />
+          <div class="row justify-content-center">
+            <div class="col-3">
+              <input
+                class="form-control mr-sm-2"
+                type="search"
+                placeholder="Tìm kiếm"
+                aria-label="Search"
+              />
+            </div>
+            <div class="col-3">
+              <select class="form-select" aria-label="Default select example">
+                <option selected>Sắp xếp</option>
+              </select>
+            </div>
+            <div class="col-2">
+              <a class="btn btn-primary" href="./overview.html" role="button"
+                >Xem chi tiết</a
+              >
+            </div>
+          </div>
+          <div class="d-flex justify-content-center py-3" id="piechart"></div>
+
+          <div class="d-flex justify-content-center">
+            <div id="barchart"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script
+      type="text/javascript"
+      src="https://www.gstatic.com/charts/loader.js"
+    ></script>
+    <script type="text/javascript">
+      // Load google charts
+      google.charts.load("current", { packages: ["corechart"] });
+      google.charts.setOnLoadCallback(drawChart);
+
+      // Draw the chart and set the chart values
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+          ["Trạng thái xử lý", "Số lượng báo cáo"],
+          ["Đang xử lý", 18],
+          ["Đã xử lý", 22],
+          ["Chưa xử lý", 14],
+        ]);
+
+        // Optional; add a title and set the width and height of the chart
+        var options = {
+          title: "Thống kê báo cáo",
+          subtitle: "01/01/2023 - Hiện tại",
+          fontName: "Be Vietnam Pro",
+          titleTextStyle: {
+            color: "#313131",
+            fontSize: 18, // 12, 18 whatever you want (don't specify px)
+            bold: true, // true or false
+            italic: false, // true or false
+          },
+          backgroundColor: "rgb(248,249,250)",
+          width: 800,
+          height: 300,
+        };
+
+        // Display the chart inside the <div> element with id="piechart"
+        var chart = new google.visualization.PieChart(
+          document.getElementById("piechart")
+        );
+        chart.draw(data, options);
+      }
+    </script>
+    <script
+      type="text/javascript"
+      src="https://www.gstatic.com/charts/loader.js"
+    ></script>
+    <script type="text/javascript">
+      google.charts.load("current", { packages: ["bar"] });
+      google.charts.setOnLoadCallback(drawStuff);
+
+      function drawStuff() {
+        var data = new google.visualization.arrayToDataTable([
+          ["Tháng", "Số lượng báo cáo"],
+          ["Tháng 1", 50],
+          ["Tháng 2", 12],
+          ["Tháng 3", 34],
+          ["Tháng 4", 56],
+          ["Tháng 5", 78],
+          ["Tháng 6", 91],
+          ["Tháng 7", 101],
+          ["Tháng 8", 150],
+          ["Tháng 9", 43],
+          ["Tháng 10", 60],
+          ["Tháng 11", 27],
+          ["Tháng 12", 15],
+        ]);
+
+        var options = {
+          width: 800,
+          height: 500,
+          legend: { position: "none" },
+          chart: {
+            title: "Số lượng báo cáo theo từng tháng",
+            subtitle: "01/01/2023 - Hiện tại",
+          },
+          bars: "vertical", // Required for Material Bar Charts.
+          axes: {
+            x: {
+              0: { side: "bottom", label: "Số lượng báo cáo" }, // Top x-axis.
+            },
+          },
+          bar: { groupWidth: "50%" },
+        };
+
+        var chart1 = new google.charts.Bar(document.getElementById("barchart"));
+        chart1.draw(data, options);
+      }
+    </script>
+  </body>
+</html>

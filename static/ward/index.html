@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AdHubPro</title>
+    <!-- Bootstrap -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"
+    />
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Mapbox CSS -->
+    <link
+      href="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.css"
+      rel="stylesheet"
+    />
+    <!-- Tiny -->
+    <script
+      src="https://cdn.tiny.cloud/1/9eza4vy0528u7nwcd7xg321gt9gk94fhc6j1c49lhsvqa7gt/tinymce/6/tinymce.min.js"
+      referrerpolicy="origin"
+    ></script>
+    <script>
+      tinymce.init({
+        selector: "#mytextarea",
+      });
+    </script>
+    <!-- Mapbox -->
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.js"></script>
+    <link rel="stylesheet" href="../css/global.css" />
+    <!-- CSS -->
+    <link href="../css/map/style.css" rel="stylesheet" type="text/css" />
+    <link href="../css/map/officer.css" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
+    <!-- Load the `mapbox-gl-geocoder` plugin. -->
+    <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.css"
+      type="text/css"
+    />
+    <div class="container-fluid bg-light">
+      <div class="row flex-nowrap">
+        <!-- Sidebar -->
+        <div class="col-auto col-md-3 col-xl-2 px-sm-3 px-0 bg-dark">
+          <div
+            class="d-flex flex-column align-items-center pt-2 min-vh-100 pt-5"
+          >
+            <a href="../index.html" class="pb-5 mb-md-0">
+              <img src="../images/AdHubPro.png" alt="" />
+            </a>
+            <ul
+              class="nav nav-pills flex-column gap-2 mb-sm-auto mb-0 w-100"
+              id="menu"
+            >
+              <li class="nav-item w-100 p-2 rounded current-nav-item">
+                <a
+                  href="."
+                  class="d-flex flex-row gap-1 align-items-center text-decoration-none text-light"
+                >
+                  <i class="fs-4 bi-house"></i>
+                  <span class="ms-1 d-none d-sm-inline fw-semibold"
+                    >Trang chủ</span
+                  >
+                </a>
+              </li>
+              <li class="nav-item w-100 p-2 rounded">
+                <a
+                  href="./location"
+                  class="d-flex flex-row gap-1 align-items-center text-decoration-none text-light"
+                >
+                  <i class="fs-4 bi-geo-alt"></i>
+                  <span class="ms-1 d-none d-sm-inline fw-semibold"
+                    >Điểm đặt quảng cáo</span
+                  >
+                </a>
+              </li>
+              <li class="nav-item w-100 p-2 rounded">
+                <a
+                  href="./ads"
+                  class="d-flex flex-row gap-1 align-items-center text-decoration-none text-light"
+                >
+                  <i class="fs-4 bi-badge-ad"></i>
+                  <span class="ms-1 d-none d-sm-inline fw-semibold"
+                    >Bảng quảng cáo</span
+                  ></a
+                >
+              </li>
+              <li class="nav-item w-100 p-2 rounded">
+                <a
+                  href="./report"
+                  class="d-flex flex-row gap-1 align-items-center text-decoration-none text-light"
+                >
+                  <i class="fs-4 bi-exclamation-octagon"></i>
+                  <span class="ms-1 d-none d-sm-inline fw-semibold"
+                    >Báo cáo</span
+                  ></a
+                >
+              </li>
+              <li class="nav-item w-100 p-2 rounded">
+                <a
+                  href="./request"
+                  class="d-flex flex-row gap-1 align-items-center text-decoration-none text-light"
+                >
+                  <i class="fs-4 bi-envelope"></i>
+                  <span class="ms-1 d-none d-sm-inline fw-semibold"
+                    >Yêu cầu cấp phép</span
+                  >
+                </a>
+              </li>
+            </ul>
+            <hr />
+          </div>
+        </div>
+
+        <!-- Right Part -->
+        <div class="col p-3 border-start position-relative">
+          <div class="user-info d-flex justify-content-end">
+            <i class="bi bi-person-circle" style="font-size: 36px"></i>
+            <div class="user-text ms-3">
+              <h6>Elijah Scott</h6>
+              <p class="text-muted">elijarscott@gmail.com</p>
+            </div>
+          </div>
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item">
+                <a href=".." class="text-decoration-none text-muted"
+                  >Trang chủ</a
+                >
+              </li>
+              <li
+                class="breadcrumb-item active text-dark fw-semibold"
+                aria-current="page"
+              >
+                Bản đồ
+              </li>
+            </ol>
+          </nav>
+          <hr />
+
+          <!-- Map Part -->
+          <div id="map">
+            <div id="sidebar" class="sidebar flex-center left collapsed">
+              <div
+                class="sidebar-content rounded-rect d-flex flex-column align-items-center"
+              >
+                <div class="nav-table row my-3 border-bottom">
+                  <div class="col text-center">
+                    <button class="info-btn nav-btn">
+                      <h6 class="text-muted">Thông tin</h6>
+                    </button>
+                  </div>
+                  <div class="col text-center">
+                    <button class="report-btn nav-btn">
+                      <h6 class="text-muted">Báo cáo</h6>
+                    </button>
+                  </div>
+                </div>
+                <div
+                  class="sidebar-toggle rounded-rect left"
+                  onclick="toggleSidebar()"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="25"
+                    height="25"
+                    fill="currentColor"
+                    class="bi bi-arrow-right"
+                    viewBox="0 0 16 16"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"
+                    />
+                  </svg>
+                </div>
+              </div>
+            </div>
+            <div class="switch-table">
+              <div class="form-check form-switch">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  role="switch"
+                  id="adsSwitch"
+                  checked
+                />
+                <label class="form-check-label" for="adsSwitch"
+                  >Bảng quảng cáo</label
+                >
+              </div>
+              <div class="form-check form-switch">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  role="switch"
+                  id="reportSwitch"
+                  checked
+                />
+                <label class="form-check-label" for="reportSwitch"
+                  >Báo cáo vi phạm</label
+                >
+              </div>
+            </div>
+          </div>
+
+          <!-- Modal section -->
+          <div
+            class="modal fade"
+            id="feedback"
+            data-bs-backdrop="static"
+            aria-hidden="true"
+            aria-labelledby="feedbackLabel"
+            tabindex="-1"
+          >
+            <div class="modal-dialog modal-lg">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h3 class="">BÁO CÁO VI PHẠM</h3>
+                  <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                  ></button>
+                </div>
+                <div class="modal-body">
+                  <form class="report-modal">
+                    <div class="row">
+                      <div class="col-7 d-flex flex-column">
+                        <h2>Thông tin người báo cáo</h2>
+                        <div class="mb-2">
+                          <label for="name" class="col-form-label"
+                            >Họ và tên</label
+                          >
+                          <input
+                            type="text"
+                            class="form-control"
+                            id="text"
+                            placeholder="Họ và tên"
+                          />
+                        </div>
+                        <div class="mb-2">
+                          <label for="email" class="col-form-label"
+                            >Số điện thoại</label
+                          >
+                          <input
+                            type="email"
+                            class="form-control"
+                            id="email"
+                            placeholder="Email"
+                          />
+                        </div>
+                        <div class="mb-2">
+                          <label for="tel" class="col-form-label">Email</label>
+                          <input
+                            type="number"
+                            class="form-control"
+                            id="tel"
+                            placeholder="Số điện thoại"
+                          />
+                        </div>
+                      </div>
+                      <div class="col-5 d-flex flex-column">
+                        <h2 class="mb-4">Hình thức báo cáo</h2>
+                        <div class="report-radio">
+                          <div class="mb-3">
+                            <input
+                              type="radio"
+                              id="report1"
+                              name="age"
+                              value="30"
+                            />
+                            <label for="report1">Tố giác tội phạm</label><br />
+                          </div>
+                          <div class="mb-3">
+                            <input
+                              type="radio"
+                              id="report2"
+                              name="age"
+                              value="60"
+                            />
+                            <label for="report2">Đăng ký nội dung</label><br />
+                          </div>
+                          <div class="mb-3">
+                            <input
+                              type="radio"
+                              id="report3"
+                              name="age"
+                              value="100"
+                            />
+                            <label for="report3">Đóng góp ý kiến</label><br />
+                          </div>
+                          <div class="mb-3">
+                            <input
+                              type="radio"
+                              id="report4"
+                              name="age"
+                              value="100"
+                            />
+                            <label for="report4">Giải đáp thắc mắc</label><br />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row mt-3">
+                      <h2 class="mb-3">Nội dung báo cáo</h2>
+                      <textarea id="mytextarea"></textarea>
+                    </div>
+                    <div class="row mt-3">
+                      <h2 class="mb-3">Hình ảnh minh họa</h2>
+                      <input
+                        type="file"
+                        name="file"
+                        id="file"
+                        class="inputfile"
+                      />
+                      <label for="file"></label>
+                    </div>
+                  </form>
+                </div>
+                <div class="modal-footer">
+                  <button class="btn btn-primary" type="submit">Submit</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="modal fade"
+            id="ads-detail"
+            data-bs-backdrop="static"
+            aria-hidden="true"
+            aria-labelledby="asdDetailLabel"
+            tabindex="-1"
+          >
+            <div class="modal-dialog modal-md">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h3 class="">THÔNG TIN CHI TIẾT</h3>
+                  <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                  ></button>
+                </div>
+                <div class="modal-body modal-info-detail"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="../js/index.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>
