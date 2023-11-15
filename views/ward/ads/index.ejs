@@ -52,7 +52,7 @@
       <% ads.forEach((element, index) => { %>
       <tr>
         <th scope="row"><%= perPage * (current - 1) + index + 1 %></th>
-        <td class=""></td>
+        <td class=""><%= element.location.address %></td>
         <td class=""><%= element.type %></td>
         <td class=""><%= element.created_at.toLocaleTimeString("en-US") %></td>
         <td class=""><%= element.updated_at.toLocaleTimeString("en-US") %></td>
