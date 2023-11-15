@@ -49,28 +49,22 @@ router.post('/', upload.array("images", 5), async (req, res) => {
       throw new Error('Invalid fields');
 
     const report = new Report({type, content, reporter: {name, email, phone}});
+    const location = req.body.location;
+    if (!location || typeof location !== 'string') throw new Error('Invalid location');
+    report.location = location;
     if (type === "ads") {
       const ads = req.body.ads;
       if (!ads || typeof ads !== "string") throw new Error("Invalid ads");
       report.ads = ads;
+    }
+    if (req.files) {
       for (let file of req.files) {
-        const url = await uploadFile(`adhubpro/reports/ads/${ads}`);
+        const url = await uploadFile(`adhubpro/reports/locations/${location}`, file);
         report.images.push(url);
       }
-    }
-    else if (type === "location") {
-      const location = req.body.location;
-      if (!location || typeof location !== 'string') throw new Error('Invalid location');
-      report.location = location;
-      for (let file of req.files) {
-        const url = await uploadFile(`adhubpro/reports/locations/${location}`);
-        report.images.push(url);
-      }
-    }
-    else {
-      throw new Error("Something went wrong!")
     }
     await report.save();
+    return res.sendStatus(204);
   } catch (err) {
     return res.status(400).send(err.message);
   }
