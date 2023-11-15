@@ -4,9 +4,10 @@ const { default: mongoose } = require('mongoose');
 const connectDB = require('./config/database');
 const app = express();
 const ejsMate = require('ejs-mate');
-const homeRouter = require('./routes/home');
-const officerRouter = require('./routes/officer');
 const apiRouter = require("./routes/api");
+const wardRouter = require("./routes/ward");
+const districtRouter = require("./routes/district");
+const departmentRouter = require('./routes/department');
 const errorHandler = require('./middleware/errorHandler');
 const authentication = require('./middleware/authentication'); 
 const cookieParser = require('cookie-parser');
@@ -25,9 +26,14 @@ app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
 
 app.use(express.static(__dirname + '/public'));
-app.use('/', homeRouter);
+
+app.get('/', async (req, res) => {
+  res.render('index');
+});
 app.use('/api', apiRouter);
-app.use('/officer', officerRouter);
+app.use('/ward', wardRouter);
+app.use('/district', districtRouter);
+app.use('/department', departmentRouter);
 
 mongoose.connection.once('open', () => {
   console.log("Connected to DB")
