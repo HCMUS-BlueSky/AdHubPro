@@ -44,10 +44,7 @@
           <p class="text-muted pt-3">Phân loại vị trí:</p>
         </div>
         <div class="col-9">
-          <p class="pt-3">
-            Đất công/Công viên/Hành lang an toàn giao thông, Đất tư nhân/Nhà ở
-            riêng lẻ, Trung tâm thương mại, Chợ, Cây xăng, Nhà chờ xe buýt
-          </p>
+          <p class="pt-3"><%= location.type %></p>
         </div>
       </div>
       <div class="row border border-2 rounded">
@@ -55,9 +52,7 @@
           <p class="text-muted pt-3">Hình thức quảng cáo:</p>
         </div>
         <div class="col-9">
-          <p class="pt-3">
-            Cổ động chính trị, Quảng cáo thương mại, Xã hội hoá
-          </p>
+          <p class="pt-3"><%= location.method %></p>
         </div>
       </div>
       <div class="row border border-2 rounded">
@@ -65,7 +60,10 @@
           <p class="text-muted pt-3">Trạng thái quy hoạch:</p>
         </div>
         <div class="col-9">
-          <p class="pt-3">Đã quy hoạch/ Chưa quy hoạch</p>
+          <p class="pt-3">
+            <% if (location.accepted) { %> Đã quy hoạch <% } else { %> Chưa quy
+            hoạch <% } %>
+          </p>
         </div>
       </div>
       <div class="row border border-2 rounded">
@@ -73,7 +71,7 @@
           <p class="text-muted pt-3">Số lượng bảng quảng cáo:</p>
         </div>
         <div class="col-9">
-          <p class="pt-3">3</p>
+          <p class="pt-3"></p>
         </div>
       </div>
       <div

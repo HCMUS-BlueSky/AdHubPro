@@ -1,5 +1,4 @@
 const Location = require("../../models/Location");
-const mongoose = require("mongoose");
 
 exports.view = async (req, res) => {
   let perPage = 10;
@@ -21,8 +20,15 @@ exports.view = async (req, res) => {
   }
 };
 
-exports.getDetail = (req, res) => {
-  res.render("ward/location/detail");
+exports.getDetail = async (req, res) => {
+  try {
+    const location = await Location.findOne({ _id: req.params.id });
+    res.render("ward/location/detail", {
+      location,
+    });
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 exports.updateInfo = (req, res) => {

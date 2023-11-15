@@ -49,74 +49,60 @@
       </tr>
     </thead>
     <tbody>
+      <% ads.forEach((element, index) => { %>
       <tr>
-        <th scope="row">1</th>
-        <td class="">227 Nguyễn Văn Cừ, Phường 4, Quận 5</td>
-        <td class="">Cổ động chính trị</td>
-        <td class="">01/01/2999</td>
-        <td class="">01/01/2999</td>
+        <th scope="row"><%= perPage * (current - 1) + index + 1 %></th>
+        <td class=""></td>
+        <td class=""><%= element.type %></td>
+        <td class=""><%= element.created_at.toLocaleTimeString("en-US") %></td>
+        <td class=""><%= element.updated_at.toLocaleTimeString("en-US") %></td>
         <td class="">
-          <a href="./detail.html">
+          <a href="/ward/ads/view/<%= element._id %>">
             <i class="bi bi-eye-fill"></i>
           </a>
         </td>
         <td class="">
-          <a href="./update_info.html">
+          <a href="/ward/ads/update-info/<%= element._id %>">
             <i class="bi bi-pencil-square"></i>
           </a>
         </td>
       </tr>
-      <tr>
-        <th scope="row">2</th>
-        <td class="">227 Nguyễn Văn Cừ, Phường 4, Quận 5</td>
-        <td class="">Cổ động chính trị</td>
-        <td class="">01/01/2999</td>
-        <td class="">01/01/2999</td>
-        <td class="">
-          <a href="./detail.html">
-            <i class="bi bi-eye-fill"></i>
-          </a>
-        </td>
-        <td class="">
-          <a href="./update_info.html">
-            <i class="bi bi-pencil-square"></i>
-          </a>
-        </td>
-      </tr>
-      <tr>
-        <th scope="row">3</th>
-        <td class="">227 Nguyễn Văn Cừ, Phường 4, Quận 5</td>
-        <td class="">Cổ động chính trị</td>
-        <td class="">01/01/2999</td>
-        <td class="">01/01/2999</td>
-        <td class="">
-          <a href="./detail.html">
-            <i class="bi bi-eye-fill"></i>
-          </a>
-        </td>
-        <td class="">
-          <a href="./update_info.html">
-            <i class="bi bi-pencil-square"></i>
-          </a>
-        </td>
-      </tr>
-      <tr>
-        <th scope="row">4</th>
-        <td class="">227 Nguyễn Văn Cừ, Phường 4, Quận 5</td>
-        <td class="">Cổ động chính trị</td>
-        <td class="">01/01/2999</td>
-        <td class="">01/01/2999</td>
-        <td class="">
-          <a href="./detail.html">
-            <i class="bi bi-eye-fill"></i>
-          </a>
-        </td>
-        <td class="">
-          <a href="./update_info.html">
-            <i class="bi bi-pencil-square"></i>
-          </a>
-        </td>
-      </tr>
+      <% }) %>
     </tbody>
   </table>
+  <% if (ads.length > 0) { %>
+  <nav aria-label="Dashboard Pagination">
+    <ul class="pagination justify-content-center mt-5">
+      <% if (current == 1) { %>
+      <li class="page-item disabled">
+        <a href="#" class="page-link">First</a>
+      </li>
+      <% } else { %>
+      <li class="page-item">
+        <a href="/ward/ads?page=1" class="page-link">First</a>
+      </li>
+      <% } %> <% i = (Number(current) > 5 ? Number(current) - 4 : 1) %> <% if (i
+      != 1) { %>
+      <li class="page-item disabled"><a href="#" class="page-link">...</a></li>
+      <% } %> <% for(; i <= (Number(current) + 4) && i <= pages; i++ ) { %> <%
+      if (i == current) { %>
+      <li class="page-item disabled">
+        <a href="#" class="page-link"><%= i %></a>
+      </li>
+      <% } else { %>
+      <li class="page-item">
+        <a href="/ward/ads?page=<%= i %>" class="page-link"><%= i %></a>
+      </li>
+      <% } %> <% if (i == Number (current) + 4 && i < pages) { %>
+      <li class="page-item disabled"><a href="#" class="page-link">...</a></li>
+      <% } %> <% } %> <% if (current == pages) { %>
+      <li class="page-item disabled"><a href="#" class="page-link">Last</a></li>
+      <% } else { %>
+      <li class="page-item">
+        <a href="/ward/ads?page=<%= pages %>" class="page-link">Last</a>
+      </li>
+      <% } %>
+    </ul>
+  </nav>
+  <% } %>
 </div>
