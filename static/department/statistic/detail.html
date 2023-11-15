@@ -95,27 +95,76 @@
             </ol>
           </nav>
           <hr />
-          <div class="card mb-3">
-            <div class="card-body">
-              <h5 class="card-title fw-semibold fs-3">Báo cáo</h5>
-              <div class="card-text p-2 text-body-secondary"><span class="fw-semibold">Địa chỉ:</span> 227 Nguyễn Văn Cừ, Phường 4, Quận 5</div>
-              <div class="card-text p-3 mt-3 border border-1 rounded"><span class="text-body-secondary fw-semibold ">Thông tin người gửi: </span> Họ tên - Số điện thoại - Email</div>
-              <div class="card-text p-3 border border-1 rounded"><span class="text-body-secondary fw-semibold ">Thời gian gửi báo cáo: </span> 00:00 - 19/10/2023</div>              
-              <div class="card-text p-3 border border-1 rounded"><span class="text-body-secondary fw-semibold ">Hình thức báo cáo:  </span>Giải đáp thắc mắc </div>        
-              <div class="card-text p-3 border border-1 rounded"><span class="text-body-secondary fw-semibold ">Trạng thái xử lý:  </span> Chưa xử lý </div>     
-              <div class="card-text p-3 mb-3 border border-1 rounded"><span class="text-body-secondary fw-semibold ">Cách thức xử lý:  </span> 
-                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ducimus error tempora sunt molestias reprehenderit voluptatibus odio perferendis eum quam, sequi sed cupiditate rerum distinctio! 
-                Excepturi dignissimos similique temporibus, consequuntur harum quisquam modi eos eveniet porro fuga praesentium ex aliquid inventore maxime minima pariatur rem necessitatibus voluptas perferendis totam id provident illum error! 
-                Esse, vel omnis!</div>
-              <div class="d-flex flex-row justify-content-center align-items-center gap-4">
-                <a name="" id="" class="btn btn-secondary px-4" href="." role="button">Trở về danh sách</a>
-                <button type="button" class="btn btn-primary px-4" data-bs-toggle="modal" data-bs-target="#imageSlideShow">
+          <div class="card bg-light mb-3">
+            <div class="card-body p-4">
+              <h4 class="card-title py-2">Báo cáo</h4>
+              <p class="text-muted">Địa chỉ: Số, Tên đường, Khu vực: Phường ..., Quận. ...</p>
+              <div class="row border border-2 rounded">
+                <div class="col-2">
+                  <p class="text-muted pt-3">Thông tin người gửi:</p>
+                </div>
+                <div class="col-10">
+                  <p class="pt-3">Họ tên - SDT - Email</p>
+                </div>
+              </div>
+              <div class="row border border-2 rounded">
+                <div class="col-2">
+                  <p class="text-muted pt-3">Thời gian gửi báo cáo: </p>
+                </div>
+                <div class="col-10">
+                  <p class="pt-3">00:00 - 31/11/2077</p>
+                </div>
+              </div>
+              <div class="row border border-2 rounded">
+                <div class="col-2">
+                  <p class="text-muted pt-3">Hình thức báo cáo: </p>
+                </div>
+                <div class="col-10">
+                  <p class="pt-3">Giải đáp thắc mắc</p>
+                </div>
+              </div>
+              <div class="row border border-2 rounded">
+                <div class="col-2">
+                  <p class="text-muted pt-3">Trạng thái xử lý:</p>
+                </div>
+                <div class="col-10">
+                  <p class="pt-3">Chưa xử lý</p>
+                </div>
+              </div>
+              <div class="row border border-2 rounded mb-3">
+                <div class="col-2">
+                  <p class="text-muted pt-3">Cách thức xử lý:</p>
+                </div>
+                <div class="col-10">
+                  <p class="pt-3">
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                    Iusto inventore perferendis assumenda, accusantium autem
+                    recusandae deserunt magni perspiciatis quo esse? Facere,
+                    atque sint deleniti repellendus molestias neque ex quos
+                    nemo! Lorem ipsum dolor sit amet consectetur adipisicing
+                    elit. Fugit illo perspiciatis voluptate veritatis,
+                    architecto esse. A tempora illo officiis aspernatur! Nihil
+                    non magnam placeat tempora corporis illo et officiis labore.
+                  </p>
+                </div>
+              </div>
+
+              <div class="d-flex justify-content-center">
+                <a href="./index.html">
+                  <button type="button" class="btn btn-secondary me-4">
+                    Trở về danh sách
+                  </button>
+                </a>
+                <button
+                  type="button"
+                  class="btn btn-primary me-4"
+                  data-bs-toggle="modal"
+                  data-bs-target="#detail"
+                >
                   Xem tất cả hình
                 </button>
               </div>
             </div>
-          </div>
-        </div>
         <!-- Modal -->
         <div class="modal fade" id="imageSlideShow" aria-hidden="true" aria-labelledby="imageSlideShow" tabindex="-1">
           <div class="modal-dialog modal-dialog-centered">
