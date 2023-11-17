@@ -1,96 +1,93 @@
 <!-- Right Part -->
 <div class="col p-3 border-start">
-    <div class="user-info d-flex justify-content-end">
-      <i class="bi bi-person-circle" style="font-size: 36px"></i>
-      <div class="user-text ms-3">
-        <h6>Elijah Scott</h6>
-        <p class="text-muted">elijarscott@gmail.com</p>
-      </div>
+  <div class="user-info d-flex justify-content-end">
+    <i class="bi bi-person-circle" style="font-size: 36px"></i>
+    <div class="user-text ms-3">
+      <h6>Elijah Scott</h6>
+      <p class="text-muted">elijarscott@gmail.com</p>
     </div>
-    <nav aria-label="breadcrumb">
-      <ol class="breadcrumb">
-        <li class="breadcrumb-item">
-          <a href="." class="text-decoration-none text-muted"
-            >Bảng quảng cáo</a
-          >
-        </li>
-        <li
-          class="breadcrumb-item active text-dark fw-semibold"
-          aria-current="page"
-        >
-          Thông tin chi tiết
-        </li>
-      </ol>
-    </nav>
-    <hr />
-    <div class="card mb-3">
-      <svg
-        class="bd-placeholder-img card-img-top"
-        width="100%"
-        height="200"
-        xmlns="http://www.w3.org/2000/svg"
-        role="img"
-        preserveAspectRatio="xMidYMid slice"
-        focusable="false"
+  </div>
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item">
+        <a href="." class="text-decoration-none text-muted">Bảng quảng cáo</a>
+      </li>
+      <li
+        class="breadcrumb-item active text-dark fw-semibold"
+        aria-current="page"
       >
-        <title>Placeholder</title>
-        <rect width="100%" height="100%" fill="#868e96"></rect>
-      </svg>
-      <div class="card-body">
-        <h5 class="card-title fw-semibold fs-3">Cổ động chính trị</h5>
-        <p class="text-muted">Khu vực: Phường 4, Quận 10</p>
-        <div class="row border border-2 rounded">
-          <div class="col-3">
-            <p class="text-muted pt-3">Địa chỉ:</p>
-          </div>
-          <div class="col-9">
-            <p class="pt-3">227 Nguyễn Văn Cừ, Phường 4, Quận 5</p>
-          </div>
+        Thông tin chi tiết
+      </li>
+    </ol>
+  </nav>
+  <hr />
+  <div class="card mb-3">
+    <svg
+      class="bd-placeholder-img card-img-top"
+      width="100%"
+      height="200"
+      xmlns="http://www.w3.org/2000/svg"
+      role="img"
+      preserveAspectRatio="xMidYMid slice"
+      focusable="false"
+    >
+      <title>Placeholder</title>
+      <rect width="100%" height="100%" fill="#868e96"></rect>
+    </svg>
+    <div class="card-body">
+      <h5 class="card-title fw-semibold fs-3">Cổ động chính trị</h5>
+      <p class="text-muted">Khu vực: Phường 4, Quận 10</p>
+      <div class="row border border-2 rounded">
+        <div class="col-3">
+          <p class="text-muted pt-3">Địa chỉ:</p>
         </div>
-        <div class="row border border-2 rounded">
-          <div class="col-3">
-            <p class="text-muted pt-3">Ngày bắt đầu hợp đồng:</p>
-          </div>
-          <div class="col-9">
-            <p class="pt-3">01/01/2999</p>
-          </div>
+        <div class="col-9">
+          <p class="pt-3"><%= ads.location.address %></p>
         </div>
-        <div class="row border border-2 rounded">
-          <div class="col-3">
-            <p class="text-muted pt-3">Ngày kết thúc hợp đồng:</p>
-          </div>
-          <div class="col-9">
-            <p class="pt-3">01/01/2999</p>
-          </div>
+      </div>
+      <div class="row border border-2 rounded">
+        <div class="col-3">
+          <p class="text-muted pt-3">Ngày bắt đầu hợp đồng:</p>
         </div>
-        <div
-          class="d-flex flex-row justify-content-center align-items-center gap-4 pt-3"
+        <div class="col-9">
+          <p class="pt-3"><%= ads.created_at %></p>
+        </div>
+      </div>
+      <div class="row border border-2 rounded">
+        <div class="col-3">
+          <p class="text-muted pt-3">Ngày kết thúc hợp đồng:</p>
+        </div>
+        <div class="col-9">
+          <p class="pt-3"><%= ads.updated_at %></p>
+        </div>
+      </div>
+      <div
+        class="d-flex flex-row justify-content-center align-items-center gap-4 pt-3"
+      >
+        <a
+          name=""
+          id=""
+          class="btn btn-secondary px-4"
+          href="/ward/ads"
+          role="button"
+          >Trở về danh sách</a
         >
-          <a
-            name=""
-            id=""
-            class="btn btn-secondary px-4"
-            href="."
-            role="button"
-            >Trở về danh sách</a
-          >
-          <button
-            type="button"
-            class="btn btn-primary px-4"
-            data-bs-toggle="modal"
-            data-bs-target="#imageSlideShow"
-          >
-            Xem tất cả hình
-          </button>
-          <a
-            name=""
-            id=""
-            class="btn btn-primary px-4"
-            href="./update_info.html"
-            role="button"
-            >Cập nhật thông tin</a
-          >
-        </div>
+        <button
+          type="button"
+          class="btn btn-primary px-4"
+          data-bs-toggle="modal"
+          data-bs-target="#imageSlideShow"
+        >
+          Xem tất cả hình
+        </button>
+        <a
+          name=""
+          id=""
+          class="btn btn-primary px-4"
+          href="/ward/ads/update-info/<%= ads._id %>"
+          role="button"
+          >Cập nhật thông tin</a
+        >
       </div>
     </div>
   </div>
@@ -184,3 +181,4 @@
       </div>
     </div>
   </div>
+</div>

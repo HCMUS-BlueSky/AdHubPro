@@ -4,7 +4,8 @@ exports.view = async (req, res) => {
   let perPage = 10;
   let page = req.query.page || 1;
   try {
-    const locations = await Location.aggregate([{ $sort: { updatedAt: -1 } }])
+    const locations = await Location.find({})
+      .sort({ updatedAt: -1 })
       .skip(perPage * page - perPage)
       .limit(perPage)
       .exec();
