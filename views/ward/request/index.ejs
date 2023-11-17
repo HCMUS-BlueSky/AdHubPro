@@ -1,6 +1,3 @@
-
-  <body>
-        <!-- Right Part -->
         <div class="col p-3 border-start">
           <div class="user-info d-flex justify-content-end">
             <i class="bi bi-person-circle" style="font-size: 36px"></i>
@@ -61,186 +58,60 @@
               </tr>
             </thead>
             <tbody>
+              <% request.forEach((element, index) => { %>
               <tr>
-                <th scope="row">1</th>
-                <td class="">Quảng cáo thương mại</td>
-                <td class="">227 Nguyễn Văn Cừ, Phường 4, Quận 5</td>
-                <td class="">Shopee</td>
+                <th scope="row"><%= perPage * (current - 1) + index + 1 %></th>
+                <td class=""><%= element.location.address %></td>
+                <td class=""><%= element.type %></td>
+                <td class=""><%= element.created_at.toLocaleTimeString("en-US") %></td>
+                <td class=""><%= element.updated_at.toLocaleTimeString("en-US") %></td>
                 <td class="">
-                  <span class="badge bg-danger w-100">Chưa quy hoạch</span>
-                </td>
-                <td class="">
-                  <a href="./detail.html">
+                  <a href="/ward/request/view/<%= element._id %>">
                     <i class="bi bi-eye-fill"></i>
                   </a>
                 </td>
                 <td class="">
-                  <a
-                    role="button"
-                    data-bs-toggle="modal"
-                    data-bs-toggle="modal"
-                    data-bs-target="#exampleModal"
-                  >
-                    <i class="bi bi-x-circle-fill cusor"></i>
+                  <a href="/ward/request/create/<%= element._id %>">
+                    <i class="bi bi-pencil-square"></i>
                   </a>
                 </td>
               </tr>
-              <tr>
-                <th scope="row">2</th>
-                <td class="">Quảng cáo thương mại</td>
-                <td class="">227 Nguyễn Văn Cừ, Phường 4, Quận 5</td>
-                <td class="">Shopee</td>
-                <td class="">
-                  <span class="badge bg-success w-100">Đã quy hoạch</span>
-                </td>
-                <td class="">
-                  <a href="./detail.html">
-                    <i class="bi bi-eye-fill"></i>
-                  </a>
-                </td>
-                <td class="">
-                  <a
-                    role="button"
-                    data-bs-toggle="modal"
-                    data-bs-toggle="modal"
-                    data-bs-target="#exampleModal"
-                  >
-                    <i class="bi bi-x-circle-fill cusor"></i>
-                  </a>
-                </td>
-              </tr>
-              <tr>
-                <th scope="row">3</th>
-                <td class="">Quảng cáo thương mại</td>
-                <td class="">227 Nguyễn Văn Cừ, Phường 4, Quận 5</td>
-                <td class="">Lazada</td>
-                <td class="">
-                  <span class="badge bg-success w-100">Đã quy hoạch</span>
-                </td>
-                <td class="">
-                  <a href="./detail.html">
-                    <i class="bi bi-eye-fill"></i>
-                  </a>
-                </td>
-                <td class="">
-                  <a
-                    role="button"
-                    data-bs-toggle="modal"
-                    data-bs-toggle="modal"
-                    data-bs-target="#exampleModal"
-                  >
-                    <i class="bi bi-x-circle-fill cusor"></i>
-                  </a>
-                </td>
-              </tr>
-              <tr>
-                <th scope="row">4</th>
-                <td class="">Quảng cáo thương mại</td>
-                <td class="">227 Nguyễn Văn Cừ, Phường 4, Quận 5</td>
-                <td class="">Lazada</td>
-                <td class="">
-                  <span class="badge bg-danger w-100">Chưa quy hoạch</span>
-                </td>
-                <td class="">
-                  <a href="./detail.html">
-                    <i class="bi bi-eye-fill"></i>
-                  </a>
-                </td>
-                <td class="">
-                  <a
-                    role="button"
-                    data-bs-toggle="modal"
-                    data-bs-toggle="modal"
-                    data-bs-target="#exampleModal"
-                  >
-                    <i class="bi bi-x-circle-fill cusor"></i>
-                  </a>
-                </td>
-              </tr>
-              <tr>
-                <th scope="row">5</th>
-                <td class="">Quảng cáo thương mại</td>
-                <td class="">227 Nguyễn Văn Cừ, Phường 4, Quận 5</td>
-                <td class="">Lazada</td>
-                <td class="">
-                  <span class="badge bg-danger w-100">Chưa quy hoạch</span>
-                </td>
-                <td class="">
-                  <a href="./detail.html">
-                    <i class="bi bi-eye-fill"></i>
-                  </a>
-                </td>
-                <td class="">
-                  <a
-                    role="button"
-                    data-bs-toggle="modal"
-                    data-bs-toggle="modal"
-                    data-bs-target="#exampleModal"
-                  >
-                    <i class="bi bi-x-circle-fill cusor"></i>
-                  </a>
-                </td>
-              </tr>
+              <% }) %>
             </tbody>
-          <tbody>
-            <% request.forEach((request, index) => { %>
-            <tr>
-              <th scope="row"><%= perPage * (current - 1) + index + 1 %></th>
-              <td class=""><%= request.address %></td>
-              <td class=""><%= request.type %></td>
-              <td class=""><%= request.method %></td>
-              <td class="">
-                <% if (requests.accepted) { %>
-                <span class="badge bg-success w-100">Đã quy hoạch</span> <% } else {
-                %> <span class="badge bg-danger w-100">Chưa quy hoạch</span> <% } %>
-              </td>
-              <td class="">
-                <a href="/ward/request/view/<%= request._id %>">
-                  <i class="bi bi-eye-fill"></i>
-                </a>
-              </td>
-              <td class="">
-                <a href="/ward/request/update-info/<%= request._id %>">
-                  <i class="bi bi-pencil-square"></i>
-                </a>
-              </td>
-            </tr>
-            <% }) %>
-          </tbody>
-        </table>
-        <% if (request.length > 0) { %>
-        <nav aria-label="Dashboard Pagination">
+          </table>
+          <% if (request.length > 0) { %>
+          <nav aria-label="Dashboard Pagination">
             <ul class="pagination justify-content-center mt-5">
-            <% if (current == 1) { %>
-            <li class="page-item disabled">
+              <% if (current == 1) { %>
+              <li class="page-item disabled">
                 <a href="#" class="page-link">First</a>
-            </li>
-            <% } else { %>
-            <li class="page-item">
+              </li>
+              <% } else { %>
+              <li class="page-item">
                 <a href="/ward/request?page=1" class="page-link">First</a>
-            </li>
-            <% } %> <% i = (Number(current) > 5 ? Number(current) - 4 : 1) %> <% if (i
-            != 1) { %>
-            <li class="page-item disabled"><a href="#" class="page-link">...</a></li>
-            <% } %> <% for(; i <= (Number(current) + 4) && i <= pages; i++ ) { %> <%
-            if (i == current) { %>
-            <li class="page-item disabled">
+              </li>
+              <% } %> <% i = (Number(current) > 5 ? Number(current) - 4 : 1) %> <% if (i
+              != 1) { %>
+              <li class="page-item disabled"><a href="#" class="page-link">...</a></li>
+              <% } %> <% for(; i <= (Number(current) + 4) && i <= pages; i++ ) { %> <%
+              if (i == current) { %>
+              <li class="page-item disabled">
                 <a href="#" class="page-link"><%= i %></a>
-            </li>
-            <% } else { %>
-            <li class="page-item">
+              </li>
+              <% } else { %>
+              <li class="page-item">
                 <a href="/ward/request?page=<%= i %>" class="page-link"><%= i %></a>
-            </li>
-            <% } %> <% if (i == Number (current) + 4 && i < pages) { %>
-            <li class="page-item disabled"><a href="#" class="page-link">...</a></li>
-            <% } %> <% } %> <% if (current == pages) { %>
-            <li class="page-item disabled"><a href="#" class="page-link">Last</a></li>
-            <% } else { %>
-            <li class="page-item">
+              </li>
+              <% } %> <% if (i == Number (current) + 4 && i < pages) { %>
+              <li class="page-item disabled"><a href="#" class="page-link">...</a></li>
+              <% } %> <% } %> <% if (current == pages) { %>
+              <li class="page-item disabled"><a href="#" class="page-link">Last</a></li>
+              <% } else { %>
+              <li class="page-item">
                 <a href="/ward/request?page=<%= pages %>" class="page-link">Last</a>
-            </li>
-            <% } %>
+              </li>
+              <% } %>
             </ul>
-        </nav>
-  <% } %>
+          </nav>
+          <% } %>
         </div>

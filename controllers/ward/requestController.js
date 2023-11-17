@@ -1,17 +1,18 @@
 const Request = require("../../models/Request");
-const mongoose = require("mongoose");
 
 exports.view = async (req, res) => {
   let perPage = 10;
   let page = req.query.page || 1;
   try {
-    const Request = await Request.aggregate([{ $sort: { updatedAt: -1 } }])
+    const request = await Request.find({})
+      .sort({ updatedAt: -1 })
       .skip(perPage * page - perPage)
       .limit(perPage)
+      .populate("location", "address")
       .exec();
     const count = await Request.count();
     res.render("ward/request/index", {
-      requests,
+      request,
       perPage,
       current: page,
       pages: Math.ceil(count / perPage),
@@ -21,10 +22,19 @@ exports.view = async (req, res) => {
   }
 };
 
-exports.getDetail = (req, res) => {
-  res.render("ward/request/detail");
+exports.getDetail = async (req, res) => {
+  try {
+    const request = await Request.findOne({ _id: req.params.id })
+      .populate("location", "address")
+      .exec();
+    res.render("ward/request/detail", {
+      request,
+    });
+  } catch (error) {
+    console.log(error);
+  }
 };
 
-exports.updateInfo = (req, res) => {
+exports.createNew = (req, res) => {
   res.render("ward/request/create");
 };

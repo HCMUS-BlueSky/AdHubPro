@@ -1,15 +1,11 @@
 const express = require("express");
-const router = express.Router();
 const requestController = require("../../controllers/ward/requestController");
-
-router.get("/", (req, res) => {
-  return res.render("ward/request/index");
-});
+const router = express.Router();
 
 router.get("/", requestController.view);
 
 router.get("/view/:id", requestController.getDetail);
 
-router.get("/create/:id", requestController.updateInfo);
+router.get("/create/:id", requestController.createNew);
 
 module.exports = router;
