@@ -24,7 +24,9 @@ exports.view = async (req, res) => {
 
 exports.getDetail = async (req, res) => {
   try {
-    const ads = await Ads.findOne({ _id: req.params.id });
+    const ads = await Ads.findOne({ _id: req.params.id })
+      .populate("location", "address")
+      .exec();
     res.render("ward/ads/detail", {
       ads,
     });
