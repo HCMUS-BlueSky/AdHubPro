@@ -917,13 +917,13 @@ const detailCardFactory = () => {
             <!-- The slideshow/carousel -->
             <div class="carousel-inner">
               <div class="carousel-item active">
-                <img src="/images/ads1.jpg" alt="ads-1" class="d-block" style="width:100%;">
+                <img src="./images/ads1.jpg" alt="ads-1" class="d-block" style="width:100%;">
               </div>
               <div class="carousel-item">
-                <img src="/images/ads2.jpg" alt="ads-2" class="d-block" style="width:100%">
+                <img src="./images/ads2.jpg" alt="ads-2" class="d-block" style="width:100%">
               </div>
               <div class="carousel-item">
-                <img src="/images/ads3.jpg" alt="ads-3" class="d-block" style="width:100%">
+                <img src="./images/ads3.jpg" alt="ads-3" class="d-block" style="width:100%">
               </div>
             </div>
             
