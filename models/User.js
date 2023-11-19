@@ -56,7 +56,7 @@ const userSchema = new mongoose.Schema(
     managed_district: {
       type: mongoose.Schema.Types.ObjectId,
       required: function () {
-        return this.role === 'district_officer';
+        return this.role === 'ward_officer' || this.role === 'district_officer';
       }
     },
   },

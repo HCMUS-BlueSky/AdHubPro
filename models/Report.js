@@ -56,7 +56,11 @@ const reportSchema = new mongoose.Schema(
       {
         type: String
       }
-    ]
+    ],
+    processed: {
+      type: Boolean,
+      default: false
+    }
   },
   {
     collection: 'reports',
