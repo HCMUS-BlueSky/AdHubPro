@@ -3,12 +3,12 @@
     <div
       class="d-flex align-items-center h-custom-2 px-5 ms-xl-4 mt-5 pt-5 pt-xl-0 mt-xl-n5"
     >
-      <form style="width: 23rem">
+      <form action="login" method="POST" style="width: 23rem">
         <h3 class="fw-normal mb-3 pb-3" style="letter-spacing: 1px">Log in</h3>
 
         <div class="form-outline mb-4">
           <label class="form-label" for="email">Email address</label>
-          <input type="email" id="email" class="form-control form-control-lg" />
+          <input type="email" id="email" name="email" class="form-control form-control-lg" />
         </div>
 
         <div class="form-outline mb-4">
@@ -16,24 +16,25 @@
           <input
             type="password"
             id="password"
+            name="password"
             class="form-control form-control-lg"
           />
         </div>
-
+        <div class="g-recaptcha" data-sitekey="6LdbsRUpAAAAAKYPxT99r6SuyLzbykoVUUJnMoOv"></div>
         <div class="pt-1 mb-4">
-          <button class="btn btn-info btn-lg btn-block" type="button">
+          <button class="btn btn-info btn-lg btn-block" type="submit">
             Login
           </button>
         </div>
 
         <p class="small mb-5 pb-lg-2">
-          <a class="text-muted" href="/account/reset/password"
+          <a class="text-muted" href="/auth/reset-password"
             >Forgot password?</a
           >
         </p>
         <p>
           Don't have an account?
-          <a href="/account/register" class="link-info">Register here</a>
+          <a href="/auth/register" class="link-info">Register here</a>
         </p>
       </form>
     </div>
@@ -47,3 +48,4 @@
     />
   </div>
 </div>
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>

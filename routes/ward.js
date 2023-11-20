@@ -10,7 +10,7 @@ const requestAPI = require("./ward/request");
 // router.use(pathFor('ward_officer'));
 
 router.get("/", (req, res) => {
-  return res.render("officer/officerWard");
+  return res.render("ward/index");
 });
 
 router.use("/ads", adsAPI);

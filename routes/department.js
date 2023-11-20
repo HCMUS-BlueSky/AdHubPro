@@ -10,7 +10,7 @@ const statisticAPI = require('./department/statistic');
 router.use(pathFor('department_officer'));
 
 router.get('/', (req, res) => {
-  return res.render('officer/officerWard');
+  return res.render('department/location/index');
 });
 
 router.use('/location', locationAPI);
