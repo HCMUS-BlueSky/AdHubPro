@@ -16,7 +16,7 @@ exports.login = async (req, res) => {
     if(!req.body["g-recaptcha-response"] || typeof req.body["g-recaptcha-response"] !== 'string') throw new Error("Invalid captcha!");
 
     const params = new URLSearchParams({
-      secret: '6LdbsRUpAAAAAPYkwsoiDGrl61k84FghC7mxUQ0x',
+      secret: process.env.RECAPTCHA_SECRET,
       response: req.body['g-recaptcha-response'],
       remoteip: req.ip
     });
