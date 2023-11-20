@@ -11,7 +11,7 @@
           <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
               <li class="breadcrumb-item">
-                <a href="." class="text-decoration-none text-muted"
+                <a href="/ward/request" class="text-decoration-none text-muted"
                   >Yêu cầu cấp phép</a
                 >
               </li>
@@ -28,13 +28,13 @@
             <!-- <div class="card-header">Xử lý báo cáo</div> -->
             <div class="card-body p-4">
               <h4 class="card-title py-2">Tên bảng quảng cáo, địa chỉ</h4>
-              <p class="text-muted">Khu vực: Phường 4, Quận 10</p>
+              <p class="text-muted">Khu vực: Phường <%= request.ward %>, Quận <%= request.district %></p>
               <div class="row border border-2 rounded">
                 <div class="col-2">
                   <p class="text-muted pt-3">Thông tin công ty:</p>
                 </div>
                 <div class="col-10">
-                  <p class="pt-3">Tên công ty - Mã số thuế - Địa chỉ</p>
+                  <p class="pt-3"><%= request.company_name %> - <%= request.company_code %> - <%= request.company_address %></p>
                 </div>
               </div>
               <div class="row border border-2 rounded">
@@ -42,7 +42,7 @@
                   <p class="text-muted pt-3">Thời hạn hợp đồng:</p>
                 </div>
                 <div class="col-10">
-                  <p class="pt-3">30/11/2077 - 31/11/2077</p>
+                  <p class="pt-3"><%= request.start_date %> - <%= request.end_date %></p>
                 </div>
               </div>
               <div class="row border border-2 rounded">
@@ -50,7 +50,7 @@
                   <p class="text-muted pt-3">Thông tin liên lạc:</p>
                 </div>
                 <div class="col-10">
-                  <p class="pt-3">Email - số điện thoại</p>
+                  <p class="pt-3"><%= request.company_email %> - <%= request.company_phone %></p>
                 </div>
               </div>
               <div class="row border border-2 rounded">
@@ -58,7 +58,9 @@
                   <p class="text-muted pt-3">Trạng thái xử lý:</p>
                 </div>
                 <div class="col-10">
-                  <p class="pt-3">Chưa duyệt</p>
+                  <p class="pt-3">
+                  <% if (request.accepted) { %> Đã duyệt <% } else { %> Chưa duyệt <% } %>
+                </p>
                 </div>
               </div>
               <div class="row border border-2 rounded mb-3">
@@ -67,14 +69,7 @@
                 </div>
                 <div class="col-10">
                   <p class="pt-3">
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                    Iusto inventore perferendis assumenda, accusantium autem
-                    recusandae deserunt magni perspiciatis quo esse? Facere,
-                    atque sint deleniti repellendus molestias neque ex quos
-                    nemo! Lorem ipsum dolor sit amet consectetur adipisicing
-                    elit. Fugit illo perspiciatis voluptate veritatis,
-                    architecto esse. A tempora illo officiis aspernatur! Nihil
-                    non magnam placeat tempora corporis illo et officiis labore.
+                    <%= request.description %> 
                   </p>
                 </div>
               </div>

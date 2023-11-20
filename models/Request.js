@@ -36,7 +36,34 @@ const requestSchema = new mongoose.Schema(
         type: Boolean,
         default: false
       },
-      company: {
+      
+      company_name: {
+        type: String
+      },
+
+      company_code: {
+        type: String
+      },
+
+      company_address: {
+        type: String
+      },
+
+      company_email: {
+        type: String
+      },
+
+      company_phone: {
+        type: String
+      },
+
+      description: {
+        type: String
+      },
+      start_date: {
+        type: String
+      },
+      end_date: {
         type: String
       },
     advertiser: {
