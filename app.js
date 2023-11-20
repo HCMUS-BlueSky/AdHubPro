@@ -8,6 +8,7 @@ const apiRouter = require("./routes/api");
 const wardRouter = require("./routes/ward");
 const districtRouter = require("./routes/district");
 const departmentRouter = require("./routes/department");
+const authRouter = require("./routes/auth");
 const errorHandler = require("./middleware/errorHandler");
 const authentication = require("./middleware/authentication");
 const cookieParser = require("cookie-parser");
@@ -15,7 +16,7 @@ connectDB();
 
 // Templating engine
 app.use(expressLayout);
-app.set("layout", "./layouts/main");
+app.set("layout", "./layouts/main", "./layouts/auth");
 app.set("view engine", "ejs");
 
 app.use(express.json());
@@ -35,6 +36,7 @@ app.use("/api", apiRouter);
 app.use("/ward", wardRouter);
 app.use("/district", districtRouter);
 app.use("/department", departmentRouter);
+app.use("/account", authRouter);
 
 mongoose.connection.once("open", () => {
   console.log("Connected to DB");
