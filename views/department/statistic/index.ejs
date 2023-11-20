@@ -1,0 +1,137 @@
+<!-- Right Part -->
+<div class="col p-3 border-start">
+  <div class="user-info d-flex justify-content-end">
+    <i class="bi bi-person-circle" style="font-size: 36px"></i>
+    <div class="user-text ms-3">
+      <h6>Elijah Scott</h6>
+      <p class="text-muted">elijarscott@gmail.com</p>
+    </div>
+  </div>
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item">
+        <a href="." class="text-decoration-none text-muted">Thống kê</a>
+      </li>
+      <li
+        class="breadcrumb-item active text-dark fw-semibold"
+        aria-current="page"
+      >
+        Tổng quan
+      </li>
+    </ol>
+  </nav>
+  <hr />
+  <div class="row justify-content-center">
+    <div class="col-3">
+      <input
+        class="form-control mr-sm-2"
+        type="search"
+        placeholder="Tìm kiếm"
+        aria-label="Search"
+      />
+    </div>
+    <div class="col-3">
+      <select class="form-select" aria-label="Default select example">
+        <option selected>Sắp xếp</option>
+      </select>
+    </div>
+    <div class="col-2">
+      <a class="btn btn-primary" href="./overview.html" role="button"
+        >Xem chi tiết</a
+      >
+    </div>
+  </div>
+  <div class="d-flex justify-content-center py-3" id="piechart"></div>
+
+  <div class="d-flex justify-content-center">
+    <div id="barchart"></div>
+  </div>
+</div>
+
+<script
+  type="text/javascript"
+  src="https://www.gstatic.com/charts/loader.js"
+></script>
+<script type="text/javascript">
+  // Load google charts
+  google.charts.load("current", { packages: ["corechart"] });
+  google.charts.setOnLoadCallback(drawChart);
+
+  // Draw the chart and set the chart values
+  function drawChart() {
+    var data = google.visualization.arrayToDataTable([
+      ["Trạng thái xử lý", "Số lượng báo cáo"],
+      ["Đang xử lý", 18],
+      ["Đã xử lý", 22],
+      ["Chưa xử lý", 14],
+    ]);
+
+    // Optional; add a title and set the width and height of the chart
+    var options = {
+      title: "Thống kê báo cáo",
+      subtitle: "01/01/2023 - Hiện tại",
+      fontName: "Be Vietnam Pro",
+      titleTextStyle: {
+        color: "#313131",
+        fontSize: 18, // 12, 18 whatever you want (don't specify px)
+        bold: true, // true or false
+        italic: false, // true or false
+      },
+      backgroundColor: "rgb(248,249,250)",
+      width: 800,
+      height: 300,
+    };
+
+    // Display the chart inside the <div> element with id="piechart"
+    var chart = new google.visualization.PieChart(
+      document.getElementById("piechart")
+    );
+    chart.draw(data, options);
+  }
+</script>
+<script
+  type="text/javascript"
+  src="https://www.gstatic.com/charts/loader.js"
+></script>
+<script type="text/javascript">
+  google.charts.load("current", { packages: ["bar"] });
+  google.charts.setOnLoadCallback(drawStuff);
+
+  function drawStuff() {
+    var data = new google.visualization.arrayToDataTable([
+      ["Tháng", "Số lượng báo cáo"],
+      ["Tháng 1", 50],
+      ["Tháng 2", 12],
+      ["Tháng 3", 34],
+      ["Tháng 4", 56],
+      ["Tháng 5", 78],
+      ["Tháng 6", 91],
+      ["Tháng 7", 101],
+      ["Tháng 8", 150],
+      ["Tháng 9", 43],
+      ["Tháng 10", 60],
+      ["Tháng 11", 27],
+      ["Tháng 12", 15],
+    ]);
+
+    var options = {
+      width: 800,
+      height: 500,
+      legend: { position: "none" },
+      chart: {
+        title: "Số lượng báo cáo theo từng tháng",
+        subtitle: "01/01/2023 - Hiện tại",
+      },
+      bars: "vertical", // Required for Material Bar Charts.
+      axes: {
+        x: {
+          0: { side: "bottom", label: "Số lượng báo cáo" }, // Top x-axis.
+        },
+      },
+      bar: { groupWidth: "50%" },
+    };
+
+    var chart1 = new google.charts.Bar(document.getElementById("barchart"));
+    chart1.draw(data, options);
+  }
+</script>
