@@ -1,5 +1,5 @@
 body {
-  font-family: 'Be Vietnam Pro', sans-serif;
+  font-family: "Be Vietnam Pro", sans-serif;
 }
 
 a {
@@ -13,10 +13,9 @@ a {
 
 .nav-item:hover {
   background-color: var(--bs-gray-800);
-  color: rgba(var(--bs-dark-rgb),var(--bs-bg-opacity));
+  color: rgba(var(--bs-dark-rgb), var(--bs-bg-opacity));
 }
 
-.table>:not(caption)>*>* {
-  padding: .75rem;
+.table > :not(caption) > * > * {
+  padding: 0.75rem;
 }
-
