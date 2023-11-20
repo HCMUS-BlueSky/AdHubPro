@@ -2,33 +2,43 @@ const mongoose = require('mongoose');
 
 const requestSchema = new mongoose.Schema(
   {
-    type: {
-      type: String,
-      enum: ['location', 'ads'],
-      required: true
-    },
-    location: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Location'
-    },
-    ads: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Ads'
-    },
-    content: {
-      type: String,
-      required: true
-    },
-    images: [
-      {
+      latitude: {
+        type: Number,
+        required: true,
+        alias: 'lat'
+      },
+      longitude: {
+        type: Number,
+        required: true,
+        alias: 'lng'
+      },
+      ward: {
         type: String
-      }
-    ],
-    officer: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
-      required: true
-    },
+      },
+      district: {
+        type: String
+      },
+      address: {
+        type: String
+      },
+      type: {
+        type: String
+      },
+      method: {
+        type: String
+      },
+      images: [
+        {
+          type: String
+        }
+      ],
+      accepted: {
+        type: Boolean,
+        default: false
+      },
+      company: {
+        type: String
+      },
     advertiser: {
       email: {
         type: String,

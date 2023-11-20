@@ -61,10 +61,15 @@
               <% request.forEach((element, index) => { %>
               <tr>
                 <th scope="row"><%= perPage * (current - 1) + index + 1 %></th>
-                <td class=""><%= element.location.address %></td>
-                <td class=""><%= element.type %></td>
-                <td class=""><%= element.created_at.toLocaleTimeString("en-US") %></td>
-                <td class=""><%= element.updated_at.toLocaleTimeString("en-US") %></td>
+                <td class=""><%= element.method %></td>
+                <td class=""><%= element.address %></td>
+                <td class=""><%= element.company %></td>
+                <td class="">
+                  <% if (element.accepted) { %>
+                  <span class="badge bg-success w-100">Đã duyệt</span> <% } else {
+                  %> <span class="badge bg-danger w-100">Chưa duyệt</span> <% } %>
+                </td>
+                <!-- toLocaleTimeString("en-US") -->
                 <td class="">
                   <a href="/ward/request/view/<%= element._id %>">
                     <i class="bi bi-eye-fill"></i>

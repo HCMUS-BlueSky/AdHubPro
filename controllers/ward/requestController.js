@@ -8,7 +8,6 @@ exports.view = async (req, res) => {
       .sort({ updatedAt: -1 })
       .skip(perPage * page - perPage)
       .limit(perPage)
-      .populate("location", "address")
       .exec();
     const count = await Request.count();
     res.render("ward/request/index", {
@@ -25,8 +24,6 @@ exports.view = async (req, res) => {
 exports.getDetail = async (req, res) => {
   try {
     const request = await Request.findOne({ _id: req.params.id })
-      .populate("location", "address")
-      .exec();
     res.render("ward/request/detail", {
       request,
     });
