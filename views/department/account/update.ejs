@@ -18,79 +18,87 @@
         class="breadcrumb-item active text-dark fw-semibold"
         aria-current="page"
       >
-        Phân công khu vực quản lý
+        Cập nhật tài khoản
       </li>
     </ol>
   </nav>
   <hr />
   <div class="card bg-light mb-3">
     <div class="card-body p-4">
-      <h4 class="card-title py-2 fw-semibold">Phân công khu vực quản lý</h4>
+      <h4 class="card-title py-2 fw-semibold">Cập nhật tài khoản</h4>
       <div class="d-flex flex-column pb-4">
         <div class="row py-3">
-          <div class="col-2">
+          <div class="col-5">
             <label for="" class="form-label"
-              >Chức vụ<span class="text-danger"> *</span></label
+              >Họ tên<span class="text-danger"> *</span></label
             >
-            <div class="form-check py-2">
+            <input type="text" class="form-control" placeholder="Họ tên" />
+          </div>
+          <div class="col-3">
+            <label for="" class="form-label"
+              >Ngày sinh<span class="text-danger"> *</span></label
+            >
+            <input type="date" class="form-control text-secondary" />
+          </div>
+          <div class="col-3">
+            <label for="" class="form-label d-block"
+              >Giới tính<span class="text-danger"> *</span></label
+            >
+            <div class="form-check form-check-inline">
               <input
                 class="form-check-input"
                 type="radio"
-                name="exampleRadios"
-                id="exampleRadios1"
+                name="inlineRadioOptions"
+                id="inlineRadio1"
                 value="option1"
-                checked
               />
-              <label class="form-check-label" for="exampleRadios1">
-                Cán bộ phường
-              </label>
+              <label class="form-check-label" for="inlineRadio1">Nam</label>
             </div>
-            <div class="form-check">
+            <div class="form-check form-check-inline">
               <input
                 class="form-check-input"
                 type="radio"
-                name="exampleRadios"
-                id="exampleRadios2"
+                name="inlineRadioOptions"
+                id="inlineRadio2"
                 value="option2"
               />
-              <label class="form-check-label" for="exampleRadios2">
-                Cán bộ quận
-              </label>
+              <label class="form-check-label" for="inlineRadio2">Nữ</label>
             </div>
           </div>
-          <div class="col-4">
+        </div>
+        <div class="row py-3">
+          <div class="col-5">
             <label for="" class="form-label"
-              >Quận<span class="text-danger"> *</span></label
+              >Email<span class="text-danger"> *</span></label
             >
-            <select class="form-select" aria-label="Default select example">
-              <option selected>Chọn quận</option>
-              <option value="1">1</option>
-              <option value="2">2</option>
-              <option value="3">3</option>
-            </select>
+            <input
+              type="email"
+              class="form-control"
+              required
+              id=""
+              aria-describedby="helpId"
+              placeholder="Email"
+            />
           </div>
-          <div class="col-4">
+          <div class="col-5">
             <label for="" class="form-label"
-              >Phường<span class="text-danger"> *</span></label
+              >Password<span class="text-danger"> *</span></label
             >
-            <select class="form-select" aria-label="Default select example">
-              <option selected>Chọn phường</option>
-              <option value="1">1</option>
-              <option value="2">2</option>
-              <option value="3">3</option>
-            </select>
+            <input
+              type="password"
+              class="form-control"
+              required
+              id=""
+              aria-describedby="helpId"
+              placeholder="Password"
+            />
           </div>
         </div>
 
         <div
           class="d-flex flex-row justify-content-center align-items-center gap-4 pt-5"
         >
-          <a
-            name=""
-            id=""
-            class="btn btn-secondary px-4"
-            href="./detail.html"
-            role="button"
+          <a name="" id="" class="btn btn-secondary px-4" href="." role="button"
             >Trở về</a
           >
           <a
@@ -100,7 +108,6 @@
             role="button"
             data-bs-toggle="modal"
             data-bs-target="#updateAccount"
-            role="button"
             >Cập nhật</a
           >
         </div>
@@ -140,7 +147,7 @@
             Đóng
           </button>
           <button type="button" class="btn btn-primary" data-bs-dismiss="modal">
-            Lưu thay đổi
+            Cập nhật
           </button>
         </div>
       </div>
