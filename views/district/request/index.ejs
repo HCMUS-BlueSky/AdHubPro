@@ -36,7 +36,7 @@
       </select>
     </div>
     <div class="col-3">
-      <a href="/ward/request/create" class="btn btn-primary">
+      <a href="/district/request/create" class="btn btn-primary">
         Tạo yêu cầu mới
       </a>
     </div>
@@ -67,7 +67,7 @@
         </td>
         <!-- toLocaleTimeString("en-US") -->
         <td class="">
-          <a href="/ward/request/view/<%= element._id %>">
+          <a href="/district/request/view/<%= element._id %>">
             <i class="bi bi-eye-fill"></i>
           </a>
         </td>
@@ -93,7 +93,7 @@
       </li>
       <% } else { %>
       <li class="page-item">
-        <a href="/ward/request?page=1" class="page-link">First</a>
+        <a href="/district/request?page=1" class="page-link">First</a>
       </li>
       <% } %> <% i = (Number(current) > 5 ? Number(current) - 4 : 1) %> <% if (i
       != 1) { %>
@@ -105,7 +105,7 @@
       </li>
       <% } else { %>
       <li class="page-item">
-        <a href="/ward/request?page=<%= i %>" class="page-link"><%= i %></a>
+        <a href="/district/request?page=<%= i %>" class="page-link"><%= i %></a>
       </li>
       <% } %> <% if (i == Number (current) + 4 && i < pages) { %>
       <li class="page-item disabled"><a href="#" class="page-link">...</a></li>
@@ -113,7 +113,7 @@
       <li class="page-item disabled"><a href="#" class="page-link">Last</a></li>
       <% } else { %>
       <li class="page-item">
-        <a href="/ward/request?page=<%= pages %>" class="page-link">Last</a>
+        <a href="/district/request?page=<%= pages %>" class="page-link">Last</a>
       </li>
       <% } %>
     </ul>

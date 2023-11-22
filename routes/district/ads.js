@@ -1,8 +1,11 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
+const adsController = require("../../controllers/district/adsController");
 
-router.get('/', (req, res) => {
-  return res.send("Test");
-});
+router.get("/", adsController.view);
+
+router.get("/view/:id", adsController.getDetail);
+
+router.get("/update-info/:id", adsController.updateInfo);
 
 module.exports = router;

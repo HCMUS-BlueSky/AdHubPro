@@ -10,7 +10,7 @@
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
       <li class="breadcrumb-item">
-        <a href="/ward/report" class="text-decoration-none text-muted">Báo cáo</a>
+        <a href="/district/report" class="text-decoration-none text-muted">Báo cáo</a>
       </li>
       <li
         class="breadcrumb-item active text-dark fw-semibold"
@@ -71,7 +71,7 @@
           <% } %>
         </td>
         <td class="">
-          <a role="button" href="/ward/report/view/<%= element._id %>">
+          <a role="button" href="/district/report/view/<%= element._id %>">
             <i class="bi bi-eye-fill"></i>
           </a>
         </td>
@@ -88,7 +88,7 @@
       </li>
       <% } else { %>
       <li class="page-item">
-        <a href="/ward/ads?page=1" class="page-link">First</a>
+        <a href="/district/ads?page=1" class="page-link">First</a>
       </li>
       <% } %> <% i = (Number(current) > 5 ? Number(current) - 4 : 1) %> <% if (i
       != 1) { %>
@@ -100,7 +100,7 @@
       </li>
       <% } else { %>
       <li class="page-item">
-        <a href="/ward/ads?page=<%= i %>" class="page-link"><%= i %></a>
+        <a href="/district/ads?page=<%= i %>" class="page-link"><%= i %></a>
       </li>
       <% } %> <% if (i == Number (current) + 4 && i < pages) { %>
       <li class="page-item disabled"><a href="#" class="page-link">...</a></li>
@@ -108,7 +108,7 @@
       <li class="page-item disabled"><a href="#" class="page-link">Last</a></li>
       <% } else { %>
       <li class="page-item">
-        <a href="/ward/ads?page=<%= pages %>" class="page-link">Last</a>
+        <a href="/district/ads?page=<%= pages %>" class="page-link">Last</a>
       </li>
       <% } %>
     </ul>
