@@ -1,0 +1,117 @@
+<!-- Right Part -->
+<div class="col p-3 border-start">
+  <div class="user-info d-flex justify-content-end">
+    <i class="bi bi-person-circle" style="font-size: 36px"></i>
+    <div class="user-text ms-3">
+      <h6>Elijah Scott</h6>
+      <p class="text-muted">elijarscott@gmail.com</p>
+    </div>
+  </div>
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item">
+        <a href="/ward/report" class="text-decoration-none text-muted">Báo cáo</a>
+      </li>
+      <li
+        class="breadcrumb-item active text-dark fw-semibold"
+        aria-current="page"
+      >
+        Thông tin chung
+      </li>
+    </ol>
+  </nav>
+  <hr />
+  <h2 class="fw-semibold">THÔNG TIN CÁC BÁO CÁO</h2>
+  <div class="row justify-content-center">
+    <div class="col-3">
+      <input
+        class="form-control mr-sm-2"
+        type="search"
+        placeholder="Tìm kiếm"
+        aria-label="Search"
+      />
+    </div>
+    <div class="col-3">
+      <select class="form-select" aria-label="Default select example">
+        <option selected>Sắp xếp</option>
+      </select>
+    </div>
+  </div>
+  <table class="table border border-2 rounded py-3 mt-3">
+    <thead>
+      <tr>
+        <th scope="col">STT</th>
+        <th scope="col">THỜI GIAN</th>
+        <th scope="col">ĐỊA CHỈ</th>
+        <th scope="col">LOẠI</th>
+        <th scope="col">NGƯỜI GỬI</th>
+        <th scope="col">TRẠNG THÁI</th>
+        <th scope="col"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% reports.forEach((element, index) => { %>
+      <tr>
+        <th scope="row"><%= perPage * (current - 1) + index + 1 %></th>
+        <td class=""><%= element.created_at.toLocaleTimeString("en-US") %></td>
+        <td class=""><%= element.location.address %></td>
+        <td class="">
+          <% if (element.type == "ads") { %>
+            Bảng quảng cáo
+          <% } else {%> 
+            Điểm đặt quảng cáo
+          <% } %>
+        </td>
+        <td class=""><%= element.reporter.name %></td>
+        <td class=""> 
+          <% if (element.processed) { %>
+            <span class="badge bg-success w-100">Đã xử lí</span>
+          <% } else {%> 
+            <span class="badge bg-danger w-100">Chưa xử lí</span>
+          <% } %>
+        </td>
+        <td class="">
+          <a role="button" href="/ward/report/view/<%= element._id %>">
+            <i class="bi bi-eye-fill"></i>
+          </a>
+        </td>
+      </tr>
+      <% }) %>
+    </tbody>
+  </table>
+  <% if (reports.length > 0) { %>
+  <nav aria-label="Dashboard Pagination">
+    <ul class="pagination justify-content-center mt-5">
+      <% if (current == 1) { %>
+      <li class="page-item disabled">
+        <a href="#" class="page-link">First</a>
+      </li>
+      <% } else { %>
+      <li class="page-item">
+        <a href="/ward/ads?page=1" class="page-link">First</a>
+      </li>
+      <% } %> <% i = (Number(current) > 5 ? Number(current) - 4 : 1) %> <% if (i
+      != 1) { %>
+      <li class="page-item disabled"><a href="#" class="page-link">...</a></li>
+      <% } %> <% for(; i <= (Number(current) + 4) && i <= pages; i++ ) { %> <%
+      if (i == current) { %>
+      <li class="page-item disabled">
+        <a href="#" class="page-link"><%= i %></a>
+      </li>
+      <% } else { %>
+      <li class="page-item">
+        <a href="/ward/ads?page=<%= i %>" class="page-link"><%= i %></a>
+      </li>
+      <% } %> <% if (i == Number (current) + 4 && i < pages) { %>
+      <li class="page-item disabled"><a href="#" class="page-link">...</a></li>
+      <% } %> <% } %> <% if (current == pages) { %>
+      <li class="page-item disabled"><a href="#" class="page-link">Last</a></li>
+      <% } else { %>
+      <li class="page-item">
+        <a href="/ward/ads?page=<%= pages %>" class="page-link">Last</a>
+      </li>
+      <% } %>
+    </ul>
+  </nav>
+  <% } %>
+</div>
