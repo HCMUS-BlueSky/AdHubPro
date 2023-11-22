@@ -8,6 +8,7 @@ exports.view = async (req, res) => {
       .sort({ updatedAt: -1 })
       .skip(perPage * page - perPage)
       .limit(perPage)
+      .populate({ path: "location", select: ["address", "ward", "district", "method", "number_of_ads","accepted"] })
       .exec();
     const count = await Location.count();
     res.render("department/location/index", {
@@ -35,3 +36,7 @@ exports.getDetail = async (req, res) => {
 exports.updateInfo = (req, res) => {
   res.render("department/location/update_info");
 };
+
+exports.createNew = (req, res) => {
+  res.render("department/location/create");
+}
