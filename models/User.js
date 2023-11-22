@@ -11,6 +11,11 @@ const userSchema = new mongoose.Schema(
       type: Date,
       alias: 'dob'
     },
+    idnumber: { //identity number
+      type: String,
+      trim: true,
+      required: true
+    },
     email: {
       type: String,
       required: true,

@@ -27,11 +27,8 @@ const locationSchema = new mongoose.Schema(
     method: {
       type: String
     },
-    numberofads: {
+    number_of_ads: { //number of ads
       type: Number
-    },
-    status: {
-      type: String
     },
     images: [
       {

@@ -15,13 +15,13 @@ const reportSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Ads'
     },
-    content: {
+    content: { //noi dung bao cao
       type: String
     },
-    solution: {
+    solution: { //cach thuc xu ly
       type: String
     },
-    reporttime:{
+    report_time:{
       type: Date,
     },
     reporter: {
