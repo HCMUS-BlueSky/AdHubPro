@@ -18,6 +18,12 @@ const reportSchema = new mongoose.Schema(
     content: {
       type: String
     },
+    solution: {
+      type: String
+    },
+    reporttime:{
+      type: Date,
+    },
     reporter: {
       name: {
         type: String,
