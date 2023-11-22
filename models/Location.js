@@ -27,6 +27,12 @@ const locationSchema = new mongoose.Schema(
     method: {
       type: String
     },
+    numberofads: {
+      type: Number
+    },
+    status: {
+      type: String
+    },
     images: [
       {
         type: String
