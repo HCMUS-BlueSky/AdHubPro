@@ -27,8 +27,9 @@ const locationSchema = new mongoose.Schema(
     method: {
       type: String
     },
-    number_of_ads: { //number of ads
-      type: Number
+    ads_count: {
+      type: Number,
+      default: 1
     },
     images: [
       {
