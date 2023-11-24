@@ -1,4 +1,5 @@
 const Ads = require("../../models/Ads");
+const moment = require("moment");
 
 exports.view = async (req, res) => {
   let perPage = 10;
@@ -20,6 +21,7 @@ exports.view = async (req, res) => {
       perPage,
       current: page,
       pages: Math.ceil(count / perPage),
+      pageName: "ads",
     });
   } catch (err) {
     return res.status(500).send(err.message);
@@ -36,6 +38,8 @@ exports.getDetail = async (req, res) => {
       .exec();
     res.render("ward/ads/detail", {
       ads,
+      pageName: "ads",
+      moment,
     });
   } catch (error) {
     console.log(error);

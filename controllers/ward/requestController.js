@@ -15,6 +15,7 @@ exports.view = async (req, res) => {
       perPage,
       current: page,
       pages: Math.ceil(count / perPage),
+      pageName: "request",
     });
   } catch (err) {
     return res.status(500).send(err.message);
@@ -26,6 +27,7 @@ exports.getDetail = async (req, res) => {
     const request = await Request.findOne({ _id: req.params.id });
     res.render("ward/request/detail", {
       request,
+      pageName: "request",
     });
   } catch (error) {
     console.log(error);

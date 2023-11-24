@@ -1,5 +1,5 @@
 const Location = require("../../models/Location");
-const uploadFile = require('../../utils/fileUpload');
+const uploadFile = require("../../utils/fileUpload");
 
 exports.view = async (req, res) => {
   let perPage = 10;
@@ -16,6 +16,7 @@ exports.view = async (req, res) => {
       perPage,
       current: page,
       pages: Math.ceil(count / perPage),
+      pageName: "location",
     });
   } catch (err) {
     return res.status(500).send(err.message);
@@ -28,6 +29,7 @@ exports.getDetail = async (req, res) => {
     if (!location) throw new Error("Location not found!");
     return res.render("ward/location/detail", {
       location,
+      pageName: "location",
     });
   } catch (err) {
     return res.redirect("/ward/location");
@@ -37,19 +39,19 @@ exports.getDetail = async (req, res) => {
 exports.renderUpdateInfo = async (req, res) => {
   try {
     const location = await Location.findOne({ _id: req.params.id });
-    if (!location) throw new Error('Location not found!');
-    return res.render('ward/location/update_info', { location });
+    if (!location) throw new Error("Location not found!");
+    return res.render("ward/location/update_info", { location });
   } catch (err) {
-    return res.redirect('/ward/location');
+    return res.redirect("/ward/location");
   }
 };
 
 exports.updateInfo = async (req, res) => {
   try {
     const location = await Location.findOne({ _id: req.params.id });
-    if (!location) throw new Error('Location not found!');
-    const {longitude, latitude, images, ...filtered } = req.body;
-    const new_images = []
+    if (!location) throw new Error("Location not found!");
+    const { longitude, latitude, images, ...filtered } = req.body;
+    const new_images = [];
     if (req.files) {
       for (let file of req.files) {
         const url = await uploadFile(`assets/location/${location.id}`, file);
@@ -57,14 +59,18 @@ exports.updateInfo = async (req, res) => {
       }
       filtered.new_images = new_images;
     }
-    const updated_location = await Location.findByIdAndUpdate(location.id, filtered, {
-      runValidators: true,
-      returnDocument: 'after',
-    }).exec();
-    return res.render('ward/location/update_info', {
-      location: updated_location
+    const updated_location = await Location.findByIdAndUpdate(
+      location.id,
+      filtered,
+      {
+        runValidators: true,
+        returnDocument: "after",
+      }
+    ).exec();
+    return res.render("ward/location/update_info", {
+      location: updated_location,
     });
   } catch (err) {
-    return res.redirect('/ward/location');
+    return res.redirect("/ward/location");
   }
-}
+};

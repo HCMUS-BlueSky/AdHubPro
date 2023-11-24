@@ -1,10 +1,15 @@
 <!-- Right Part -->
 <div class="col p-3 border-start">
-  <div class="user-info d-flex justify-content-end">
-    <i class="bi bi-person-circle" style="font-size: 36px"></i>
-    <div class="user-text ms-3">
-      <h6>Elijah Scott</h6>
-      <p class="text-muted">elijarscott@gmail.com</p>
+  <div class="menu-user">
+    <div
+      class="user-info d-flex justify-content-end"
+      onclick="handleUserMenu()"
+      style="cursor: pointer"
+    >
+      <i class="bi bi-person-circle" style="font-size: 36px"></i>
+      <div class="user-text ms-3 d-flex align-items-center">
+        <h6>Elijah Scott</h6>
+      </div>
     </div>
   </div>
   <nav aria-label="breadcrumb">
@@ -36,7 +41,10 @@
     </svg>
     <div class="card-body">
       <h5 class="card-title fw-semibold fs-3"><%= ads.location.method %></h5>
-      <p class="text-muted">Khu vực: Phường <%= ads.location.ward %>, Quận <%= ads.location.district %></p>
+      <p class="text-muted">
+        Khu vực: Phường <%= ads.location.ward %>, Quận <%= ads.location.district
+        %>
+      </p>
       <div class="row border border-2 rounded">
         <div class="col-3">
           <p class="text-muted pt-3">Địa chỉ:</p>
@@ -50,7 +58,9 @@
           <p class="text-muted pt-3">Ngày bắt đầu hợp đồng:</p>
         </div>
         <div class="col-9">
-          <p class="pt-3"><%= ads.created_at %></p>
+          <p class="pt-3">
+            <%= moment(ads.created_at).format('hh:mm a MMM DD YYYY'); %>
+          </p>
         </div>
       </div>
       <div class="row border border-2 rounded">
@@ -58,7 +68,9 @@
           <p class="text-muted pt-3">Ngày kết thúc hợp đồng:</p>
         </div>
         <div class="col-9">
-          <p class="pt-3"><%= ads.updated_at %></p>
+          <p class="pt-3">
+            <%= moment(ads.updated_at).format('hh:mm a MMM DD YYYY') %>
+          </p>
         </div>
       </div>
       <div
@@ -176,7 +188,10 @@
         </div>
         <div class="container-fluid mt-3">
           <p class="text-center">Địa điểm</p>
-          <p class="text-center">Khu vực: Phường <%= ads.location.ward %>, Quận <%= ads.location.district %></p>
+          <p class="text-center">
+            Khu vực: Phường <%= ads.location.ward %>, Quận <%=
+            ads.location.district %>
+          </p>
         </div>
       </div>
     </div>

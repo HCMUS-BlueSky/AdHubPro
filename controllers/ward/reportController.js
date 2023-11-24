@@ -1,4 +1,4 @@
-const Report = require('../../models/Report');
+const Report = require("../../models/Report");
 
 exports.view = async (req, res) => {
   let perPage = 10;
@@ -8,14 +8,18 @@ exports.view = async (req, res) => {
       .sort({ updatedAt: -1 })
       .skip(perPage * page - perPage)
       .limit(perPage)
-      .populate({ path: "location", select: ["address", "ward", "district", "method"] })
+      .populate({
+        path: "location",
+        select: ["address", "ward", "district", "method"],
+      })
       .exec();
     const count = await Report.count();
-    res.render('ward/report/index', {
+    res.render("ward/report/index", {
       reports,
       perPage,
       current: page,
-      pages: Math.ceil(count / perPage)
+      pages: Math.ceil(count / perPage),
+      pageName: "report",
     });
   } catch (err) {
     return res.status(500).send(err.message);
@@ -25,10 +29,14 @@ exports.view = async (req, res) => {
 exports.getDetail = async (req, res) => {
   try {
     const report = await Report.findOne({ _id: req.params.id })
-    .populate({ path: "location", select: ["address", "ward", "district", "method"] })
-    .exec();
-    res.render('ward/report/detail', {
-      report
+      .populate({
+        path: "location",
+        select: ["address", "ward", "district", "method"],
+      })
+      .exec();
+    res.render("ward/report/detail", {
+      report,
+      pageName: "report",
     });
   } catch (error) {
     console.log(error);
@@ -37,9 +45,12 @@ exports.getDetail = async (req, res) => {
 
 exports.processReport = async (req, res) => {
   const report = await Report.findOne({ _id: req.params.id })
-  .populate({ path: "location", select: ["address", "ward", "district", "method"]})
-  .exec()
-  res.render('ward/report/process', {
-    report
+    .populate({
+      path: "location",
+      select: ["address", "ward", "district", "method"],
+    })
+    .exec();
+  res.render("ward/report/process", {
+    report,
   });
 };
