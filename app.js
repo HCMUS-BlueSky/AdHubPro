@@ -7,12 +7,12 @@ const expressLayout = require("express-ejs-layouts");
 const apiRouter = require("./routes/api");
 const wardRouter = require("./routes/ward");
 const districtRouter = require("./routes/district");
-const departmentRouter = require("./routes/department");
+// const departmentRouter = require("./routes/department");
 const authRouter = require("./routes/auth");
 const errorHandler = require("./middleware/errorHandler");
 const cookieParser = require("cookie-parser");
-const crypto = require('crypto');
-const session = require('express-session');
+const crypto = require("crypto");
+const session = require("express-session");
 connectDB();
 
 // Templating engine
@@ -25,10 +25,10 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(
   session({
-    secret: process.env.SECRET || crypto.randomBytes(20).toString('hex'),
+    secret: process.env.SECRET || crypto.randomBytes(20).toString("hex"),
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: false }
+    cookie: { secure: false },
   })
 );
 // app.use(cors(corsOptions));
@@ -43,7 +43,7 @@ app.get("/", async (req, res) => {
 app.use("/api", apiRouter);
 app.use("/ward", wardRouter);
 app.use("/district", districtRouter);
-app.use("/department", departmentRouter);
+// app.use("/department", departmentRouter);
 app.use("/auth", authRouter);
 
 mongoose.connection.once("open", () => {
