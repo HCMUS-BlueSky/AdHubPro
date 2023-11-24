@@ -39,4 +39,4 @@ const adsSchema = new mongoose.Schema(
 );
 
 //Export the model
-module.exports = mongoose.model('Ads', adsSchema);
+module.exports = { adsSchema, Ads: mongoose.model('Ads', adsSchema) };

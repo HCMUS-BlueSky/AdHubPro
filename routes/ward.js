@@ -9,6 +9,9 @@ const router = express.Router();
 const path = require("path");
 
 // router.use(pathFor('ward_officer'));
+// Main
+
+router.get("/", (req, res) => res.send("WARD"))
 
 // Home
 router.get("/", (req, res) => {
@@ -20,7 +23,9 @@ router.get("/ads", adsController.view);
 
 router.get("/ads/view/:id", adsController.getDetail);
 
-router.get("/ads/update-info/:id", adsController.updateInfo);
+router.get('/ads/update-info/:id', adsController.renderUpdateInfo);
+
+router.post('/ads/update-info/:id', upload.array('images', 5) , adsController.updateInfo);
 
 // Location
 router.get("/location", locationController.view);
