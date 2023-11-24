@@ -8,13 +8,18 @@ const upload = require('../middleware/multer');
 const router = express.Router();
 
 // router.use(pathFor('ward_officer'));
+// Main
+
+router.get("/", (req, res) => res.send("WARD"))
 
 // Ads
 router.get("/ads", adsController.view);
 
 router.get("/ads/view/:id", adsController.getDetail);
 
-router.get("/ads/update-info/:id", adsController.updateInfo);
+router.get('/ads/update-info/:id', adsController.renderUpdateInfo);
+
+router.post('/ads/update-info/:id', upload.array('images', 5) , adsController.updateInfo);
 
 // Location
 router.get("/location", locationController.view);

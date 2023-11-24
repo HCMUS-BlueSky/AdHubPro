@@ -21,12 +21,12 @@
     </ol>
   </nav>
   <hr />
-  <div class="card bg-light mb-3">
+  <form method="POST" id="form" class="card bg-light mb-3" enctype="multipart/form-data">
     <div class="card-body p-4">
       <h4 class="card-title py-2 fw-semibold">Cập nhật thông tin</h4>
       <div class="d-flex flex-column pb-4 px-3">
         <label for="" class="form-label"
-          >Địa điểm<span class="text-danger"> *</span></label
+          >Địa điểm</label
         >
         <div
           class="d-flex flex-row gap-3 align-items-start text-secondary w-75"
@@ -38,6 +38,8 @@
             id=""
             aria-describedby="helpId"
             placeholder="Địa chỉ"
+            name="address"
+            value=""
           />
           <input
             type="text"
@@ -57,7 +59,7 @@
           />
         </div>
         <label for="method_select" class="form-label pt-3"
-          >Hình thức quảng cáo<span class="text-danger"> *</span></label
+          >Loại bảng quảng cáo</label
         >
         <div>
           <select
@@ -116,7 +118,7 @@
         </div>
       </div>
     </div>
-  </div>
+  </form>
 </div>
 
 <div
