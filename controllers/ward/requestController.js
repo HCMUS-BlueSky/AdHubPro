@@ -23,7 +23,7 @@ exports.view = async (req, res) => {
 
 exports.getDetail = async (req, res) => {
   try {
-    const request = await Request.findOne({ _id: req.params.id })
+    const request = await Request.findOne({ _id: req.params.id });
     res.render("ward/request/detail", {
       request,
     });

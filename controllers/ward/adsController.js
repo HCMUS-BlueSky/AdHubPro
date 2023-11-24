@@ -8,7 +8,10 @@ exports.view = async (req, res) => {
       .sort({ updatedAt: -1 })
       .skip(perPage * page - perPage)
       .limit(perPage)
-      .populate({ path: "location", select: ["address", "ward", "district", "method"] })
+      .populate({
+        path: "location",
+        select: ["address", "ward", "district", "method"],
+      })
       .exec();
 
     const count = await Ads.count();
@@ -26,11 +29,13 @@ exports.view = async (req, res) => {
 exports.getDetail = async (req, res) => {
   try {
     const ads = await Ads.findOne({ _id: req.params.id })
-    .populate({ path: "location", select: ["address", "ward", "district", "method"] })
-    .exec();
-
+      .populate({
+        path: "location",
+        select: ["address", "ward", "district", "method"],
+      })
+      .exec();
     res.render("ward/ads/detail", {
-      ads
+      ads,
     });
   } catch (error) {
     console.log(error);
