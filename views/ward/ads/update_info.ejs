@@ -81,9 +81,9 @@
           >Thời hạn hợp đồng</label
         >
         <div class="input-group input-daterange w-50" id="date_input">
-          <input type="date" class="form-control text-secondary" disabled value="<%= moment(ads.effective).format('YYYY-MM-DD'); %>"/>
+          <input type="date" class="form-control text-secondary" disabled value="<%= moment(ads.effective).format('DD-MM-YYYY'); %>"/>
           <div class="input-group-text">to</div>
-          <input type="date" class="form-control text-secondary" disabled value="<%= moment(ads.expiration).format('YYYY-MM-DD'); %>"/>
+          <input type="date" class="form-control text-secondary" disabled value="<%= moment(ads.expiration).format('DD-MM-YYYY'); %>"/>
         </div>
         <label for="file_inp" class="form-label pt-3"
           >Hình ảnh thực tế</label
