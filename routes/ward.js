@@ -50,8 +50,9 @@ router.get("/report", reportController.view);
 
 router.get("/report/view/:id", reportController.getDetail);
 
-router.get("/report/process/:id", reportController.processReport);
+router.get("/report/process/:id", reportController.renderProcessReport);
 
+router.post('/report/process/:id', reportController.processReport);
 // Request
 router.get("/request", requestController.view);
 

@@ -16,11 +16,17 @@ const reportSchema = new mongoose.Schema(
       ref: 'Ads'
     },
     content: {
-      type: String
+      type: String,
+      trim: true
     },
     method: {
       type: String,
-      enum: ["Tố giác sai phạm", "Đăng ký nội dung", "Đóng góp ý kiến", "Giải đáp thắc mắc"],
+      enum: [
+        'Tố giác sai phạm',
+        'Đăng ký nội dung',
+        'Đóng góp ý kiến',
+        'Giải đáp thắc mắc'
+      ],
       required: true
     },
     reporter: {
@@ -59,12 +65,18 @@ const reportSchema = new mongoose.Schema(
     },
     images: [
       {
-        type: String
+        type: String,
+        trim: true
       }
     ],
-    processed: {
-      type: Boolean,
-      default: false
+    status: {
+      type: String,
+      enum: ['pending', 'processing', 'done'],
+      default: 'pending'
+    },
+    response: {
+      type: String,
+      trim: true
     }
   },
   {

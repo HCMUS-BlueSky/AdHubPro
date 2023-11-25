@@ -1,4 +1,5 @@
 const Report = require("../../models/Report");
+const moment = require('moment');
 
 exports.view = async (req, res) => {
   let perPage = 10;
@@ -17,6 +18,7 @@ exports.view = async (req, res) => {
     res.render("ward/report/index", {
       reports,
       perPage,
+      moment,
       current: page,
       pages: Math.ceil(count / perPage),
       pageName: "report",
@@ -46,19 +48,46 @@ exports.getDetail = async (req, res) => {
         navCurrent: "Thông tin chi tiết",
       },
     });
-  } catch (error) {
-    console.log(error);
+  } catch (err) {
+    return res.redirect('/ward/report');
+  }
+};
+
+exports.renderProcessReport = async (req, res) => {
+  try {
+    const report = await Report.findOne({ _id: req.params.id }).exec();
+    if (!report) throw new Error("No report found!");
+    res.render('ward/report/process', {
+      report,
+      pageName: "report",
+      header: {
+        navRoot: 'Báo cáo',
+        navCurrent: 'Xử lí báo cáo'
+      }
+    });
+  } catch (err) {
+    return res.redirect('/ward/report');
   }
 };
 
 exports.processReport = async (req, res) => {
-  const report = await Report.findOne({ _id: req.params.id })
-    .populate({
-      path: "location",
-      select: ["address", "ward", "district", "method"],
-    })
-    .exec();
-  res.render("ward/report/process", {
-    report,
-  });
+  try {
+    const { status, response } = req.body;
+    if (!status || !response || typeof status !== 'string' || typeof status !== 'string') throw new Error("Invalid values!")
+    const report = await Report.findOne({ _id: req.params.id }).exec();
+    if (!report) throw new Error('No report found!');
+    if (status !== 'processing' && status !== 'done') throw new Error("Invalid status!");
+    await Report.findByIdAndUpdate(report.id, { status, response }).exec();
+    // res.render('ward/report/process', {
+    //   report,
+    //   pageName: 'report',
+    //   header: {
+    //     navRoot: 'Báo cáo',
+    //     navCurrent: 'Xử lí báo cáo'
+    //   }
+    // });
+    return res.redirect(`/ward/report/view/${report.id}`);
+  } catch (err) {
+    return res.redirect('/ward/report');
+  }
 };

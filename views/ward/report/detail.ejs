@@ -61,8 +61,13 @@
         </div>
         <div class="col-10">
           <p class="pt-3">
-            <% if (report.processed) { %> Đã xử lí <% } else {%> Chưa xử lí <% }
-            %>
+            <% if (report.status === 'done') { %>
+            <span class="badge bg-success">Đã xử lí</span>
+            <% } else if (report.status === 'processing') { %>
+            <span class="badge bg-warning">Đang xử lí</span>
+            <% } else {%>
+            <span class="badge bg-danger">Chưa xử lí</span>
+            <% } %>
           </p>
         </div>
       </div>

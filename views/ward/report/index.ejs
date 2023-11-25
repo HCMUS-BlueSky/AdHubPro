@@ -37,16 +37,18 @@
       <% reports.forEach((element, index) => { %>
       <tr>
         <th scope="row"><%= perPage * (current - 1) + index + 1 %></th>
-        <td class=""><%= element.created_at.toLocaleTimeString("en-US") %></td>
+        <td class=""><%= moment(element.created_at).format("DD-MM-YYYY hh:mm:ss") %></td>
         <td class=""><%= element.location.address %></td>
         <td class="">
-          <% if (element.type == "ads") { %> Bảng quảng cáo <% } else {%> Điểm
+          <% if (element.type === "ads") { %> Bảng quảng cáo <% } else {%> Điểm
           đặt quảng cáo <% } %>
         </td>
         <td class=""><%= element.reporter.name %></td>
         <td class="">
-          <% if (element.processed) { %>
+          <% if (element.status === 'done') { %>
           <span class="badge bg-success w-100">Đã xử lí</span>
+          <% } else if (element.status === 'processing') { %>
+          <span class="badge bg-warning w-100">Đang xử lí</span>
           <% } else {%>
           <span class="badge bg-danger w-100">Chưa xử lí</span>
           <% } %>
