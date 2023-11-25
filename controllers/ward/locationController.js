@@ -85,7 +85,14 @@ exports.renderUpdateInfo = async (req, res) => {
   try {
     const location = await Location.findOne({ _id: req.params.id });
     if (!location) throw new Error("Location not found!");
-    return res.render("ward/location/update_info", { location });
+    return res.render("ward/location/update_info", { 
+      location,
+      pageName: "location",
+      header: {
+        navRoot: "Điểm đặt quảng cáo",
+        navCurrent: "Thông tin chi tiết",
+      },
+    });
   } catch (err) {
     return res.redirect("/ward/location");
   }

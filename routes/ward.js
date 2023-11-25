@@ -44,6 +44,7 @@ router.post(
   upload.array("images", 5),
   locationController.updateInfo
 );
+
 // Report
 router.get("/report", reportController.view);
 

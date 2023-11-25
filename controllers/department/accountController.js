@@ -1,1 +1,0 @@
-const Ads = require("../../models/");

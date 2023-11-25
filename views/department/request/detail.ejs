@@ -1,39 +1,22 @@
-<!-- Right Part -->
 <div class="col p-3 border-start">
-  <div class="user-info d-flex justify-content-end">
-    <i class="bi bi-person-circle" style="font-size: 36px"></i>
-    <div class="user-text ms-3">
-      <h6>Elijah Scott</h6>
-      <p class="text-muted">elijarscott@gmail.com</p>
-    </div>
-  </div>
-  <nav aria-label="breadcrumb">
-    <ol class="breadcrumb bg-light">
-      <li class="breadcrumb-item">
-        <a href=".." class="text-decoration-none text-muted"
-          >Yêu cầu cấp phép</a
-        >
-      </li>
-      <li
-        class="breadcrumb-item active text-dark fw-semibold"
-        aria-current="page"
-      >
-        Thông tin chi tiết
-      </li>
-    </ol>
-  </nav>
+  <%- include('../../partials/header.ejs') %>
   <hr />
   <div class="card bg-light mb-3">
     <!-- <div class="card-header">Xử lý báo cáo</div> -->
     <div class="card-body p-4">
       <h4 class="card-title py-2">Tên bảng quảng cáo, địa chỉ</h4>
-      <p class="text-muted">Khu vực: Phường 4, Quận 10</p>
+      <p class="text-muted">
+        Khu vực: Phường <%= request.ward %>, Quận <%= request.district %>
+      </p>
       <div class="row border border-2 rounded">
         <div class="col-2">
           <p class="text-muted pt-3">Thông tin công ty:</p>
         </div>
         <div class="col-10">
-          <p class="pt-3">Tên công ty - Mã số thuế - Địa chỉ</p>
+          <p class="pt-3">
+            <%= request.company_name %> - <%= request.company_code %> - <%=
+            request.company_address %>
+          </p>
         </div>
       </div>
       <div class="row border border-2 rounded">
@@ -41,7 +24,9 @@
           <p class="text-muted pt-3">Thời hạn hợp đồng:</p>
         </div>
         <div class="col-10">
-          <p class="pt-3">30/11/2077 - 31/11/2077</p>
+          <p class="pt-3">
+            <%= request.start_date %> - <%= request.end_date %>
+          </p>
         </div>
       </div>
       <div class="row border border-2 rounded">
@@ -49,7 +34,9 @@
           <p class="text-muted pt-3">Thông tin liên lạc:</p>
         </div>
         <div class="col-10">
-          <p class="pt-3">Email - số điện thoại</p>
+          <p class="pt-3">
+            <%= request.company_email %> - <%= request.company_phone %>
+          </p>
         </div>
       </div>
       <div class="row border border-2 rounded">
@@ -57,7 +44,19 @@
           <p class="text-muted pt-3">Trạng thái xử lý:</p>
         </div>
         <div class="col-10">
-          <p class="pt-3">Chưa duyệt</p>
+          <p class="pt-3">
+            <% if (request.accepted) { %> Đã duyệt <% } else { %> Chưa duyệt <%
+            } %>
+          </p>
+        </div>
+      </div>
+      <div class="row border border-2 rounded">
+        <div class="col-2">
+          <p class="text-muted pt-3">Hình ảnh: </p>
+        </div>
+        <div class="col-10">
+          <p class="pt-3"><a href="https://www.google.com/">Xem tất cả hình ảnh</a></p>
+          </p>
         </div>
       </div>
       <div class="row border border-2 rounded mb-3">
@@ -65,31 +64,24 @@
           <p class="text-muted pt-3">Nội dung báo cáo:</p>
         </div>
         <div class="col-10">
-          <p class="pt-3">
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Iusto
-            inventore perferendis assumenda, accusantium autem recusandae
-            deserunt magni perspiciatis quo esse? Facere, atque sint deleniti
-            repellendus molestias neque ex quos nemo! Lorem ipsum dolor sit amet
-            consectetur adipisicing elit. Fugit illo perspiciatis voluptate
-            veritatis, architecto esse. A tempora illo officiis aspernatur!
-            Nihil non magnam placeat tempora corporis illo et officiis labore.
-          </p>
+          <p class="pt-3"><%= request.description %></p>
         </div>
       </div>
 
       <div class="d-flex justify-content-center">
-        <a href="./index.html">
-          <button type="button" class="btn btn-secondary me-4">
-            Trở về danh sách
-          </button>
+        <a href="/department/request">
+          <button type="button" class="btn btn-secondary me-4">Trở về</button>
+        </a>
+        <a href="/department/request">
+          <button type="button" class="btn btn-secondary me-4 bg-danger">Từ chối xét duyệt</button>
         </a>
         <button
           type="button"
-          class="btn btn-primary me-4"
+          class="btn btn-primary me-4 bg-success"
           data-bs-toggle="modal"
           data-bs-target="#detail"
         >
-          Xem tất cả hình
+          Xét duyệt
         </button>
       </div>
     </div>
@@ -188,10 +180,10 @@
         </div>
       </div>
     </div>
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-      crossorigin="anonymous"
-    ></script>
   </div>
 </div>
+<script
+  src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+  integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+  crossorigin="anonymous"
+></script>
