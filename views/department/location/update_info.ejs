@@ -1,34 +1,13 @@
 <!-- Right Part -->
 <div class="col p-3 border-start">
-  <div class="user-info d-flex justify-content-end">
-    <i class="bi bi-person-circle" style="font-size: 36px"></i>
-    <div class="user-text ms-3">
-      <h6>Elijah Scott</h6>
-      <p class="text-muted">elijarscott@gmail.com</p>
-    </div>
-  </div>
-  <nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-      <li class="breadcrumb-item">
-        <a href=".." class="text-decoration-none text-muted"
-          >Điểm đặt quảng cáo</a
-        >
-      </li>
-      <li
-        class="breadcrumb-item active text-dark fw-semibold"
-        aria-current="page"
-      >
-        Cập nhật thông tin
-      </li>
-    </ol>
-  </nav>
+  <%- include('../../partials/header.ejs') %>
   <hr />
-  <div class="card bg-light mb-1">
+  <form method="POST" id="form" class="card bg-light mb-1" enctype="multipart/form-data">
     <div class="card-body p-3">
-      <h4 class="card-title py-3 fw-semibold">Cập nhật thông tin</h4>
+      <h4 class="card-title py-3 fw-semibold">Yêu cầu cập nhật thông tin</h4>
       <div class="d-flex flex-column px-3 mb-3">
         <label for="" class="form-label"
-          >Địa điểm<span class="text-danger"> *</span></label
+          >Địa điểm</label
         >
         <div
           class="d-flex flex-row gap-4 align-items-start text-secondary w-100"
@@ -40,6 +19,8 @@
             id=""
             aria-describedby="helpId"
             placeholder="Địa chỉ"
+            name="address"
+            value="<%= location.address %>"
           />
           <input
             type="text"
@@ -48,6 +29,8 @@
             id=""
             aria-describedby="helpId"
             placeholder="Phường"
+            name="ward"
+            value="<%= location.ward %>"
           />
           <input
             type="text"
@@ -56,6 +39,8 @@
             id=""
             aria-describedby="helpId"
             placeholder="Quận"
+            name="district"
+            value="<%= location.district %>"
           />
         </div>
       </div>
@@ -63,36 +48,35 @@
       <div class="d-flex px-3 mb-3 gap-5">
         <div class="">
           <label for="" class="form-label"
-            >Loại vị trí<span class="text-danger"> *</span></label
+            >Hình thức quảng cáo</label
           >
           <select
             class="form-select text-secondary w-auto"
-            name=""
+            name="method"
             id="method_select"
           >
-            <option selected>Vui lòng chọn</option>
-            <option value="">Đất công</option>
-            <option value="">Công viên</option>
-            <option value="">Hành lang an toàn giao thông, Đất tư nhân</option>
-            <option value="">
-              Nhà ở riêng lẻ, Trung tâm thương mại, Chợ, Cây xăng, Nhà chờ xe
-              buýt
-            </option>
+            <option value="" <%= location.method ? '' : 'selected'%> >Vui lòng chọn</option>
+            <option value="Cổ động chính trị" <%= location.method === "Cổ động chính trị" ? 'selected' : ''%> >Cổ động chính trị</option>
+            <option value="Quảng cáo thương mại" <%= location.method === "Quảng cáo thương mại" ? 'selected' : ''%> >Quảng cáo thương mại</option>
+            <option value="Xã hội hóa" <%= location.method === 'Xã hội hóa' ? 'selected' : ''%> >Xã hội hóa</option>
           </select>
         </div>
         <div class="">
           <label for="" class="form-label"
-            >Hình thức quảng cáo<span class="text-danger"> *</span></label
+            >Loại vị trí</label
           >
           <select
             class="form-select text-secondary w-auto"
-            name=""
+            name="type"
             id="method_select"
           >
-            <option selected>Vui lòng chọn</option>
-            <option value="">Cổ động chính trị</option>
-            <option value="">Quảng cáo thương mại</option>
-            <option value="">Xã hội hoá</option>
+            <option value="" <%= location.type ? '' : 'selected'%>>Vui lòng chọn</option>
+            <option <%= location.type === "Đất công/Công viên/Hành lang an toàn giao thông" ? 'selected' : ''%> value="Đất công/Công viên/Hành lang an toàn giao thông">Đất công/Công viên/Hành lang an toàn giao thông</option>
+            <option <%= location.type === "Đất tư nhân/Nhà ở riêng lẻ" ? 'selected' : ''%> value="Đất tư nhân/Nhà ở riêng lẻ">Đất tư nhân/Nhà ở riêng lẻ</option>
+            <option <%= location.type === "Trung tâm thương mại" ? 'selected' : ''%> value="Trung tâm thương mại">Trung tâm thương mại</option>
+            <option <%= location.type === "Chợ" ? 'selected' : ''%> value="Chợ">Chợ</option>
+            <option <%= location.type === "Cây xăng" ? 'selected' : ''%> value="Cây xăng">Cây xăng</option>
+            <option <%= location.type === "Nhà chờ xe buýt" ? 'selected' : ''%> value="Nhà chờ xe buýt">Nhà chờ xe buýt</option>
           </select>
         </div>
       </div>
@@ -100,14 +84,16 @@
       <div class="d-flex px-3 gap-5">
         <div>
           <label for="" class="form-label"
-            >Hình thức quảng cáo<span class="text-danger"> *</span></label
+            >Trạng thái quy hoạch</label
           >
           <div class="form-check pb-1">
             <input
               class="form-check-input"
               type="radio"
-              name="flexRadioDefault"
+              name="accepted"
               id="flexRadioDefault1"
+              <%= location.accepted ? '' : 'checked'%>
+              value="false"
             />
             <label
               class="form-check-label text-secondary"
@@ -120,9 +106,10 @@
             <input
               class="form-check-input"
               type="radio"
-              name="flexRadioDefault"
+              name="accepted"
               id="flexRadioDefault2"
-              checked
+              <%= location.accepted ? 'checked' : ''%>
+              value="true"
             />
             <label
               class="form-check-label text-secondary"
@@ -133,11 +120,7 @@
           </div>
         </div>
         <div>
-          <label for="" class="form-label"
-            >Số lượng điểm đặt quảng cáo<span class="text-danger">
-              *</span
-            ></label
-          >
+          <label for="" class="form-label">Số lượng điểm đặt quảng cáo</label>
           <input
             type="text"
             class="form-control w-auto"
@@ -145,13 +128,15 @@
             id=""
             aria-describedby="helpId"
             placeholder="1"
+            name="ads_count"
+            value="<%= location.ads_count || 0 %>"
           />
         </div>
       </div>
       <div class="px-3 gap-5">
         <label for="file_inp" class="form-label pt-3"
-          >Hình ảnh thực tế<span class="text-danger"> *</span></label
-        >
+          >Hình ảnh thực tế
+        </label>
         <div class="input-group input-daterange">
           <input
             type="file"
@@ -160,13 +145,23 @@
             placeholder="Chưa có file được chọn"
             aria-describedby="fileHelpId"
             multiple
+            name="images"
           />
         </div>
+      </div>
+      <div class="px-3 gap-5">
+        <label for="exampleFormControlTextarea1" class="form-label pt-3">Lý do chỉnh sửa<span class="text-danger"> *</span></label>
+        <textarea name="content" class="form-control" id="exampleFormControlTextarea1" rows="4" placeholder="Lý do chỉnh sửa..." value=""></textarea>
       </div>
       <div
         class="d-flex flex-row justify-content-center align-items-center gap-4 pt-5"
       >
-        <a name="" id="" class="btn btn-secondary px-4" href="." role="button"
+        <a
+          name=""
+          id=""
+          class="btn btn-secondary px-4"
+          href="/department/location/"
+          role="button"
           >Trở về danh sách</a
         >
         <button
@@ -175,51 +170,49 @@
           id=""
           class="btn btn-primary px-4"
           data-bs-toggle="modal"
-          data-bs-target="#updateLocation"
+          data-bs-target="#exampleModal"
         >
           Cập nhật thông tin
         </button>
       </div>
     </div>
-  </div>
+  </form>
 </div>
-
-<!-- Modal -->
+<!--Alert-->
 <div
   class="modal fade"
-  id="updateLocation"
-  aria-hidden="true"
-  aria-labelledby="updateLocation"
+  id="exampleModal"
   tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
 >
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Xác nhận</h5>
-          <button
-            type="button"
-            class="btn-close"
-            data-bs-dismiss="modal"
-            aria-label="Close"
-          ></button>
-        </div>
-        <div class="modal-body">
-          <p>Bạn có chắc chắn muốn cập nhật những thay đổi này?</p>
-        </div>
-        <div class="modal-footer">
-          <button
-            type="button"
-            class="btn btn-secondary"
-            data-bs-dismiss="modal"
-          >
-            Đóng
-          </button>
-          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">
-            Cập nhật
-          </button>
-        </div>
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Xác nhận</h1>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        Bạn có chắc chắn muốn thay đổi?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Đóng
+        </button>
+        <button type="button" class="btn btn-primary" id="submit-btn">
+          Cập nhật
+        </button>
       </div>
     </div>
   </div>
 </div>
+<script>
+  document.getElementById("submit-btn").addEventListener("click", () => {
+    form.submit();
+  });
+</script>

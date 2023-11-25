@@ -43,5 +43,15 @@ exports.getDetail = async (req, res) => {
 };
 
 exports.createNew = (req, res) => {
-  res.render("ward/request/create");
+  try {
+    res.render("ward/request/create", {
+      pageName: "request",
+      header: {
+        navRoot: "Yêu cầu cấp phép",
+        navCurrent: "Tạo yêu cầu mới",
+      },
+    });
+  } catch (error) {
+    console.log(error);
+  }
 };

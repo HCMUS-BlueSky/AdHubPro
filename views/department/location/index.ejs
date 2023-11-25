@@ -1,47 +1,24 @@
 <!-- Right Part -->
 <div class="col p-3 border-start">
-  <div class="user-info d-flex justify-content-end">
-    <i class="bi bi-person-circle" style="font-size: 36px"></i>
-    <div class="user-text ms-3">
-      <h6>Elijah Scott</h6>
-      <p class="text-muted">elijarscott@gmail.com</p>
-    </div>
-  </div>
-  <nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-      <li class="breadcrumb-item">
-        <a href=".." class="text-decoration-none text-muted"
-          >Điểm đặt quảng cáo</a
-        >
-      </li>
-      <li
-        class="breadcrumb-item active text-dark fw-semibold"
-        aria-current="page"
-      >
-        Thông tin chung
-      </li>
-    </ol>
-  </nav>
+  <%- include('../../partials/header.ejs') %>
   <hr />
-  <h2 class="fw-semibold">THÔNG TIN CÁC ĐIỂM CÓ THỂ ĐẶT QUẢNG CÁO</h2>
+  <h2 class="fw-semibold">THÔNG TIN CÁC ĐIỂM ĐẶT QUẢNG CÁO</h2>
   <div class="row justify-content-center">
     <div class="col-3">
-      <input
-        class="form-control mr-sm-2"
-        type="search"
-        placeholder="Tìm kiếm"
-        aria-label="Search"
-      />
+      <form role="search" method="POST" action="/department/location/search">
+        <input
+          class="form-control mr-sm-2"
+          type="search"
+          placeholder="Tìm kiếm"
+          aria-label="Search"
+          name="searchTerm"
+        />
+      </form>
     </div>
     <div class="col-3">
       <select class="form-select" aria-label="Default select example">
         <option selected>Sắp xếp</option>
       </select>
-    </div>
-    <div class="col-2">
-      <a class="btn btn-primary" href="./create.html" role="button"
-        >Thêm điểm đặt QC</a
-      >
     </div>
   </div>
   <table class="table border border-2 rounded py-3 mt-3">
@@ -51,194 +28,70 @@
         <th scope="col">Địa chỉ</th>
         <th scope="col">Phân loại</th>
         <th scope="col">Hình thức</th>
-        <th scope="col">SL</th>
         <th scope="col">Tình trạng</th>
-        <th scope="col"></th>
         <th scope="col"></th>
         <th scope="col"></th>
       </tr>
     </thead>
     <tbody>
+      <% locations.forEach((location, index) => { %>
       <tr>
-        <th scope="row">1</th>
-        <td class="">227 Nguyễn Văn Cừ, Phường 4, Quận 5</td>
-        <td class="">Đất công</td>
-        <td class="">Cổ động chính trị</td>
-        <td class="">1</td>
+        <th scope="row"><%= perPage * (current - 1) + index + 1 %></th>
+        <td class=""><%= location.address %></td>
+        <td class=""><%= location.type %></td>
+        <td class=""><%= location.method %></td>
         <td class="">
-          <span class="badge bg-danger w-100">Chưa quy hoạch</span>
+          <% if (location.accepted) { %>
+          <span class="badge bg-success w-100">Đã quy hoạch</span> <% } else {
+          %> <span class="badge bg-danger w-100">Chưa quy hoạch</span> <% } %>
         </td>
         <td class="">
-          <a href="./detail.html">
+          <a href="/department/location/view/<%= location._id %>">
             <i class="bi bi-eye-fill"></i>
           </a>
         </td>
         <td class="">
-          <a href="./update_info.html">
+          <a href="/department/location/update-info/<%= location._id %>">
             <i class="bi bi-pencil-square"></i>
           </a>
         </td>
-        <td class="">
-          <i
-            role="button"
-            class="bi bi-x-circle-fill cusor"
-            data-bs-toggle="modal"
-            data-bs-target="#removeLocation"
-          ></i>
-        </td>
       </tr>
-      <tr>
-        <th scope="row">2</th>
-        <td class="">227 Nguyễn Văn Cừ, Phường 4, Quận 5</td>
-        <td class="">Đất công</td>
-        <td class="">Cổ động chính trị</td>
-        <td class="">2</td>
-        <td class="">
-          <span class="badge bg-success w-100">Đã quy hoạch</span>
-        </td>
-        <td class="">
-          <a href="./detail.html">
-            <i class="bi bi-eye-fill"></i>
-          </a>
-        </td>
-        <td class="">
-          <a href="./update_info.html">
-            <i class="bi bi-pencil-square"></i>
-          </a>
-        </td>
-        <td class="">
-          <i
-            role="button"
-            class="bi bi-x-circle-fill cusor"
-            data-bs-toggle="modal"
-            data-bs-target="#removeLocation"
-          ></i>
-        </td>
-      </tr>
-      <tr>
-        <th scope="row">3</th>
-        <td class="">227 Nguyễn Văn Cừ, Phường 4, Quận 5</td>
-        <td class="">Đất công</td>
-        <td class="">Cổ động chính trị</td>
-        <td class="">1</td>
-        <td class="">
-          <span class="badge bg-success w-100">Đã quy hoạch</span>
-        </td>
-        <td class="">
-          <a href="./detail.html">
-            <i class="bi bi-eye-fill"></i>
-          </a>
-        </td>
-        <td class="">
-          <a href="./update_info.html">
-            <i class="bi bi-pencil-square"></i>
-          </a>
-        </td>
-        <td class="">
-          <i
-            role="button"
-            class="bi bi-x-circle-fill cusor"
-            data-bs-toggle="modal"
-            data-bs-target="#removeLocation"
-          ></i>
-        </td>
-      </tr>
-      <tr>
-        <th scope="row">4</th>
-        <td class="">227 Nguyễn Văn Cừ, Phường 4, Quận 5</td>
-        <td class="">Đất công</td>
-        <td class="">Cổ động chính trị</td>
-        <td class="">7</td>
-        <td class="">
-          <span class="badge bg-danger w-100">Chưa quy hoạch</span>
-        </td>
-        <td class="">
-          <a href="./detail.html">
-            <i class="bi bi-eye-fill"></i>
-          </a>
-        </td>
-        <td class="">
-          <a href="./update_info.html">
-            <i class="bi bi-pencil-square"></i>
-          </a>
-        </td>
-        <td class="">
-          <i
-            role="button"
-            class="bi bi-x-circle-fill cusor"
-            data-bs-toggle="modal"
-            data-bs-target="#removeLocation"
-          ></i>
-        </td>
-      </tr>
-      <tr>
-        <th scope="row">5</th>
-        <td class="">227 Nguyễn Văn Cừ, Phường 4, Quận 5</td>
-        <td class="">Đất công</td>
-        <td class="">Cổ động chính trị</td>
-        <td class="">3</td>
-        <td class="">
-          <span class="badge bg-danger w-100">Chưa quy hoạch</span>
-        </td>
-        <td class="">
-          <a href="./detail.html">
-            <i class="bi bi-eye-fill"></i>
-          </a>
-        </td>
-        <td class="">
-          <a href="./update_info.html">
-            <i class="bi bi-pencil-square"></i>
-          </a>
-        </td>
-        <td class="">
-          <i
-            role="button"
-            class="bi bi-x-circle-fill cusor"
-            data-bs-toggle="modal"
-            data-bs-target="#removeLocation"
-          ></i>
-        </td>
-      </tr>
+      <% }) %>
     </tbody>
   </table>
-</div>
-
-<!-- Modal Remove -->
-<div
-  class="modal fade"
-  id="removeLocation"
-  aria-hidden="true"
-  aria-labelledby="removeLocation"
-  tabindex="-1"
->
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Xác nhận</h5>
-          <button
-            type="button"
-            class="btn-close"
-            data-bs-dismiss="modal"
-            aria-label="Close"
-          ></button>
-        </div>
-        <div class="modal-body">
-          <p>Bạn có chắc chắn muốn xóa thông tin điểm đặt quảng cáo này?</p>
-        </div>
-        <div class="modal-footer">
-          <button
-            type="button"
-            class="btn btn-secondary"
-            data-bs-dismiss="modal"
-          >
-            Đóng
-          </button>
-          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
-            Xóa
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
+  <% if (locations.length > 0) { %>
+  <nav aria-label="Dashboard Pagination">
+    <ul class="pagination justify-content-center mt-5">
+      <% if (current == 1) { %>
+      <li class="page-item disabled">
+        <a href="#" class="page-link">First</a>
+      </li>
+      <% } else { %>
+      <li class="page-item">
+        <a href="/department/location?page=1" class="page-link">First</a>
+      </li>
+      <% } %> <% i = (Number(current) > 5 ? Number(current) - 4 : 1) %> <% if (i
+      != 1) { %>
+      <li class="page-item disabled"><a href="#" class="page-link">...</a></li>
+      <% } %> <% for(; i <= (Number(current) + 4) && i <= pages; i++ ) { %> <%
+      if (i == current) { %>
+      <li class="page-item disabled">
+        <a href="#" class="page-link"><%= i %></a>
+      </li>
+      <% } else { %>
+      <li class="page-item">
+        <a href="/department/location?page=<%= i %>" class="page-link"><%= i %></a>
+      </li>
+      <% } %> <% if (i == Number (current) + 4 && i < pages) { %>
+      <li class="page-item disabled"><a href="#" class="page-link">...</a></li>
+      <% } %> <% } %> <% if (current == pages) { %>
+      <li class="page-item disabled"><a href="#" class="page-link">Last</a></li>
+      <% } else { %>
+      <li class="page-item">
+        <a href="/department/location?page=<%= pages %>" class="page-link">Last</a>
+      </li>
+      <% } %>
+    </ul>
+  </nav>
+  <% } %>
 </div>

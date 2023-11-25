@@ -15,6 +15,11 @@ exports.view = async (req, res) => {
       perPage,
       current: page,
       pages: Math.ceil(count / perPage),
+      pageName: "request",
+      header: {
+        navRoot: "Yêu cầu cấp phép",
+        navCurrent: "Thông tin chung",
+      },
     });
   } catch (err) {
     return res.status(500).send(err.message);
@@ -23,15 +28,16 @@ exports.view = async (req, res) => {
 
 exports.getDetail = async (req, res) => {
   try {
-    const request = await Request.findOne({ _id: req.params.id })
+    const request = await Request.findOne({ _id: req.params.id });
     res.render("department/request/detail", {
       request,
+      pageName: "request",
+      header: {
+        navRoot: "Yêu cầu cấp phép",
+        navCurrent: "Thông tin chi tiết",
+      },
     });
   } catch (error) {
     console.log(error);
   }
-};
-
-exports.createNew = (req, res) => {
-  res.render("department/request/create");
 };

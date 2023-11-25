@@ -7,6 +7,7 @@ const expressLayout = require("express-ejs-layouts");
 const apiRouter = require("./routes/api");
 const wardRouter = require("./routes/ward");
 const districtRouter = require("./routes/district");
+const departmentRouter =  require("./routes/department");
 // const departmentRouter = require("./routes/department");
 const authRouter = require("./routes/auth");
 const errorHandler = require("./middleware/errorHandler");
@@ -43,7 +44,7 @@ app.get("/", async (req, res) => {
 app.use("/api", apiRouter);
 app.use("/ward", wardRouter);
 app.use("/district", districtRouter);
-// app.use("/department", departmentRouter);
+app.use("/department", departmentRouter);
 app.use("/auth", authRouter);
 
 mongoose.connection.once("open", () => {
