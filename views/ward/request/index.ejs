@@ -1,6 +1,7 @@
 <div class="col p-3 border-start">
   <%- include('../../partials/header.ejs') %>
   <hr />
+  <%- include('../../partials/flash.ejs') %>
   <h2 class="fw-semibold">THÔNG TIN CÁC YÊU CẦU CẤP PHÉP ĐÃ ĐƯỢC GỬI</h2>
   <div class="row justify-content-center">
     <div class="col-3">
@@ -10,11 +11,6 @@
         placeholder="Tìm kiếm"
         aria-label="Search"
       />
-    </div>
-    <div class="col-3">
-      <select class="form-select" aria-label="Default select example">
-        <option selected>Sắp xếp</option>
-      </select>
     </div>
     <div class="col-3">
       <a href="/ward/request/create" class="btn btn-primary">
