@@ -18,6 +18,46 @@ exports.view = async (req, res) => {
       current: page,
       pages: Math.ceil(count / perPage),
       pageName: "location",
+      header: {
+        navRoot: "Điểm đặt quảng cáo",
+        navCurrent: "Thông tin chung",
+      },
+    });
+  } catch (err) {
+    return res.status(500).send(err.message);
+  }
+};
+
+exports.search = async (req, res) => {
+  let perPage = 10;
+  let page = req.query.page || 1;
+  try {
+    let searchTerm = req.body.searchTerm;
+
+    const locations = await Location.find({
+      address: { $regex: searchTerm, $options: "i" },
+    })
+      .sort({ updatedAt: -1 })
+      .skip(perPage * page - perPage)
+      .limit(perPage)
+      .exec();
+
+    if (!locations) {
+      return res.status(404).send("Location not found");
+    }
+
+    const count = locations.length;
+
+    res.render("ward/location/index", {
+      locations,
+      perPage,
+      current: page,
+      pages: Math.ceil(count / perPage),
+      pageName: "location",
+      header: {
+        navRoot: "Điểm đặt quảng cáo",
+        navCurrent: "Thông tin chung",
+      },
     });
   } catch (err) {
     return res.status(500).send(err.message);
@@ -31,6 +71,10 @@ exports.getDetail = async (req, res) => {
     return res.render("ward/location/detail", {
       location,
       pageName: "location",
+      header: {
+        navRoot: "Điểm đặt quảng cáo",
+        navCurrent: "Thông tin chi tiết",
+      },
     });
   } catch (err) {
     return res.redirect("/ward/location");

@@ -16,6 +16,10 @@ exports.view = async (req, res) => {
       current: page,
       pages: Math.ceil(count / perPage),
       pageName: "request",
+      header: {
+        navRoot: "Yêu cầu cấp phép",
+        navCurrent: "Thông tin chung",
+      },
     });
   } catch (err) {
     return res.status(500).send(err.message);
@@ -28,6 +32,10 @@ exports.getDetail = async (req, res) => {
     res.render("ward/request/detail", {
       request,
       pageName: "request",
+      header: {
+        navRoot: "Yêu cầu cấp phép",
+        navCurrent: "Thông tin chi tiết",
+      },
     });
   } catch (error) {
     console.log(error);

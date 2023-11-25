@@ -1,24 +1,5 @@
 <div class="col p-3 border-start">
-  <div class="user-info d-flex justify-content-end">
-    <i class="bi bi-person-circle" style="font-size: 36px"></i>
-    <div class="user-text ms-3">
-      <h6>Elijah Scott</h6>
-      <p class="text-muted">elijarscott@gmail.com</p>
-    </div>
-  </div>
-  <nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-      <li class="breadcrumb-item">
-        <a href=".." class="text-decoration-none text-muted">Báo cáo</a>
-      </li>
-      <li
-        class="breadcrumb-item active text-dark fw-semibold"
-        aria-current="page"
-      >
-        Xử lý báo cáo
-      </li>
-    </ol>
-  </nav>
+  <%- include('../../partials/header.ejs') %>
   <hr />
   <div class="card bg-light mb-3">
     <!-- <div class="card-header">Xử lý báo cáo</div> -->
@@ -58,9 +39,7 @@
 
       <div class="d-flex justify-content-center">
         <a href="../view/<%= report._id %>" class="">
-          <button type="button" class="btn btn-secondary me-4">
-            Trở về
-          </button>
+          <button type="button" class="btn btn-secondary me-4">Trở về</button>
         </a>
         <button
           type="button"
@@ -84,9 +63,7 @@
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
-          <h1 class="modal-title fs-5" id="exampleModalLabel">
-            Xác nhận
-          </h1>
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Xác nhận</h1>
           <button
             type="button"
             class="btn-close"
@@ -105,9 +82,7 @@
           >
             Đóng
           </button>
-          <button type="button" class="btn btn-primary">
-            Cập nhật
-          </button>
+          <button type="button" class="btn btn-primary">Cập nhật</button>
         </div>
       </div>
     </div>

@@ -1,4 +1,5 @@
-const Ads = require("../../models/Ads");
+const { Ads } = require("../../models/Ads");
+const { Location } = require("../../models/Location");
 const moment = require("moment");
 
 exports.view = async (req, res) => {
@@ -22,6 +23,53 @@ exports.view = async (req, res) => {
       current: page,
       pages: Math.ceil(count / perPage),
       pageName: "ads",
+      header: {
+        navRoot: "Bảng quảng cáo",
+        navCurrent: "Thông tin chung",
+      },
+    });
+  } catch (err) {
+    return res.status(500).send(err.message);
+  }
+};
+
+exports.search = async (req, res) => {
+  let perPage = 10;
+  let page = req.query.page || 1;
+  try {
+    let searchTerm = req.body.searchTerm;
+
+    const location = await Location.findOne({
+      address: { $regex: searchTerm, $options: "i" },
+    });
+
+    if (!location) {
+      return res.status(404).send("Location not found");
+    }
+
+    const ads = await Ads.find({
+      location: location._id,
+    })
+      .sort({ updatedAt: -1 })
+      .skip(perPage * page - perPage)
+      .limit(perPage)
+      .populate({
+        path: "location",
+        select: ["address", "ward", "district", "method"],
+      })
+      .exec();
+
+    const count = ads.length;
+    res.render("ward/ads/index", {
+      ads,
+      perPage,
+      current: page,
+      pages: Math.ceil(count / perPage),
+      pageName: "ads",
+      header: {
+        navRoot: "Bảng quảng cáo",
+        navCurrent: "Thông tin chung",
+      },
     });
   } catch (err) {
     return res.status(500).send(err.message);
@@ -40,6 +88,10 @@ exports.getDetail = async (req, res) => {
       ads,
       pageName: "ads",
       moment,
+      header: {
+        navRoot: "Bảng quảng cáo",
+        navCurrent: "Thông tin chi tiết",
+      },
     });
   } catch (error) {
     return res.redirect("/ward/ads");
