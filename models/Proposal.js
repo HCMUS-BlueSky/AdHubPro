@@ -39,52 +39,6 @@ const proposalSchema = new mongoose.Schema(
         return this.type == 'ads';
       }
     }
-    // images: [
-    //   {
-    //     type: String
-    //   }
-    // ],
-
-    // latitude: {
-    //   type: Number,
-    //   required: true,
-    //   alias: 'lat'
-    // },
-    // longitude: {
-    //   type: Number,
-    //   required: true,
-    //   alias: 'lng'
-    // },
-    // ward: {
-    //   type: String
-    // },
-    // district: {
-    //   type: String
-    // },
-    // address: {
-    //   type: String
-    // },
-    // type: {
-    //   type: String
-    // },
-    // method: {
-    //   type: String
-    // },
-    // images: [
-    //   {
-    //     type: String
-    //   }
-    // ],
-    // accepted: {
-    //   type: Boolean,
-    //   default: false
-    // },
-    // description: {
-    //   type: String
-    // },
-    // start_date: {
-    //   type: String
-    // }
   },
   {
     collection: 'proposals',

@@ -1,6 +1,6 @@
 const express = require('express');
-const Location = require('../../models/Location');
-const Ads = require('../../models/Ads');
+const {Location} = require('../../models/Location');
+const {Ads} = require('../../models/Ads');
 const upload = require('../../middleware/multer');
 const uploadFile = require('../../utils/fileUpload');
 const router = express.Router();
@@ -35,7 +35,13 @@ router.get('/get-detail/:location_id', async (req, res) => {
   }
 });
 
-// router.post('/test' ,async (req, res) => {
+function generateRandomDate(from, to) {
+  return new Date(
+    from.getTime() + Math.random() * (to.getTime() - from.getTime())
+  );
+}
+
+// router.get('/test' ,async (req, res) => {
 //   try {
 //     // console.log(req.files);
 //     // const urls = []
@@ -45,22 +51,23 @@ router.get('/get-detail/:location_id', async (req, res) => {
 //     // }
 //     // console.log(urls);
 //     const ads = await Ads.find({}).exec();
-//     const types = [
-//       'Trụ bảng hiflex',
-//       'Trụ màn hình điện tử LED',
-//       'Trụ hộp đèn',
-//       'Bảng hiflex ốp tường',
-//       'Màn hình điện tử ốp tường',
-//       'Trụ treo băng rôn dọc',
-//       'Trụ treo băng rôn ngang',
-//       'Trụ/Cụm pano',
-//       'Cổng chào',
-//       'Trung tâm thương mại'
-//     ];
+//     // const types = [
+//     //   'Trụ bảng hiflex',
+//     //   'Trụ màn hình điện tử LED',
+//     //   'Trụ hộp đèn',
+//     //   'Bảng hiflex ốp tường',
+//     //   'Màn hình điện tử ốp tường',
+//     //   'Trụ treo băng rôn dọc',
+//     //   'Trụ treo băng rôn ngang',
+//     //   'Trụ/Cụm pano',
+//     //   'Cổng chào',
+//     //   'Trung tâm thương mại'
+//     // ];
+    
 //     for(let ad of ads) {
-//       const type = types[Math.floor(Math.random() * types.length)];
-//       const size = '2.5m x 10m';
-//       await Ads.findByIdAndUpdate(ad.id, {type, size}).exec();
+//       // const type = types[Math.floor(Math.random() * types.length)];
+//       // const size = '2.5m x 10m';
+//       await Ads.findByIdAndUpdate(ad.id, {effective: generateRandomDate(new Date(2023, 1, 1), new Date(2023, 11, 1))}).exec();
 //     }
 //     return res.send("SUCCESS")
 //   } catch (err) {

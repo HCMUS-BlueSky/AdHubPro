@@ -15,14 +15,13 @@ const reportSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Ads'
     },
-    content: { //noi dung bao cao
+    content: {
       type: String
     },
-    solution: { //cach thuc xu ly
-      type: String
-    },
-    report_time:{
-      type: Date,
+    method: {
+      type: String,
+      enum: ["Tố giác sai phạm", "Đăng ký nội dung", "Đóng góp ý kiến", "Giải đáp thắc mắc"],
+      required: true
     },
     reporter: {
       name: {

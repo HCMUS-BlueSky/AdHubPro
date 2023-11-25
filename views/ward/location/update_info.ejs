@@ -55,7 +55,7 @@
             name="method"
             id="method_select"
           >
-            <option value="" <%= location.method ? '' : 'selected'%> >Vui lòng chọn</option>
+            <option <%= location.method ? '' : 'selected'%> >Vui lòng chọn</option>
             <option value="Cổ động chính trị" <%= location.method === "Cổ động chính trị" ? 'selected' : ''%> >Cổ động chính trị</option>
             <option value="Quảng cáo thương mại" <%= location.method === "Quảng cáo thương mại" ? 'selected' : ''%> >Quảng cáo thương mại</option>
             <option value="Xã hội hóa" <%= location.method === 'Xã hội hóa' ? 'selected' : ''%> >Xã hội hóa</option>
@@ -70,7 +70,7 @@
             name="type"
             id="method_select"
           >
-            <option value="" <%= location.type ? '' : 'selected'%>>Vui lòng chọn</option>
+            <option <%= location.type ? '' : 'selected'%>>Vui lòng chọn</option>
             <option <%= location.type === "Đất công/Công viên/Hành lang an toàn giao thông" ? 'selected' : ''%> value="Đất công/Công viên/Hành lang an toàn giao thông">Đất công/Công viên/Hành lang an toàn giao thông</option>
             <option <%= location.type === "Đất tư nhân/Nhà ở riêng lẻ" ? 'selected' : ''%> value="Đất tư nhân/Nhà ở riêng lẻ">Đất tư nhân/Nhà ở riêng lẻ</option>
             <option <%= location.type === "Trung tâm thương mại" ? 'selected' : ''%> value="Trung tâm thương mại">Trung tâm thương mại</option>
@@ -150,8 +150,8 @@
         </div>
       </div>
       <div class="px-3 gap-5">
-        <label for="exampleFormControlTextarea1" class="form-label pt-3">Lý do chỉnh sửa<span class="text-danger"> *</span></label>
-        <textarea name="content" class="form-control" id="exampleFormControlTextarea1" rows="4" placeholder="Lý do chỉnh sửa..." value=""></textarea>
+        <label for="text-area" class="form-label pt-3">Lý do chỉnh sửa<span class="text-danger"> *</span></label>
+        <textarea name="content" class="form-control" id="text-area" rows="4" placeholder="Lý do chỉnh sửa ..." value=""></textarea>
       </div>
       <div
         class="d-flex flex-row justify-content-center align-items-center gap-4 pt-5"
@@ -170,7 +170,7 @@
           id=""
           class="btn btn-primary px-4"
           data-bs-toggle="modal"
-          data-bs-target="#exampleModal"
+          data-bs-target="#confirmModal"
         >
           Gửi yêu cầu
         </button>
@@ -181,15 +181,15 @@
 <!--Alert-->
 <div
   class="modal fade"
-  id="exampleModal"
+  id="confirmModal"
   tabindex="-1"
-  aria-labelledby="exampleModalLabel"
+  aria-labelledby="confirmModalLabel"
   aria-hidden="true"
 >
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">Xác nhận</h1>
+        <h1 class="modal-title fs-5" id="confirmModalLabel">Xác nhận</h1>
         <button
           type="button"
           class="btn-close"

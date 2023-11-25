@@ -1,5 +1,7 @@
 const { Ads } = require("../../models/Ads");
 const { Location } = require("../../models/Location");
+const Proposal = require('../../models/Proposal');
+const uploadFile = require('../../utils/fileUpload');
 const moment = require("moment");
 
 exports.view = async (req, res) => {
@@ -21,6 +23,7 @@ exports.view = async (req, res) => {
       ads,
       perPage,
       current: page,
+      moment,
       pages: Math.ceil(count / perPage),
       pageName: "ads",
       header: {
@@ -100,9 +103,17 @@ exports.getDetail = async (req, res) => {
 
 exports.renderUpdateInfo = async (req, res) => {
   try {
-    const ads = await Ads.findOne({ _id: req.params.id });
+    const ads = await Ads.findOne({ _id: req.params.id }).populate("location");
     if (!ads) throw new Error("Ads not found!");
-    return res.render("ward/ads/update_info", { ads });
+    return res.render('ward/ads/update_info', {
+      ads,
+      pageName: 'ads',
+      moment,
+      header: {
+        navRoot: 'Bảng quảng cáo',
+        navCurrent: 'Cập nhật thông tin'
+      }
+    });
   } catch (err) {
     return res.redirect("/ward/ads");
   }
@@ -110,29 +121,32 @@ exports.renderUpdateInfo = async (req, res) => {
 
 exports.updateInfo = async (req, res) => {
   try {
-    const location = await Location.findOne({ _id: req.params.id });
-    if (!location) throw new Error("Location not found!");
-    const { longitude, latitude, images, ...filtered } = req.body;
+    const ads = await Ads.findOne({ _id: req.params.id });
+    if (!ads) throw new Error('Ads not found!');
+    const { location, images, content, effective, expiration, ...filtered } = req.body;
+    if (!content || typeof content !== 'string')
+      throw new Error('Invalid content');
     const new_images = [];
     if (req.files) {
       for (let file of req.files) {
-        const url = await uploadFile(`assets/location/${location.id}`, file);
+        const url = await uploadFile(`assets/ads/${ads.id}`, file);
         new_images.push(url);
       }
-      filtered.new_images = new_images;
+      filtered.images = new_images;
     }
-    const updated_location = await Location.findByIdAndUpdate(
-      location.id,
-      filtered,
-      {
-        runValidators: true,
-        returnDocument: "after",
-      }
-    ).exec();
-    return res.render("ward/location/update_info", {
-      location: updated_location,
+    const updated_ads = {
+      location: ads.location,
+      ...filtered
+    };
+    const proposal = new Proposal({
+      type: 'ads',
+      ads: ads.id,
+      updated_ads,
+      content
     });
+    await proposal.save();
+    return res.redirect('/ward/ads');
   } catch (err) {
-    return res.redirect("/ward/location");
+    return res.redirect('/ward/ads');
   }
 };

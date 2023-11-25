@@ -38,8 +38,8 @@
         <th scope="row"><%= perPage * (current - 1) + index + 1 %></th>
         <td class=""><%= element.location.address %></td>
         <td class=""><%= element.type %></td>
-        <td class=""><%= element.created_at.toLocaleTimeString("en-US") %></td>
-        <td class=""><%= element.updated_at.toLocaleTimeString("en-US") %></td>
+        <td class=""><%= moment(element.effective).format('YYYY-MM-DD') %></td>
+        <td class=""><%= moment(element.expiration).format('YYYY-MM-DD') %></td>
         <td class="">
           <a href="/ward/ads/view/<%= element._id %>">
             <i class="bi bi-eye-fill"></i>

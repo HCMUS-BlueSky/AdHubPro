@@ -35,20 +35,22 @@ router.post('/', upload.array("images", 5), async (req, res) => {
   try {
     const { type } = req.body;
     if (!type) throw new Error("Missing report type!");
-    const { name, email, phone, content } = req.body;
+    const { name, email, phone, content, method } = req.body;
     if (
       !name ||
       !content ||
       !email ||
       !phone ||
+      !method ||
       typeof name !== 'string' ||
       typeof email !== 'string' ||
       typeof content !== 'string' ||
-      typeof phone !== 'string'
+      typeof phone !== 'string' ||
+      typeof method !== 'string'
     )
       throw new Error('Invalid fields');
 
-    const report = new Report({type, content, reporter: {name, email, phone}});
+    const report = new Report({type, content, method, reporter: {name, email, phone}});
     const location = req.body.location;
     if (!location || typeof location !== 'string') throw new Error('Invalid location');
     report.location = location;
@@ -59,7 +61,7 @@ router.post('/', upload.array("images", 5), async (req, res) => {
     }
     if (req.files) {
       for (let file of req.files) {
-        const url = await uploadFile(`adhubpro/reports/locations/${location}`, file);
+        const url = await uploadFile(`reports/locations/${location}`, file);
         report.images.push(url);
       }
     }
