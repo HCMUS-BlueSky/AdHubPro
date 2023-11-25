@@ -85,13 +85,13 @@ exports.renderUpdateInfo = async (req, res) => {
   try {
     const location = await Location.findOne({ _id: req.params.id });
     if (!location) throw new Error("Location not found!");
-    return res.render('ward/location/update_info', {
+    return res.render("ward/location/update_info", {
       location,
-      pageName: 'location',
+      pageName: "location",
       header: {
-        navRoot: 'Điểm đặt quảng cáo',
-        navCurrent: 'Cập nhật thông tin'
-      }
+        navRoot: "Điểm đặt quảng cáo",
+        navCurrent: "Cập nhật thông tin",
+      },
     });
   } catch (err) {
     return res.redirect("/ward/location");
@@ -125,6 +125,7 @@ exports.updateInfo = async (req, res) => {
       content,
     });
     await proposal.save();
+    req.flash("success", "Gửi yêu cầu thay đổi điểm đặt báo cáo thành công!");
     return res.redirect("/ward/location");
   } catch (err) {
     return res.redirect("/ward/location");

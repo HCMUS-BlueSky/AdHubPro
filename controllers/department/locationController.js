@@ -12,17 +12,21 @@ exports.view = async (req, res) => {
       .limit(perPage)
       .exec();
     const count = await Location.count();
-    res.render("department/location/index", {
-      locations,
-      perPage,
-      current: page,
-      pages: Math.ceil(count / perPage),
-      pageName: "location",
-      header: {
-        navRoot: "Điểm đặt quảng cáo",
-        navCurrent: "Thông tin chung",
+    res.render(
+      "department/location/index",
+      {
+        locations,
+        perPage,
+        current: page,
+        pages: Math.ceil(count / perPage),
+        pageName: "location",
+        header: {
+          navRoot: "Điểm đặt quảng cáo",
+          navCurrent: "Thông tin chung",
+        },
       },
-    });
+      { layout: "layouts/department" }
+    );
   } catch (err) {
     return res.status(500).send(err.message);
   }
@@ -85,7 +89,7 @@ exports.renderUpdateInfo = async (req, res) => {
   try {
     const location = await Location.findOne({ _id: req.params.id });
     if (!location) throw new Error("Location not found!");
-    return res.render("department/location/update_info", { 
+    return res.render("department/location/update_info", {
       location,
       pageName: "location",
       header: {

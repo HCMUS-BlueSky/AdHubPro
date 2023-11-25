@@ -1,7 +1,7 @@
 const { Ads } = require("../../models/Ads");
 const { Location } = require("../../models/Location");
-const Proposal = require('../../models/Proposal');
-const uploadFile = require('../../utils/fileUpload');
+const Proposal = require("../../models/Proposal");
+const uploadFile = require("../../utils/fileUpload");
 const moment = require("moment");
 
 exports.view = async (req, res) => {
@@ -105,14 +105,14 @@ exports.renderUpdateInfo = async (req, res) => {
   try {
     const ads = await Ads.findOne({ _id: req.params.id }).populate("location");
     if (!ads) throw new Error("Ads not found!");
-    return res.render('ward/ads/update_info', {
+    return res.render("ward/ads/update_info", {
       ads,
-      pageName: 'ads',
+      pageName: "ads",
       moment,
       header: {
-        navRoot: 'Bảng quảng cáo',
-        navCurrent: 'Cập nhật thông tin'
-      }
+        navRoot: "Bảng quảng cáo",
+        navCurrent: "Cập nhật thông tin",
+      },
     });
   } catch (err) {
     return res.redirect("/ward/ads");
@@ -122,10 +122,11 @@ exports.renderUpdateInfo = async (req, res) => {
 exports.updateInfo = async (req, res) => {
   try {
     const ads = await Ads.findOne({ _id: req.params.id });
-    if (!ads) throw new Error('Ads not found!');
-    const { location, images, content, effective, expiration, ...filtered } = req.body;
-    if (!content || typeof content !== 'string')
-      throw new Error('Invalid content');
+    if (!ads) throw new Error("Ads not found!");
+    const { location, images, content, effective, expiration, ...filtered } =
+      req.body;
+    if (!content || typeof content !== "string")
+      throw new Error("Invalid content");
     const new_images = [];
     if (req.files) {
       for (let file of req.files) {
@@ -136,17 +137,18 @@ exports.updateInfo = async (req, res) => {
     }
     const updated_ads = {
       location: ads.location,
-      ...filtered
+      ...filtered,
     };
     const proposal = new Proposal({
-      type: 'ads',
+      type: "ads",
       ads: ads.id,
       updated_ads,
-      content
+      content,
     });
     await proposal.save();
-    return res.redirect('/ward/ads');
+    req.flash("success", "Gửi yêu cầu thay đổi bảng quảng cáo thành công!");
+    return res.redirect("/ward/ads");
   } catch (err) {
-    return res.redirect('/ward/ads');
+    return res.redirect("/ward/ads");
   }
 };
