@@ -97,14 +97,15 @@ exports.getDetail = async (req, res) => {
       },
     });
   } catch (error) {
+    req.flash('error', 'Bảng quảng cáo không tồn tại!');
     return res.redirect("/ward/ads");
   }
 };
 
 exports.renderUpdateInfo = async (req, res) => {
   try {
-    const ads = await Ads.findOne({ _id: req.params.id }).populate("location");
-    if (!ads) throw new Error("Ads not found!");
+    const ads = await Ads.findOne({ _id: req.params.id }).populate("location").exec();
+    if (!ads) throw new Error('Bảng quảng cáo không tồn tại!');
     return res.render("ward/ads/update_info", {
       ads,
       pageName: "ads",
@@ -115,6 +116,7 @@ exports.renderUpdateInfo = async (req, res) => {
       },
     });
   } catch (err) {
+    req.flash('error', 'Bảng quảng cáo không tồn tại!');
     return res.redirect("/ward/ads");
   }
 };
@@ -122,11 +124,11 @@ exports.renderUpdateInfo = async (req, res) => {
 exports.updateInfo = async (req, res) => {
   try {
     const ads = await Ads.findOne({ _id: req.params.id });
-    if (!ads) throw new Error("Ads not found!");
+    if (!ads) throw new Error("Bảng quảng cáo không tồn tại!");
     const { location, images, content, effective, expiration, ...filtered } =
       req.body;
     if (!content || typeof content !== "string")
-      throw new Error("Invalid content");
+      throw new Error("Nội dung yêu cầu không hợp lệ!");
     const new_images = [];
     if (req.files) {
       for (let file of req.files) {
@@ -149,6 +151,7 @@ exports.updateInfo = async (req, res) => {
     req.flash("success", "Gửi yêu cầu thay đổi bảng quảng cáo thành công!");
     return res.redirect("/ward/ads");
   } catch (err) {
+    req.flash('error', err.message);
     return res.redirect("/ward/ads");
   }
 };

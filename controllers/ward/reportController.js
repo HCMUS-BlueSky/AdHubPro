@@ -45,6 +45,7 @@ exports.getDetail = async (req, res) => {
         select: ['address', 'ward', 'district', 'method']
       })
       .exec();
+    if (!report) throw new Error('Báo cáo không tồn tại!');
     res.render('ward/report/detail', {
       report,
       pageName: 'report',
@@ -54,6 +55,7 @@ exports.getDetail = async (req, res) => {
       }
     });
   } catch (err) {
+    req.flash('error', 'Báo cáo không tồn tại!');
     return res.redirect('/ward/report');
   }
 };
@@ -61,7 +63,7 @@ exports.getDetail = async (req, res) => {
 exports.renderProcessReport = async (req, res) => {
   try {
     const report = await Report.findOne({ _id: req.params.id }).exec();
-    if (!report) throw new Error('No report found!');
+    if (!report) throw new Error('Báo cáo không tồn tại!');
     res.render('ward/report/process', {
       report,
       pageName: 'report',
@@ -71,6 +73,7 @@ exports.renderProcessReport = async (req, res) => {
       }
     });
   } catch (err) {
+    req.flash('error', 'Báo cáo không tồn tại!');
     return res.redirect('/ward/report');
   }
 };
@@ -84,13 +87,13 @@ exports.processReport = async (req, res) => {
       typeof status !== 'string' ||
       typeof status !== 'string'
     )
-      throw new Error('Invalid values!');
+      throw new Error('Dữ liệu truyền vào không hợp lệ!');
     const report = await Report.findOne({ _id: req.params.id })
       .populate('location')
       .exec();
-    if (!report) throw new Error('No report found!');
+    if (!report) throw new Error('Báo cáo không tồn tại!');
     if (status !== 'processing' && status !== 'done')
-      throw new Error('Invalid status!');
+      throw new Error('Trạng thái không hợp lệ!');
     await Report.findByIdAndUpdate(
       report.id,
       { status, response },
@@ -111,8 +114,10 @@ exports.processReport = async (req, res) => {
         genFinishedTemplate(report)
       );
     }
-    return res.redirect(`/ward/report/view/${report.id}`);
+    req.flash('success', 'Cập nhật trạng thái báo cáo thành công!');
+    return res.redirect(`/ward/report`);
   } catch (err) {
+    req.flash('error', err.message);
     return res.redirect('/ward/report');
   }
 };

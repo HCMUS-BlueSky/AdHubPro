@@ -77,6 +77,7 @@ exports.getDetail = async (req, res) => {
       },
     });
   } catch (err) {
+    req.flash('error', 'Địa điểm không tồn tại!');
     return res.redirect("/ward/location");
   }
 };
@@ -84,7 +85,7 @@ exports.getDetail = async (req, res) => {
 exports.renderUpdateInfo = async (req, res) => {
   try {
     const location = await Location.findOne({ _id: req.params.id });
-    if (!location) throw new Error("Location not found!");
+    if (!location) throw new Error('Địa điểm không tồn tại!');
     return res.render("ward/location/update_info", {
       location,
       pageName: "location",
@@ -94,6 +95,7 @@ exports.renderUpdateInfo = async (req, res) => {
       },
     });
   } catch (err) {
+    req.flash('error', 'Địa điểm không tồn tại!');
     return res.redirect("/ward/location");
   }
 };
@@ -101,10 +103,10 @@ exports.renderUpdateInfo = async (req, res) => {
 exports.updateInfo = async (req, res) => {
   try {
     const location = await Location.findOne({ _id: req.params.id });
-    if (!location) throw new Error("Location not found!");
+    if (!location) throw new Error('Địa điểm không tồn tại!');
     const { longitude, latitude, images, content, ...filtered } = req.body;
     if (!content || typeof content !== "string")
-      throw new Error("Invalid content");
+      throw new Error('Nội dung yêu cầu không hợp lệ!');
     const new_images = [];
     if (req.files) {
       for (let file of req.files) {
@@ -128,6 +130,7 @@ exports.updateInfo = async (req, res) => {
     req.flash("success", "Gửi yêu cầu thay đổi điểm đặt báo cáo thành công!");
     return res.redirect("/ward/location");
   } catch (err) {
+    req.flash('error', err.message);
     return res.redirect("/ward/location");
   }
 };
