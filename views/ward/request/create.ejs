@@ -6,9 +6,9 @@
     <form class="card-body p-4">
       <h2 class="fw-semibold mb-3">Yêu cầu cấp phép</h2>
       <h4>Thông tin bảng quảng cáo</h4>
-      <div class="row mb-3">
+      <div class="row mt-3">
         <div class="col-8">
-          <label for="place">Địa điểm</label>
+          <label for="place" class="form-label">Địa điểm</label>
           <select class="form-select" aria-label="">
             <% locations.forEach(location => { %>
             <option value="<%= location._id %>"><%= location.address %></option>
@@ -16,9 +16,9 @@
           </select>
         </div>
       </div>
-      <div class="row mb-3">
+      <div class="row mt-3">
         <div class="col-6">
-          <label for="method_select" class="form-label pt-3"
+          <label for="method_select" class="form-label"
             >Loại bảng quảng cáo</label
           >
           <select
@@ -46,14 +46,14 @@
           </select>
         </div>
         <div class="col-6">
-          <label for="" class="form-label pt-3"
+          <label for="adsSize" class="form-label"
             >Kích thước bảng quảng cáo</label
           >
           <input
             type="text"
             class="form-control w-100"
             required
-            id=""
+            id="adsSize"
             aria-describedby="helpId"
             placeholder="2.5m x 10m"
             name="size"
@@ -61,7 +61,7 @@
           />
         </div>
       </div>
-      <div class="row mb-3">
+      <div class="row mt-3">
         <div class="col-6">
           <label for="" class="form-label">Hình thức quảng cáo</label>
           <select
@@ -76,14 +76,23 @@
           </select>
         </div>
         <div class="col-6">
-          <label for="name">Số lượng</label>
-          <input type="number" class="form-control" id="name" placeholder="" />
+          <label for="amount" class="form-label">Số lượng</label>
+          <input
+            type="number"
+            class="form-control"
+            id="amount"
+            placeholder="1"
+            min="1"
+            value="1"
+          />
         </div>
       </div>
-      <div class="row mb-3">
+      <div class="row my-3">
         <div class="col-8">
           <div class="form-group">
-            <label for="ads-content">Nội dung quảng cáo</label>
+            <label for="ads-content" class="form-label"
+              >Nội dung quảng cáo</label
+            >
             <textarea class="form-control" id="ads-content" rows="3"></textarea>
           </div>
         </div>
@@ -95,27 +104,47 @@
       <h4>Thông tin công ty</h4>
       <div class="row mb-3">
         <div class="col-6">
-          <label for="name">Tên công ty</label>
-          <input type="text" class="form-control" id="name" placeholder="" />
+          <label for="companyName" class="form-label">Tên công ty</label>
+          <input
+            type="text"
+            class="form-control"
+            id="companyName"
+            placeholder=""
+          />
         </div>
         <div class="col-6">
-          <label for="email">Email</label>
-          <input type="email" class="form-control" id="email" placeholder="" />
+          <label for="companyEmail" class="form-label">Email</label>
+          <input
+            type="email"
+            class="form-control"
+            id="companyEmail"
+            placeholder="abc@gmail.com"
+          />
         </div>
       </div>
-      <div class="row">
+      <div class="row mt-3">
         <div class="col-8">
-          <label for="">Địa chỉ</label>
-          <input type="text" class="form-control" id="address" placeholder="" />
+          <label for="companyAddress" class="form-label">Địa chỉ</label>
+          <input
+            type="text"
+            class="form-control"
+            id="companyAddress"
+            placeholder=""
+          />
         </div>
         <div class="col-4">
-          <label for="">Số điện thoại</label>
-          <input type="number" class="form-control" id="phone" placeholder="" />
+          <label for="companyPhone" class="form-label">Số điện thoại</label>
+          <input
+            type="number"
+            class="form-control"
+            id="companyPhone"
+            placeholder=""
+          />
         </div>
       </div>
       <div class="row mb-3">
         <div class="col-6">
-          <label for="date" class="form-label pt-3">Thời hạn hợp đồng</label>
+          <label for="date" class="form-label">Thời hạn hợp đồng</label>
           <div class="input-group input-daterange" id="date">
             <input type="date" class="form-control text-secondary" />
             <div class="input-group-text">to</div>
