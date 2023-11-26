@@ -75,4 +75,20 @@ function generateRandomDate(from, to) {
 //   }
 // });
 
+// router.get("/test2", async (req, res) => {
+//   try {
+//     const locations = await Location.find({ accepted: false }).exec();
+    
+//     for(let location of locations) {
+//       // const type = types[Math.floor(Math.random() * types.length)];
+//       // const size = '2.5m x 10m';
+//       await Ads.findOneAndDelete(
+//         { location: location.id }
+//       ).exec();
+//     }
+//     return res.send(locations);
+//   } catch (err) {
+//     return res.status(500).send(err.message);
+//   }
+// })
 module.exports = router;

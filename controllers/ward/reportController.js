@@ -5,6 +5,7 @@ const {
   genProcessingTemplate,
   genFinishedTemplate
 } = require('../../utils/sendEmail');
+const DOMPurify = require('isomorphic-dompurify');
 
 exports.view = async (req, res) => {
   let perPage = 10;
@@ -46,6 +47,7 @@ exports.getDetail = async (req, res) => {
       })
       .exec();
     if (!report) throw new Error('Báo cáo không tồn tại!');
+    report.content = DOMPurify.sanitize(report.content);
     res.render('ward/report/detail', {
       report,
       pageName: 'report',
