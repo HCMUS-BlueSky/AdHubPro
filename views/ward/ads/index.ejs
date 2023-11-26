@@ -20,7 +20,7 @@
     <thead>
       <tr>
         <th scope="col">STT</th>
-        <th scope="col">Địa chỉ</th>
+        <th scope="col" class="col-5">Địa chỉ</th>
         <th scope="col">Hình thức</th>
         <th scope="col">Ngày bắt đầu</th>
         <th scope="col">Ngày hết hạn</th>
@@ -32,7 +32,11 @@
       <% ads.forEach((element, index) => { %>
       <tr>
         <th scope="row"><%= perPage * (current - 1) + index + 1 %></th>
-        <td class=""><%= element.location.address %></td>
+        <td>
+          <%= (element.location.address.length > 55 ?
+          element.location.address.substring(0, 55) + '...' :
+          element.location.address) %>
+        </td>
         <td class=""><%= element.type %></td>
         <td class=""><%= moment(element.effective).format('DD-MM-YYYY') %></td>
         <td class=""><%= moment(element.expiration).format('DD-MM-YYYY') %></td>

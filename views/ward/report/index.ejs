@@ -5,6 +5,15 @@
   <%- include('../../partials/flash.ejs') %>
   <h2 class="fw-semibold">THÔNG TIN CÁC BÁO CÁO</h2>
   <div class="row justify-content-end">
+    <div class="col-2">
+      <select class="form-select select-report" aria-label="select-report">
+        <option selected>Loại báo cáo</option>
+        <option value="tố giác">Tố giác sai phạm</option>
+        <option value="đăng ký">Đăng ký nội dung</option>
+        <option value="đóng góp">Đóng góp ý kiến</option>
+        <option value="giải đáp">Giải đáp thắc mắc</option>
+      </select>
+    </div>
     <div class="col-4">
       <form role="search" method="POST" action="/ward/report/search">
         <input
@@ -22,7 +31,7 @@
       <tr>
         <th scope="col">STT</th>
         <th scope="col">THỜI GIAN</th>
-        <th scope="col">ĐỊA CHỈ</th>
+        <th scope="col" class="col-5">ĐỊA CHỈ</th>
         <th scope="col">LOẠI</th>
         <th scope="col">NGƯỜI GỬI</th>
         <th scope="col">TRẠNG THÁI</th>
@@ -33,8 +42,12 @@
       <% reports.forEach((element, index) => { %>
       <tr>
         <th scope="row"><%= perPage * (current - 1) + index + 1 %></th>
-        <td class=""><%= moment(element.created_at).format("DD-MM-YYYY hh:mm:ss") %></td>
-        <td class=""><%= element.location.address %></td>
+        <td class=""><%= moment(element.created_at).format("DD-MM-YYYY") %></td>
+        <td class="">
+          <%= (element.location.address.length > 55 ?
+          element.location.address.substring(0, 55) + '...' :
+          element.location.address) %>
+        </td>
         <td class="">
           <% if (element.type === "ads") { %> Bảng quảng cáo <% } else {%> Điểm
           đặt quảng cáo <% } %>

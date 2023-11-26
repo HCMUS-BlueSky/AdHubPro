@@ -47,8 +47,9 @@ app.use((req, res, next) => {
 app.use(express.static(__dirname + "/public"));
 
 app.get("/", async (req, res) => {
-  res.render("index");
+  res.render("index", { layout: false });
 });
+
 app.use("/api", apiRouter);
 app.use("/ward", wardRouter);
 app.use("/district", districtRouter);

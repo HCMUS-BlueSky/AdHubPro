@@ -23,7 +23,7 @@
       <tr>
         <th scope="col">STT</th>
         <th scope="col">Hình thức quảng cáo</th>
-        <th scope="col">Điểm đặt</th>
+        <th scope="col" class="col-5">Điểm đặt</th>
         <th scope="col">Công ty</th>
         <th scope="col">Tình trạng</th>
         <th scope="col"></th>
@@ -35,7 +35,10 @@
       <tr>
         <th scope="row"><%= perPage * (current - 1) + index + 1 %></th>
         <td class=""><%= element.method %></td>
-        <td class=""><%= element.address %></td>
+        <td class="">
+          <%= (element.address.length > 55 ? element.address.substring(0, 55) +
+          '...' : element.address) %>
+        </td>
         <td class=""><%= element.company_name %></td>
         <td class="">
           <% if (element.accepted) { %>
