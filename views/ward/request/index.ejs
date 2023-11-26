@@ -22,8 +22,8 @@
     <thead>
       <tr>
         <th scope="col">STT</th>
-        <th scope="col">Hình thức quảng cáo</th>
         <th scope="col" class="col-5">Điểm đặt</th>
+        <th scope="col">Loại bảng quảng cáo</th>
         <th scope="col">Công ty</th>
         <th scope="col">Tình trạng</th>
         <th scope="col"></th>
@@ -34,12 +34,12 @@
       <% request.forEach((element, index) => { %>
       <tr>
         <th scope="row"><%= perPage * (current - 1) + index + 1 %></th>
-        <td class=""><%= element.method %></td>
         <td class="">
-          <%= (element.address.length > 55 ? element.address.substring(0, 55) +
-          '...' : element.address) %>
+          <%= (element.ads.location.address.length > 55 ? element.ads.location.address.substring(0, 55) +
+          '...' : element.ads.location.address) %>
         </td>
-        <td class=""><%= element.company_name %></td>
+        <td class=""><%= element.ads.type %></td>
+        <td class=""><%= element.company.name %></td>
         <td class="">
           <% if (element.accepted) { %>
           <span class="badge bg-success w-100">Đã duyệt</span> <% } else { %>

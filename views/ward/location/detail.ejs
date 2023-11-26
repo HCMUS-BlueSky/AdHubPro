@@ -42,8 +42,11 @@
         </div>
         <div class="col-9">
           <p class="pt-3">
-            <% if (location.accepted) { %> Đã quy hoạch <% } else { %> Chưa quy
-            hoạch <% } %>
+            <% if (location.accepted) { %>
+            <span class="badge bg-success">Đã quy hoạch</span>
+            <% } else {%>
+            <span class="badge bg-danger">Chưa quy hoạch</span>
+            <% } %>
           </p>
         </div>
       </div>

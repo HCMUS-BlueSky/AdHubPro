@@ -50,19 +50,15 @@
           <select
             class="form-select text-secondary w-50"
             name="type"
-            id="method_select"
+            id="type_select"
           >
-            <option <%= ads.type ? '' : 'selected' %> >Vui lòng chọn</option>
-            <option value="Trụ bảng hiflex" <%= ads.type === 'Trụ bảng hiflex' ? 'selected' : '' %> >Trụ bảng hiflex</option>
-            <option value="Trụ màn hình điện tử LED" <%= ads.type === 'Trụ màn hình điện tử LED' ? 'selected' : '' %> >Trụ màn hình điện tử LED</option>
-            <option value="Trụ hộp đèn" <%= ads.type === 'Trụ hộp đèn' ? 'selected' : '' %> >Trụ hộp đèn</option>
-            <option value="Bảng hiflex ốp tường" <%= ads.type === 'Bảng hiflex ốp tường' ? 'selected' : '' %> >Bảng hiflex ốp tường</option>
-            <option value="Màn hình điện tử ốp tường" <%= ads.type === 'Màn hình điện tử ốp tường' ? 'selected' : '' %> >Màn hình điện tử ốp tường</option>
-            <option value="Trụ treo băng rôn dọc" <%= ads.type === 'Trụ treo băng rôn dọc' ? 'selected' : '' %> >Trụ treo băng rôn dọc</option>
-            <option value="Trụ treo băng rôn ngang" <%= ads.type === 'Trụ treo băng rôn ngang' ? 'selected' : '' %> >Trụ treo băng rôn ngang</option>
-            <option value="Trụ/Cụm pano" <%= ads.type === 'Trụ/Cụm pano' ? 'selected' : '' %> >Trụ/Cụm pano</option>
-            <option value="Cổng chào" <%= ads.type === 'Cổng chào' ? 'selected' : '' %> >Cổng chào</option>
-            <option value="Trung tâm thương mại" <%= ads.type === 'Trung tâm thương mại' ? 'selected' : '' %> >Trung tâm thương mại</option>
+            <% if(!ads?.availableType) {%>
+              <option value="" selected> >Vui lòng chọn</option>
+            <% } else {%>
+              <% ads?.availableType?.forEach((type, index) => { %>
+                <option value="<%= type %>" <%= ads.type === type ? 'selected' : ''%> ><%= type %></option>
+              <% })%>
+            <% }%>
           </select>
         </div>
         <label for="" class="form-label pt-3">Kích thước bảng quảng cáo</label>

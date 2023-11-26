@@ -106,6 +106,7 @@ exports.renderUpdateInfo = async (req, res) => {
   try {
     const ads = await Ads.findOne({ _id: req.params.id }).populate("location").exec();
     if (!ads) throw new Error('Bảng quảng cáo không tồn tại!');
+    ads.availableType = Ads.getAvailableType();
     return res.render("ward/ads/update_info", {
       ads,
       pageName: "ads",

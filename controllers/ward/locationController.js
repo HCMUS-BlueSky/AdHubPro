@@ -86,6 +86,8 @@ exports.renderUpdateInfo = async (req, res) => {
   try {
     const location = await Location.findOne({ _id: req.params.id });
     if (!location) throw new Error('Địa điểm không tồn tại!');
+    location.availableType = Location.getAvailableType();
+    location.availableMethod = Location.getAvailableMethod();
     return res.render("ward/location/update_info", {
       location,
       pageName: "location",
@@ -107,6 +109,7 @@ exports.updateInfo = async (req, res) => {
     const { longitude, latitude, images, content, ...filtered } = req.body;
     if (!content || typeof content !== "string")
       throw new Error('Nội dung yêu cầu không hợp lệ!');
+
     const new_images = [];
     if (req.files) {
       for (let file of req.files) {
@@ -120,6 +123,7 @@ exports.updateInfo = async (req, res) => {
       latitude: location.latitude,
       ...filtered,
     };
+    console.log(filtered);
     const proposal = new Proposal({
       type: "location",
       location: location.id,
@@ -127,7 +131,7 @@ exports.updateInfo = async (req, res) => {
       content,
     });
     await proposal.save();
-    req.flash("success", "Gửi yêu cầu thay đổi điểm đặt báo cáo thành công!");
+    req.flash("success", "Gửi yêu cầu thay đổi điểm đặt quảng cáo thành công!");
     return res.redirect("/ward/location");
   } catch (err) {
     req.flash('error', err.message);

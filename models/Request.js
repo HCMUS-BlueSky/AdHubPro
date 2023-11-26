@@ -1,42 +1,21 @@
 const mongoose = require('mongoose');
+const { adsSchema } = require('./Ads')
 
 const requestSchema = new mongoose.Schema(
   {
-    latitude: {
+    ads: {
+      type: adsSchema,
+      required: true
+    },
+    ads_count: {
       type: Number,
-      required: true,
-      alias: 'lat'
-    },
-    longitude: {
-      type: Number,
-      required: true,
-      alias: 'lng'
-    },
-    ward: {
-      type: String,
-      trim: true
-    },
-    district: {
-      type: String,
-      trim: true
-    },
-    address: {
-      type: String,
-      trim: true
-    },
-    type: {
-      type: String,
-      trim: true
+      min: 1,
+      default: 1
     },
     method: {
       type: String,
       trim: true
     },
-    images: [
-      {
-        type: String
-      }
-    ],
     accepted: {
       type: Boolean,
       default: false
@@ -44,7 +23,7 @@ const requestSchema = new mongoose.Schema(
     description: {
       type: String
     },
-    advertiser: {
+    company: {
       name: {
         type: String,
         required: true,
@@ -79,14 +58,9 @@ const requestSchema = new mongoose.Schema(
       },
       address: {
         type: String,
-        required: true
+        required: true,
+        trim: true
       }
-    },
-    effective: {
-      type: Date
-    },
-    expiration: {
-      type: Date
     }
   },
   {

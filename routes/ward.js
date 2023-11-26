@@ -58,6 +58,8 @@ router.get("/request", requestController.view);
 
 router.get("/request/view/:id", requestController.getDetail);
 
-router.get("/request/create", requestController.createNew);
+router.get("/request/create", requestController.renderCreateNew);
+
+router.post('/request/create', upload.array('images', 5), requestController.createNew);
 
 module.exports = router;

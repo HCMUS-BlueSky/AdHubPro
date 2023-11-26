@@ -47,7 +47,7 @@
 
       <div class="d-flex px-3 mb-3 gap-5">
         <div class="">
-          <label for="" class="form-label"
+          <label for="method_select" class="form-label"
             >Hình thức quảng cáo</label
           >
           <select
@@ -55,28 +55,31 @@
             name="method"
             id="method_select"
           >
-            <option <%= location.method ? '' : 'selected'%> >Vui lòng chọn</option>
-            <option value="Cổ động chính trị" <%= location.method === "Cổ động chính trị" ? 'selected' : ''%> >Cổ động chính trị</option>
-            <option value="Quảng cáo thương mại" <%= location.method === "Quảng cáo thương mại" ? 'selected' : ''%> >Quảng cáo thương mại</option>
-            <option value="Xã hội hóa" <%= location.method === 'Xã hội hóa' ? 'selected' : ''%> >Xã hội hóa</option>
+            <% if(!location?.availableMethod) {%>
+              <option value="" selected> >Vui lòng chọn</option>
+            <% } else {%>
+              <% location?.availableMethod?.forEach((method, index) => { %>
+                <option value="<%= method %>" <%= location.method === method ? 'selected' : ''%> ><%= method %></option>
+              <% })%>
+            <% }%>
           </select>
         </div>
         <div class="">
-          <label for="" class="form-label"
+          <label for="type_select" class="form-label"
             >Loại vị trí</label
           >
           <select
             class="form-select text-secondary w-auto"
             name="type"
-            id="method_select"
+            id="type_select"
           >
-            <option <%= location.type ? '' : 'selected'%>>Vui lòng chọn</option>
-            <option <%= location.type === "Đất công/Công viên/Hành lang an toàn giao thông" ? 'selected' : ''%> value="Đất công/Công viên/Hành lang an toàn giao thông">Đất công/Công viên/Hành lang an toàn giao thông</option>
-            <option <%= location.type === "Đất tư nhân/Nhà ở riêng lẻ" ? 'selected' : ''%> value="Đất tư nhân/Nhà ở riêng lẻ">Đất tư nhân/Nhà ở riêng lẻ</option>
-            <option <%= location.type === "Trung tâm thương mại" ? 'selected' : ''%> value="Trung tâm thương mại">Trung tâm thương mại</option>
-            <option <%= location.type === "Chợ" ? 'selected' : ''%> value="Chợ">Chợ</option>
-            <option <%= location.type === "Cây xăng" ? 'selected' : ''%> value="Cây xăng">Cây xăng</option>
-            <option <%= location.type === "Nhà chờ xe buýt" ? 'selected' : ''%> value="Nhà chờ xe buýt">Nhà chờ xe buýt</option>
+            <% if(!location?.availableType) {%>
+              <option value="" selected> >Vui lòng chọn</option>
+            <% } else {%>
+              <% location?.availableType?.forEach((type, index) => { %>
+                <option value="<%= type %>" <%= location.type === type ? 'selected' : ''%> ><%= type %></option>
+              <% })%>
+            <% }%>
           </select>
         </div>
       </div>
@@ -122,7 +125,8 @@
         <div>
           <label for="" class="form-label">Số lượng điểm đặt quảng cáo</label>
           <input
-            type="text"
+            type="number"
+            min="1"
             class="form-control w-auto"
             required
             id=""

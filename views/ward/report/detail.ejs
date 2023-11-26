@@ -88,7 +88,7 @@
           type="button"
           class="btn btn-primary me-4"
           data-bs-toggle="modal"
-          data-bs-target="#detail"
+          data-bs-target="#imageSlideShow"
           <%= report.images.length ? "" : "disabled" %>
         >
           Xem tất cả hình
@@ -102,9 +102,9 @@
 </div>
 <div
   class="modal fade"
-  id="detail"
+  id="imageSlideShow"
   aria-hidden="true"
-  aria-labelledby="detail"
+  aria-labelledby="imageSlideShow"
   tabindex="-1"
 >
   <div class="modal-dialog modal-dialog-centered">
@@ -113,26 +113,28 @@
         <div id="slide" class="carousel slide" data-bs-ride="carousel">
           <!-- Indicators/dots -->
           <div class="carousel-indicators">
-            <% report.images.forEach((image, index) => { %>
-            <button
-              type="button"
-              data-bs-target="#slide"
-              data-bs-slide-to="<%= index %>"
-            ></button>
+            <% report.images.forEach((img, index) => { %>
+              <button
+                type="button"
+                data-bs-target="#slide"
+                data-bs-slide-to="<%= index %>"
+                class="<%= index == 0 ? 'active' : '' %>"
+              ></button>
             <% }) %>
           </div>
 
           <!-- The slideshow/carousel -->
           <div class="carousel-inner">
-            <% report.images.forEach((image, index) => { %>
-            <div class="carousel-item <%= index ? '': 'active' %>">
-              <img
-                src="<%= image %>"
-                alt="image-<%= index %>"
-                class="d-block"
-                style="width: 100%"
-              />
-            </div>
+            <% report.images.forEach((img, index) => { %>
+              <div class="carousel-item <%= index == 0 ? 'active' : '' %>">
+                <img
+                  src="<%= img %>"
+                  alt="image-<%= index %>"
+                  class="d-block"
+                  style="width: 100%"
+                  loading="lazy"
+                />
+              </div>
             <% }) %>
           </div>
 
@@ -158,3 +160,4 @@
     </div>
   </div>
 </div>
+

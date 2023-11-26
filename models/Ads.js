@@ -4,11 +4,23 @@ const adsSchema = new mongoose.Schema(
   {
     location: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Location",
+      ref: 'Location',
       required: true
     },
     type: {
-      type: String
+      type: String,
+      enum: [
+        'Trụ bảng hiflex',
+        'Trụ màn hình điện tử LED',
+        'Trụ hộp đèn',
+        'Bảng hiflex ốp tường',
+        'Màn hình điện tử ốp tường',
+        'Trụ treo băng rôn dọc',
+        'Trụ treo băng rôn ngang',
+        'Trụ/Cụm pano',
+        'Cổng chào',
+        'Trung tâm thương mại'
+      ]
     },
     size: {
       type: String
@@ -32,6 +44,11 @@ const adsSchema = new mongoose.Schema(
         get() {
           return this._id;
         }
+      }
+    },
+    statics: {
+      getAvailableType() {
+        return this.schema.path('type').enumValues;
       }
     },
     timestamps: {
