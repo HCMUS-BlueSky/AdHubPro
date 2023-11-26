@@ -2,71 +2,54 @@ const mongoose = require('mongoose');
 
 const requestSchema = new mongoose.Schema(
   {
-      latitude: {
-        type: Number,
-        required: true,
-        alias: 'lat'
-      },
-      longitude: {
-        type: Number,
-        required: true,
-        alias: 'lng'
-      },
-      ward: {
+    latitude: {
+      type: Number,
+      required: true,
+      alias: 'lat'
+    },
+    longitude: {
+      type: Number,
+      required: true,
+      alias: 'lng'
+    },
+    ward: {
+      type: String,
+      trim: true
+    },
+    district: {
+      type: String,
+      trim: true
+    },
+    address: {
+      type: String,
+      trim: true
+    },
+    type: {
+      type: String,
+      trim: true
+    },
+    method: {
+      type: String,
+      trim: true
+    },
+    images: [
+      {
         type: String
-      },
-      district: {
-        type: String
-      },
-      address: {
-        type: String
-      },
-      type: {
-        type: String
-      },
-      method: {
-        type: String
-      },
-      images: [
-        {
-          type: String
-        }
-      ],
-      accepted: {
-        type: Boolean,
-        default: false
-      },
-      
-      company_name: {
-        type: String
-      },
-
-      company_code: {
-        type: String
-      },
-
-      company_address: {
-        type: String
-      },
-
-      company_email: {
-        type: String
-      },
-
-      company_phone: {
-        type: String
-      },
-
-      description: {
-        type: String
-      },
-      start_date: {
-        type: String
-      },
-      end_date: {
-        type: String
-      },
+      }
+    ],
+    accepted: {
+      type: Boolean,
+      default: false
+    },
+    description: {
+      type: String
+    },
     advertiser: {
+      name: {
+        type: String,
+        required: true,
+        trim: true
+      },
       email: {
         type: String,
         required: true,
@@ -99,10 +82,10 @@ const requestSchema = new mongoose.Schema(
         required: true
       }
     },
-    effective_date: {
+    effective: {
       type: Date
     },
-    expire_date: {
+    expiration: {
       type: Date
     }
   },

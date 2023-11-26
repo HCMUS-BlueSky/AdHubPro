@@ -3,29 +3,23 @@
   <%- include('../../partials/header.ejs') %>
   <hr />
   <div class="card bg-light mb-3">
-    <div class="card-body p-4">
+    <form class="card-body p-4">
       <h2 class="fw-semibold">Yêu cầu cấp phép</h2>
-
-      <div class="row g-3 py-1">
-        <label for="inputAddress" class="form-label"
-          >Thông tin bảng quảng cáo</label
-        >
-      </div>
-
-      <form class="row g-3 py-1">
-        <div class="col-3">
+      <label for="adsAddress" class="form-label pt-2">Thông tin bảng quảng cáo</label>
+      <div class="row g-3" id="adsAddress">
+        <div class="col-3 flex-grow-1">
           <input
-            type="email"
+            type="text"
             class="form-control"
-            id="inputEmail4"
+            id="address"
             placeholder="Địa chỉ"
           />
         </div>
         <div class="col-3">
           <input
-            type="email"
+            type="text"
             class="form-control"
-            id="#"
+            id="ward"
             placeholder="Phường"
           />
         </div>
@@ -33,99 +27,65 @@
           <input
             type="email"
             class="form-control"
-            id="inputEmail4"
+            id="district"
             placeholder="Quận"
+          />
+        </div>
+      </div>
+
+      <label for="companyInfo" class="form-label pt-3">Thông tin công ty</label>
+      <div class="row g-3" id="companyInfo">
+        <div class="col-3">
+          <input
+            type="text"
+            class="form-control"
+            id="companyName"
+            placeholder="Tên công ty"
           />
         </div>
         <div class="col-3">
           <input
-            type="email"
+            type="text"
             class="form-control"
-            id="inputEmail4"
-            placeholder="Số thứ tự"
+            id="companyPhone"
+            placeholder="Số điện thoại"
           />
         </div>
-      </form>
-
-      <div class="row g-3 py-1">
-        <label for="inputAddress2" class="form-label">Thông tin công ty</label>
-      </div>
-
-      <form class="row g-3 py-1">
-        <div class="col-4">
+        <div class="col-4 flex-grow-1">
           <input
-            type="email"
+            type="text"
             class="form-control"
-            id="inputEmail4"
-            placeholder="Tên công ty"
-          />
-        </div>
-        <div class="col-4">
-          <input
-            type="email"
-            class="form-control"
-            id="#"
-            placeholder="Mã số thuế"
-          />
-        </div>
-        <div class="col-4">
-          <input
-            type="email"
-            class="form-control"
-            id="inputEmail4"
+            id="companyAddress"
             placeholder="Địa chỉ công ty"
           />
         </div>
-      </form>
+      </div>
 
       <div class="row g-3">
         <div class="col-4 py-3">
-          <div class="row py-1">
+          <div class="row">
             <div class="col">
-              <label for="inputAddress2" class="form-label"
-                >Thông tin liên lạc</label
+              <label for="companyEmail" class="form-label"
+                >Email liên lạc</label
               >
               <input
                 type="email"
                 class="form-control"
-                id="inputEmail4"
+                id="companyEmail"
                 placeholder="Email"
-              />
-            </div>
-            <div class="col">
-              <label for="inputAddress2" class="form-label"
-                >Thông tin liên lạc</label
-              >
-              <input
-                type="email"
-                class="form-control"
-                id="inputEmail4"
-                placeholder="Số điện thoại"
               />
             </div>
           </div>
           <div class="row py-1">
             <div class="col">
-              <label for="inputAddress2" class="form-label"
+              <label for="date_input" class="form-label pt-3"
                 >Thời hạn hợp đồng</label
               >
-              <input
-                type="email"
-                class="form-control"
-                id="inputEmail4"
-                placeholder="Ngày bắt đầu"
-              />
-            </div>
-            <div class="col">
-              <label for="inputAddress2" class="form-label"
-                >Thời hạn hợp đồng</label
-              >
-              <input
-                type="email"
-                class="form-control"
-                id="#"
-                placeholder="Ngày kết thúc"
-              />
+              <div class="input-group input-daterange" id="date_input">
+                <input type="date" class="form-control text-secondary"/>
+                <div class="input-group-text">to</div>
+                <input type="date" class="form-control text-secondary"/>
+              </div>
             </div>
           </div>
           <div class="py-1">
@@ -146,7 +106,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </form>
     <div class="d-flex justify-content-center py-1">
       <a name="" id="" class="btn btn-secondary me-4" href="." role="button"
         >Trở về danh sách</a
