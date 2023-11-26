@@ -4,116 +4,125 @@
   <hr />
   <div class="card bg-light mb-3">
     <form class="card-body p-4">
-      <h2 class="fw-semibold">Yêu cầu cấp phép</h2>
-      <label for="adsAddress" class="form-label pt-2">Thông tin bảng quảng cáo</label>
-      <div class="row g-3" id="adsAddress">
-        <div class="col-3 flex-grow-1">
+      <h2 class="fw-semibold mb-3">Yêu cầu cấp phép</h2>
+      <h4>Thông tin bảng quảng cáo</h4>
+      <div class="row mb-3">
+        <div class="col-8">
+          <label for="place">Địa điểm</label>
+          <select class="form-select" aria-label="">
+            <% locations.forEach(location => { %>
+            <option value="<%= location._id %>"><%= location.address %></option>
+            <% }) %>
+          </select>
+        </div>
+      </div>
+      <div class="row mb-3">
+        <div class="col-6">
+          <label for="method_select" class="form-label pt-3"
+            >Loại bảng quảng cáo</label
+          >
+          <select
+            class="form-select text-secondary w-100"
+            name="type"
+            id="method_select"
+          >
+            <option>Vui lòng chọn</option>
+            <option value="Trụ bảng hiflex">Trụ bảng hiflex</option>
+            <option value="Trụ màn hình điện tử LED">
+              Trụ màn hình điện tử LED
+            </option>
+            <option value="Trụ hộp đèn">Trụ hộp đèn</option>
+            <option value="Bảng hiflex ốp tường">Bảng hiflex ốp tường</option>
+            <option value="Màn hình điện tử ốp tường">
+              Màn hình điện tử ốp tường
+            </option>
+            <option value="Trụ treo băng rôn dọc">Trụ treo băng rôn dọc</option>
+            <option value="Trụ treo băng rôn ngang" %>
+              >Trụ treo băng rôn ngang
+            </option>
+            <option value="Trụ/Cụm pano">Trụ/Cụm pano</option>
+            <option value="Cổng chào">Cổng chào</option>
+            <option value="Trung tâm thương mại">Trung tâm thương mại</option>
+          </select>
+        </div>
+        <div class="col-6">
+          <label for="" class="form-label pt-3"
+            >Kích thước bảng quảng cáo</label
+          >
           <input
             type="text"
-            class="form-control"
-            id="address"
-            placeholder="Địa chỉ"
-          />
-        </div>
-        <div class="col-3">
-          <input
-            type="text"
-            class="form-control"
-            id="ward"
-            placeholder="Phường"
-          />
-        </div>
-        <div class="col-3">
-          <input
-            type="email"
-            class="form-control"
-            id="district"
-            placeholder="Quận"
+            class="form-control w-100"
+            required
+            id=""
+            aria-describedby="helpId"
+            placeholder="2.5m x 10m"
+            name="size"
+            value=""
           />
         </div>
       </div>
-
-      <label for="companyInfo" class="form-label pt-3">Thông tin công ty</label>
-      <div class="row g-3" id="companyInfo">
-        <div class="col-3">
-          <input
-            type="text"
-            class="form-control"
-            id="companyName"
-            placeholder="Tên công ty"
-          />
+      <div class="row mb-3">
+        <div class="col-6">
+          <label for="" class="form-label">Hình thức quảng cáo</label>
+          <select
+            class="form-select text-secondary w-100"
+            name="type"
+            id="method_select"
+          >
+            <option>Vui lòng chọn</option>
+            <option value="Cổ động chính trị">Cổ động chính trị</option>
+            <option value="Quảng cáo thương mại">Quảng cáo thương mại</option>
+            <option value="Xã hội hóa">Xã hội hóa</option>
+          </select>
         </div>
-        <div class="col-3">
-          <input
-            type="text"
-            class="form-control"
-            id="companyPhone"
-            placeholder="Số điện thoại"
-          />
-        </div>
-        <div class="col-4 flex-grow-1">
-          <input
-            type="text"
-            class="form-control"
-            id="companyAddress"
-            placeholder="Địa chỉ công ty"
-          />
+        <div class="col-6">
+          <label for="name">Số lượng</label>
+          <input type="number" class="form-control" id="name" placeholder="" />
         </div>
       </div>
-
-      <div class="row g-3">
-        <div class="col-4 py-3">
-          <div class="row">
-            <div class="col">
-              <label for="companyEmail" class="form-label"
-                >Email liên lạc</label
-              >
-              <input
-                type="email"
-                class="form-control"
-                id="companyEmail"
-                placeholder="Email"
-              />
-            </div>
-          </div>
-          <div class="row py-1">
-            <div class="col">
-              <label for="date_input" class="form-label pt-3"
-                >Thời hạn hợp đồng</label
-              >
-              <div class="input-group input-daterange" id="date_input">
-                <input type="date" class="form-control text-secondary"/>
-                <div class="input-group-text">to</div>
-                <input type="date" class="form-control text-secondary"/>
-              </div>
-            </div>
-          </div>
-          <div class="py-1">
-            <label for="formFile" class="form-label">Hình ảnh minh họa</label>
-            <input class="form-control" type="file" id="formFile" />
-          </div>
-        </div>
-        <div class="col-8 py-3">
+      <div class="row mb-3">
+        <div class="col-8">
           <div class="form-group">
-            <label for="inputAddress2" class="form-label"
-              >Nội dung quảng cáo</label
-            >
-            <textarea
-              class="form-control"
-              id="exampleFormControlTextarea1"
-              rows="8"
-            ></textarea>
+            <label for="ads-content">Nội dung quảng cáo</label>
+            <textarea class="form-control" id="ads-content" rows="3"></textarea>
+          </div>
+        </div>
+        <div class="col-4">
+          <label for="ads-image" class="form-label">Hình ảnh minh họa</label>
+          <input class="form-control" type="file" id="ads-image" multiple />
+        </div>
+      </div>
+      <h4>Thông tin công ty</h4>
+      <div class="row">
+        <div class="col-6">
+          <label for="name">Tên công ty</label>
+          <input type="text" class="form-control" id="name" placeholder="" />
+        </div>
+        <div class="col-6">
+          <label for="email">Email</label>
+          <input type="email" class="form-control" id="email" placeholder="" />
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-8">
+          <label for="">Địa chỉ</label>
+          <input type="text" class="form-control" id="address" placeholder="" />
+        </div>
+        <div class="col-4">
+          <label for="">Số điện thoại</label>
+          <input type="number" class="form-control" id="phone" placeholder="" />
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-6">
+          <label for="date" class="form-label pt-3">Thời hạn hợp đồng</label>
+          <div class="input-group input-daterange" id="date">
+            <input type="date" class="form-control text-secondary" />
+            <div class="input-group-text">to</div>
+            <input type="date" class="form-control text-secondary" />
           </div>
         </div>
       </div>
     </form>
-    <div class="d-flex justify-content-center py-1">
-      <a name="" id="" class="btn btn-secondary me-4" href="." role="button"
-        >Trở về danh sách</a
-      >
-      <a name="" id="" class="btn btn-primary me-4" href="." role="button"
-        >Tạo yêu cầu</a
-      >
-    </div>
   </div>
 </div>

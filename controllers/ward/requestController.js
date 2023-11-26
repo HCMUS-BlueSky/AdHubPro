@@ -1,3 +1,4 @@
+const { Location } = require("../../models/Location");
 const Request = require("../../models/Request");
 
 exports.view = async (req, res) => {
@@ -42,9 +43,11 @@ exports.getDetail = async (req, res) => {
   }
 };
 
-exports.createNew = (req, res) => {
+exports.createNew = async (req, res) => {
   try {
+    const locations = await Location.find({}).exec();
     res.render("ward/request/create", {
+      locations,
       pageName: "request",
       header: {
         navRoot: "Yêu cầu cấp phép",
