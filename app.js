@@ -13,7 +13,7 @@ const authRouter = require("./routes/auth");
 const errorHandler = require("./middleware/errorHandler");
 const cookieParser = require("cookie-parser");
 const crypto = require("crypto");
-const session = require("express-session");
+const session = require('cookie-session');
 const flash = require("connect-flash");
 connectDB();
 
@@ -27,10 +27,10 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(
   session({
-    secret: process.env.SECRET || crypto.randomBytes(20).toString("hex"),
+    secret: process.env.SECRET || crypto.randomBytes(20).toString('hex'),
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: false },
+    cookie: { secure: false, httpOnly: true }
   })
 );
 app.use(flash());

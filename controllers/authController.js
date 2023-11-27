@@ -37,7 +37,9 @@ exports.login = async (req, res) => {
     const matched = await bcrypt.compare(password, user.password);
 
     if (!matched) throw new Error('Email or password is incorrect!');
-    req.session.user = user;
+    const sessUser = user.toObject();
+    delete sessUser['password'];
+    req.session.user = sessUser;
     if (user.role === "ward_officer") {
       req.session.workDir = '/ward';
       return res.redirect("/ward")
