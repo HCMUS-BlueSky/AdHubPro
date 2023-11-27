@@ -148,7 +148,7 @@ exports.createNew = async (req, res) => {
     });
     if (req.files) {
       for (let file of req.files) {
-        const url = await uploadFile(`request/${request._id}`, file);
+        const url = await uploadFile(`assets/request/${request._id}`, file);
         request.ads.images.push(url);
       }
     }
