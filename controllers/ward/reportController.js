@@ -1,4 +1,5 @@
 const Report = require('../../models/Report');
+const { Location } = require('../../models/Location');
 const moment = require('moment');
 const {
   sendEmail,
@@ -11,7 +12,14 @@ exports.view = async (req, res) => {
   let perPage = 10;
   let page = req.query.page || 1;
   try {
-    const reports = await Report.find({})
+    const user = req.session.user;
+    const managed_locations = await Location.find({
+      district: user.managed_district.name,
+      ward: user.managed_ward
+    })
+      .distinct('_id')
+      .exec();
+    const reports = await Report.find({ location: { $in: managed_locations } })
       .sort({ updatedAt: -1 })
       .skip(perPage * page - perPage)
       .limit(perPage)
@@ -20,7 +28,7 @@ exports.view = async (req, res) => {
         select: ['address', 'ward', 'district', 'method']
       })
       .exec();
-    const count = await Report.count();
+    const count = reports.length;
     res.render('ward/report/index', {
       reports,
       perPage,
@@ -40,7 +48,17 @@ exports.view = async (req, res) => {
 
 exports.getDetail = async (req, res) => {
   try {
-    const report = await Report.findOne({ _id: req.params.id })
+    const user = req.session.user;
+    const managed_locations = await Location.find({
+      district: user.managed_district.name,
+      ward: user.managed_ward
+    })
+      .distinct('_id')
+      .exec();
+    const report = await Report.findOne({
+      _id: req.params.id,
+      location: { $in: managed_locations }
+    })
       .populate({
         path: 'location',
         select: ['address', 'ward', 'district', 'method']
@@ -64,7 +82,17 @@ exports.getDetail = async (req, res) => {
 
 exports.renderProcessReport = async (req, res) => {
   try {
-    const report = await Report.findOne({ _id: req.params.id }).exec();
+    const user = req.session.user;
+    const managed_locations = await Location.find({
+      district: user.managed_district.name,
+      ward: user.managed_ward
+    })
+      .distinct('_id')
+      .exec();
+    const report = await Report.findOne({
+      _id: req.params.id,
+      location: { $in: managed_locations }
+    }).exec();
     if (!report) throw new Error('Báo cáo không tồn tại!');
     res.render('ward/report/process', {
       report,
@@ -90,7 +118,17 @@ exports.processReport = async (req, res) => {
       typeof status !== 'string'
     )
       throw new Error('Dữ liệu truyền vào không hợp lệ!');
-    const report = await Report.findOne({ _id: req.params.id })
+    const user = req.session.user;
+    const managed_locations = await Location.find({
+      district: user.managed_district.name,
+      ward: user.managed_ward
+    })
+      .distinct('_id')
+      .exec();
+    const report = await Report.findOne({
+      _id: req.params.id,
+      location: { $in: managed_locations }
+    })
       .populate('location')
       .exec();
     if (!report) throw new Error('Báo cáo không tồn tại!');

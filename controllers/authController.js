@@ -28,7 +28,9 @@ exports.login = async (req, res) => {
     const recaptcha = await ggRes.json();
     if (!recaptcha.success) throw new Error('Invalid captcha!');
 
-    const user = await User.findOne({ email }).exec();
+    const user = await User.findOne({ email })
+      .populate('managed_district', 'name')
+      .exec();
 
     if (!user) throw new Error('Email or password is incorrect!');
 
@@ -37,12 +39,15 @@ exports.login = async (req, res) => {
     if (!matched) throw new Error('Email or password is incorrect!');
     req.session.user = user;
     if (user.role === "ward_officer") {
+      req.session.workDir = '/ward';
       return res.redirect("/ward")
     }
     if (user.role === 'district_officer') {
+      req.session.workDir = '/district';
       return res.redirect('/district');
     } 
     if (user.role === 'department_officer') {
+      req.session.workDir = '/department';
       return res.redirect('/department');
     } 
     return res.redirect("/");

@@ -8,17 +8,24 @@ exports.view = async (req, res) => {
   let perPage = 10;
   let page = req.query.page || 1;
   try {
-    const ads = await Ads.find({})
+    const user = req.session.user;
+    const managed_locations = await Location.find({
+      district: user.managed_district.name,
+      ward: user.managed_ward
+    })
+      .distinct('_id')
+      .exec();
+    const ads = await Ads.find({ location: { $in: managed_locations } })
       .sort({ updatedAt: -1 })
       .skip(perPage * page - perPage)
       .limit(perPage)
       .populate({
-        path: "location",
-        select: ["address", "ward", "district", "method"],
+        path: 'location',
+        select: ['address', 'ward', 'district', 'method']
       })
       .exec();
 
-    const count = await Ads.count();
+    const count = ads.length;
     res.render("ward/ads/index", {
       ads,
       perPage,
@@ -81,10 +88,20 @@ exports.search = async (req, res) => {
 
 exports.getDetail = async (req, res) => {
   try {
-    const ads = await Ads.findOne({ _id: req.params.id })
+    const user = req.session.user;
+    const managed_locations = await Location.find({
+      district: user.managed_district.name,
+      ward: user.managed_ward
+    })
+      .distinct('_id')
+      .exec();
+    const ads = await Ads.findOne({
+      _id: req.params.id,
+      location: { $in: managed_locations }
+    })
       .populate({
-        path: "location",
-        select: ["address", "ward", "district", "method"],
+        path: 'location',
+        select: ['address', 'ward', 'district', 'method']
       })
       .exec();
     res.render("ward/ads/detail", {
@@ -104,7 +121,19 @@ exports.getDetail = async (req, res) => {
 
 exports.renderUpdateInfo = async (req, res) => {
   try {
-    const ads = await Ads.findOne({ _id: req.params.id }).populate("location").exec();
+    const user = req.session.user;
+    const managed_locations = await Location.find({
+      district: user.managed_district.name,
+      ward: user.managed_ward
+    })
+      .distinct('_id')
+      .exec();
+    const ads = await Ads.findOne({
+      _id: req.params.id,
+      location: { $in: managed_locations }
+    })
+      .populate('location')
+      .exec();
     if (!ads) throw new Error('Bảng quảng cáo không tồn tại!');
     ads.availableType = Ads.getAvailableType();
     return res.render("ward/ads/update_info", {
@@ -124,7 +153,17 @@ exports.renderUpdateInfo = async (req, res) => {
 
 exports.updateInfo = async (req, res) => {
   try {
-    const ads = await Ads.findOne({ _id: req.params.id });
+    const user = req.session.user;
+    const managed_locations = await Location.find({
+      district: user.managed_district.name,
+      ward: user.managed_ward
+    })
+      .distinct('_id')
+      .exec();
+    const ads = await Ads.findOne({
+      _id: req.params.id,
+      location: { $in: managed_locations }
+    });
     if (!ads) throw new Error("Bảng quảng cáo không tồn tại!");
     const { location, images, content, effective, expiration, ...filtered } =
       req.body;

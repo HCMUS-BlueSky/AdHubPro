@@ -76,11 +76,20 @@
         >
           Xem tất cả hình
         </button>
+        <button
+          type="button"
+          class="btn btn-danger me-4"
+          data-bs-toggle="modal"
+          data-bs-target="#cancelRequest"
+          <%= request.accepted ? "disabled" : "" %>
+        >
+          Hủy yêu cầu
+        </button>
       </div>
     </div>
   </div>
 </div>
-
+<form method="POST" action="../<%= request._id %>/cancel" id="cancelForm" style="display: none;"></form>
 <div
   class="modal fade"
   id="imageSlideShow"
@@ -147,3 +156,36 @@
     </div>
   </div>
 </div>
+<div
+  class="modal fade"
+  id="cancelRequest"
+  tabindex="-1"
+  aria-labelledby="cancelRequestLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="cancelRequestLabel">Xác nhận</h1>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">Bạn có chắc chắn muốn hủy bỏ yêu cầu này?</div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Đóng
+        </button>
+        <button type="button" class="btn btn-danger" id="delete-btn">Xóa</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  document.getElementById("delete-btn").addEventListener("click", () => {
+    cancelForm.submit();
+  });
+</script>

@@ -8,13 +8,22 @@ exports.view = async (req, res) => {
   let perPage = 10;
   let page = req.query.page || 1;
   try {
-    const request = await Request.find({})
-      .populate("ads.location", "address")
+    const user = req.session.user;
+    const managed_locations = await Location.find({
+      district: user.managed_district.name,
+      ward: user.managed_ward
+    })
+      .distinct('_id')
+      .exec();
+    const request = await Request.find({
+      "ads.location": { $in: managed_locations }
+    })
+      .populate('ads.location', 'address')
       .sort({ updatedAt: -1 })
       .skip(perPage * page - perPage)
       .limit(perPage)
       .exec();
-    const count = await Request.count();
+    const count = request.length;
     res.render("ward/request/index", {
       request,
       perPage,
@@ -33,7 +42,17 @@ exports.view = async (req, res) => {
 
 exports.getDetail = async (req, res) => {
   try {
-    const request = await Request.findOne({ _id: req.params.id }).populate('ads.location', 'ward district address');
+    const user = req.session.user;
+    const managed_locations = await Location.find({
+      district: user.managed_district.name,
+      ward: user.managed_ward
+    })
+      .distinct('_id')
+      .exec();
+    const request = await Request.findOne({
+      _id: req.params.id,
+      'ads.location': { $in: managed_locations }
+    }).populate('ads.location', 'ward district address');
     res.render("ward/request/detail", {
       request,
       moment,
@@ -51,7 +70,11 @@ exports.getDetail = async (req, res) => {
 
 exports.renderCreateNew = async (req, res) => {
   try {
-    const locations = await Location.find({}).exec();
+    const user = req.session.user;
+    const locations = await Location.find({
+      district: user.managed_district.name,
+      ward: user.managed_ward
+    }).exec();
     const availableAdsType = await Ads.getAvailableType();
     const availableLocationMethod = await Location.getAvailableMethod();
     res.render("ward/request/create", {
@@ -99,7 +122,13 @@ exports.createNew = async (req, res) => {
       throw new Error('Số điện thoại công ty không hợp lệ');
     if (!effective || typeof effective !== 'string') throw new Error('Ngày bắt đầu hợp đồng không hợp lệ');
     if (!expiration || typeof expiration !== 'string') throw new Error('Ngày kết thúc hợp đồng không hợp lệ');
-
+    const user = req.session.user;
+    const exists = await Location.exists({
+      _id: location,
+      district: user.managed_district.name,
+      ward: user.managed_ward
+    }).exec();
+    if (!exists) throw new Error('Địa điểm không hợp lệ'); 
     const request = new Request({
       ads: {
         location,
@@ -128,6 +157,30 @@ exports.createNew = async (req, res) => {
     return res.redirect('/ward/request');
   } catch (err) {
     req.flash("error", err.message);
+    return res.redirect('/ward/request');
+  }
+};
+
+exports.cancelRequest = async (req, res) => {
+  try {
+    const user = req.session.user;
+    const managed_locations = await Location.find({
+      district: user.managed_district.name,
+      ward: user.managed_ward
+    })
+      .distinct('_id')
+      .exec();
+    const request = await Request.findOne({
+      _id: req.params.id,
+      'ads.location': { $in: managed_locations }
+    })
+    if (!request) throw new Error("Không tìm thế yêu cầu cấp phép!")
+    if (request.accepted) throw new Error("Không thể xóa yêu cầu đã được duyệt!")
+    await Request.findByIdAndDelete(req.params.id);
+    req.flash('success', 'Hủy yêu cầu cấp phép thành công!');
+    return res.redirect('/ward/request');
+  } catch (error) {
+    req.flash('error', "Hủy yêu cầu cấp phép không thành công!");
     return res.redirect('/ward/request');
   }
 };

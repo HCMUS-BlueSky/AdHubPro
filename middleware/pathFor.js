@@ -1,6 +1,6 @@
 const pathFor = (...roles) => (req, res, next) => {
   if (roles.includes(req?.session?.user?.role)) return next();
-  return res.redirect(302, '/');
+  return res.redirect(302, req?.session?.workDir || '/');
 };
 
 module.exports = pathFor;

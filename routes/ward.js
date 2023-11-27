@@ -8,7 +8,7 @@ const upload = require("../middleware/multer");
 const router = express.Router();
 const path = require("path");
 
-// router.use(pathFor('ward_officer'));
+router.use(pathFor('ward_officer'));
 
 // Home
 router.get("/", (req, res) => {
@@ -61,5 +61,7 @@ router.get("/request/view/:id", requestController.getDetail);
 router.get("/request/create", requestController.renderCreateNew);
 
 router.post('/request/create', upload.array('images', 5), requestController.createNew);
+
+router.post('/request/:id/cancel', requestController.cancelRequest);
 
 module.exports = router;

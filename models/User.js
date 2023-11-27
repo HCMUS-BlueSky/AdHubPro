@@ -11,7 +11,8 @@ const userSchema = new mongoose.Schema(
       type: Date,
       alias: 'dob'
     },
-    idnumber: { //identity number
+    idnumber: {
+      //identity number
       type: String,
       trim: true,
       required: true
@@ -60,10 +61,11 @@ const userSchema = new mongoose.Schema(
     },
     managed_district: {
       type: mongoose.Schema.Types.ObjectId,
+      ref: "District",
       required: function () {
         return this.role === 'ward_officer' || this.role === 'district_officer';
       }
-    },
+    }
   },
   {
     collection: 'users',

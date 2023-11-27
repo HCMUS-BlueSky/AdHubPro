@@ -6,12 +6,16 @@ exports.view = async (req, res) => {
   let perPage = 10;
   let page = req.query.page || 1;
   try {
-    const locations = await Location.find({})
+    const user = req.session.user;
+    const locations = await Location.find({
+      district: user.managed_district.name,
+      ward: user.managed_ward
+    })
       .sort({ updatedAt: -1 })
       .skip(perPage * page - perPage)
       .limit(perPage)
       .exec();
-    const count = await Location.count();
+    const count = locations.length;
     res.render("ward/location/index", {
       locations,
       perPage,
@@ -33,9 +37,11 @@ exports.search = async (req, res) => {
   let page = req.query.page || 1;
   try {
     let searchTerm = req.body.searchTerm;
-
+    const user = req.session.user;
     const locations = await Location.find({
-      address: { $regex: searchTerm, $options: "i" },
+      address: { $regex: searchTerm, $options: 'i' },
+      district: user.managed_district.name,
+      ward: user.managed_ward
     })
       .sort({ updatedAt: -1 })
       .skip(perPage * page - perPage)
@@ -66,8 +72,13 @@ exports.search = async (req, res) => {
 
 exports.getDetail = async (req, res) => {
   try {
-    const location = await Location.findOne({ _id: req.params.id });
-    if (!location) throw new Error("Location not found!");
+    const user = req.session.user;
+    const location = await Location.findOne({
+      _id: req.params.id,
+      district: user.managed_district.name,
+      ward: user.managed_ward
+    });
+    if (!location) throw new Error('Địa điểm không tồn tại!');
     return res.render("ward/location/detail", {
       location,
       pageName: "location",
@@ -84,7 +95,12 @@ exports.getDetail = async (req, res) => {
 
 exports.renderUpdateInfo = async (req, res) => {
   try {
-    const location = await Location.findOne({ _id: req.params.id });
+    const user = req.session.user;
+    const location = await Location.findOne({
+      _id: req.params.id,
+      district: user.managed_district.name,
+      ward: user.managed_ward
+    });
     if (!location) throw new Error('Địa điểm không tồn tại!');
     location.availableType = Location.getAvailableType();
     location.availableMethod = Location.getAvailableMethod();
@@ -104,12 +120,16 @@ exports.renderUpdateInfo = async (req, res) => {
 
 exports.updateInfo = async (req, res) => {
   try {
-    const location = await Location.findOne({ _id: req.params.id });
+    const user = req.session.user;
+    const location = await Location.findOne({
+      _id: req.params.id,
+      district: user.managed_district.name,
+      ward: user.managed_ward
+    });
     if (!location) throw new Error('Địa điểm không tồn tại!');
     const { longitude, latitude, images, content, ...filtered } = req.body;
     if (!content || typeof content !== "string")
       throw new Error('Nội dung yêu cầu không hợp lệ!');
-
     const new_images = [];
     if (req.files) {
       for (let file of req.files) {
@@ -123,7 +143,6 @@ exports.updateInfo = async (req, res) => {
       latitude: location.latitude,
       ...filtered,
     };
-    console.log(filtered);
     const proposal = new Proposal({
       type: "location",
       location: location.id,
