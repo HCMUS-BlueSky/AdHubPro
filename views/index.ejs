@@ -58,15 +58,11 @@
           class="sidebar-content rounded-rect d-flex flex-column align-items-center"
         >
           <div class="nav-table row my-3 border-bottom">
-            <div class="col text-center">
-              <button class="info-btn nav-btn">
-                <h6 class="text-muted">Thông tin</h6>
-              </button>
+            <div class="col">
+              <button class="info-btn nav-btn active">Thông tin</button>
             </div>
-            <div class="col text-center">
-              <button class="report-btn nav-btn">
-                <h6 class="text-muted">Báo cáo</h6>
-              </button>
+            <div class="col">
+              <button class="report-btn nav-btn">Báo cáo</button>
             </div>
           </div>
           <div
@@ -135,7 +131,7 @@
             ></button>
           </div>
           <div class="modal-body">
-            <form class="report-modal">
+            <form class="report-modal" id="form">
               <div class="row">
                 <div class="col-7 d-flex flex-column">
                   <h3>Thông tin người báo cáo</h3>
@@ -220,10 +216,20 @@
               </div>
               <div class="row mt-3">
                 <h3 class="mb-3">Hình ảnh minh họa</h3>
-                <input type="file" name="file" id="file" class="inputfile" />
+                <input
+                  type="file"
+                  name="file"
+                  id="file"
+                  class="inputfile"
+                  multiple
+                />
                 <label for="file"></label>
               </div>
-              <button class="btn btn-primary" type="submit">Gửi báo cáo</button>
+              <div class="row d-flex justify-content-center mt-3">
+                <button class="btn btn-primary w-25" type="submit">
+                  Gửi báo cáo
+                </button>
+              </div>
             </form>
           </div>
           <div class="modal-footer"></div>
@@ -255,8 +261,8 @@
       </div>
     </div>
 
-    <script src="/js/form.js"></script>
     <script src="/js/map.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
   </body>
 </html>

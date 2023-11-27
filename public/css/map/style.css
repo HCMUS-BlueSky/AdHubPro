@@ -98,23 +98,22 @@ input[type="file"]::file-selector-button {
 }
 
 .nav-btn {
+  width: 100%;
   padding: 8px 16px;
-  border: none;
   background-color: #fff;
-  position: relative;
-}
-
-.nav-btn:focus::after {
-  content: "";
-  border-bottom: 3px solid #000;
-  width: 60px;
-  position: absolute;
-  bottom: 0px;
-  display: block;
+  border: none;
+  font-size: 16px;
+  border-radius: 4px 4px 0 0;
 }
 
 .nav-btn:hover {
-  background-color: #f5f7f8;
+  background: #a0c3d2;
+  color: #fff;
+}
+
+.nav-btn.active {
+  background: #a0c3d2;
+  color: #fff;
 }
 
 /* Side bar */
