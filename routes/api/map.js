@@ -1,6 +1,7 @@
 const express = require("express");
 const { Location } = require("../../models/Location");
 const { Ads } = require("../../models/Ads");
+const Report = require("../../models/Report");
 const router = express.Router();
 
 router.get("/locations", async (req, res) => {
@@ -19,6 +20,16 @@ router.get("/ads/:location_id", async (req, res) => {
       .populate("location")
       .exec();
     return res.json(ads);
+  } catch (err) {
+    return res.status(500).send(err.message);
+  }
+});
+
+router.get("/report/:ads_id", async (req, res) => {
+  const adsID = req.params.ads_id;
+  try {
+    const reports = await Report.find({ ads: adsID }).exec();
+    return res.json(reports);
   } catch (err) {
     return res.status(500).send(err.message);
   }

@@ -10,6 +10,12 @@ async function logAdsByLocation(locationID) {
   return ads;
 }
 
+async function logReports(adsID) {
+  const response = await fetch(`api/map/report/${adsID}`);
+  const reports = await response.json();
+  return reports;
+}
+
 mapboxgl.accessToken =
   "pk.eyJ1Ijoibm1raG9pMjEiLCJhIjoiY2xvMno5ZzhyMGQzdTJ2bGVkbTc4bGZ5dSJ9.9ljGVzjte5iqJXpbOiAN1Q";
 const map = new mapboxgl.Map({
@@ -102,17 +108,33 @@ const locationCardFactory = (result) => {
   return elm;
 };
 
-const reportCardFactory = () => {
+const reportCardFactory = (report) => {
   const elem = document.createElement("div");
+  let statusLabel = "";
+  if (report.status === "pending") {
+    statusLabel = "Chờ xử lý";
+    elem.className = "report-card card bg-light my-3";
+  } else if (report.status == "processing") {
+    statusLabel = "Đang xử lý";
+    elem.className = "report-card card text-white bg-info my-3";
+  } else {
+    statusLabel = "Đã xử lý";
+    elem.className = "report-card card text-white bg-success my-3";
+  }
   elem.innerHTML = `
-            <div class="card-header text-center fw-bold fs-4 font-weight-bold py-3">Đóng góp ý kiến</div>
+            <div class="card-header text-center fw-bold fs-4 font-weight-bold py-3">${
+              report.method
+            }</div>
               <div class="card-body">
-                <h5 class="card-text">Báo cáo bởi: Minh Khôi</h5>
-                <h5 class="card-text">Nội dung báo cáo: Trụ pano hiển thị nội dung sai, nội dung chưa phù hợp với vị trí đặt</h5>
+                <h5 class="card-text">Báo cáo bởi: ${report.reporter.name}</h5>
+                <h5 class="card-text">Nội dung báo cáo: ${report.content}</h5>
+                <h5 class="card-text">Thời gian ghi nhận: ${moment(
+                  report.created_at
+                ).format("MMMM Do YYYY")}</h5>
+                <h5 class="card-text">Trạng thái: ${statusLabel}</h5>
               </div>
             </div>
           `;
-  elem.className = "report-card card text-white bg-danger my-3";
   elem.style = "max-width: 18rem;";
   return elem;
 };
@@ -173,8 +195,10 @@ const addToSideBar = (elm) => {
 
 const removeOutSideBar = (className) => {
   const sidebarContent = document.querySelector(".sidebar-content");
-  const elem = document.querySelector(className);
-  sidebarContent.removeChild(elem);
+  const elems = document.querySelectorAll(className);
+  elems.forEach((el) => {
+    sidebarContent.removeChild(el);
+  });
 };
 
 async function addMarker(x, y) {
@@ -421,15 +445,39 @@ async function initMap() {
     const features = e.features[0];
     clearSidebar();
     const adsInfo = await logAdsByLocation(features.properties._id);
-    if (adsInfo) {
+    if (adsInfo.length !== 0) {
+      const reportButton = document.querySelector(".report-btn");
+      const infoButton = document.querySelector(".info-btn");
+
+      reportButton.classList.remove("active");
+      infoButton.classList.add("active");
+      removeOutSideBar(".report-card");
+      removeOutSideBar(".ads-card");
       const adsCard = AdsCardFactory(adsInfo[0]);
       addToSideBar(adsCard);
 
-      const infoButton = document.querySelector(".info-btn");
-      infoButton.addEventListener("click", () => {});
+      infoButton.addEventListener("click", () => {
+        infoButton.replaceWith(infoButton.cloneNode(true));
+        reportButton.classList.remove("active");
+        infoButton.classList.add("active");
+        removeOutSideBar(".report-card");
+        removeOutSideBar(".ads-card");
+        const adsCard = AdsCardFactory(adsInfo[0]);
+        addToSideBar(adsCard);
+      });
 
-      const reportButton = document.querySelector(".report-btn");
-      reportButton.addEventListener("click", () => {});
+      reportButton.addEventListener("click", async () => {
+        reportButton.replaceWith(reportButton.cloneNode(true));
+        infoButton.classList.remove("active");
+        reportButton.classList.add("active");
+        removeOutSideBar(".report-card");
+        removeOutSideBar(".ads-card");
+        const reportInfo = await logReports(adsInfo[0]._id);
+        reportInfo.map((report) => {
+          const reportCard = reportCardFactory(report);
+          addToSideBar(reportCard);
+        });
+      });
 
       const detailIcon = document.querySelector(".bi-info-circle");
       detailIcon.addEventListener("click", () => {
@@ -466,10 +514,6 @@ async function initMap() {
         const fileInput = document.getElementById("file");
         for (const file of fileInput.files) {
           data.append("images", file);
-        }
-
-        for (const value of data.values()) {
-          console.log(value);
         }
 
         try {
