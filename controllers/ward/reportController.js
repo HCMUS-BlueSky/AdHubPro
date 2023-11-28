@@ -31,6 +31,7 @@ exports.view = async (req, res) => {
     const count = reports.length;
     res.render('ward/report/index', {
       reports,
+      user,
       perPage,
       moment,
       current: page,
@@ -68,6 +69,7 @@ exports.getDetail = async (req, res) => {
     report.content = DOMPurify.sanitize(report.content);
     res.render('ward/report/detail', {
       report,
+      user,
       pageName: 'report',
       header: {
         navRoot: 'Báo cáo',
@@ -96,6 +98,7 @@ exports.renderProcessReport = async (req, res) => {
     if (!report) throw new Error('Báo cáo không tồn tại!');
     res.render('ward/report/process', {
       report,
+      user,
       pageName: 'report',
       header: {
         navRoot: 'Báo cáo',

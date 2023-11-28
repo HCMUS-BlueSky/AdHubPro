@@ -16,16 +16,17 @@ exports.view = async (req, res) => {
       .limit(perPage)
       .exec();
     const count = locations.length;
-    res.render("ward/location/index", {
+    res.render('ward/location/index', {
       locations,
       perPage,
+      user,
       current: page,
       pages: Math.ceil(count / perPage),
-      pageName: "location",
+      pageName: 'location',
       header: {
-        navRoot: "Điểm đặt quảng cáo",
-        navCurrent: "Thông tin chung",
-      },
+        navRoot: 'Điểm đặt quảng cáo',
+        navCurrent: 'Thông tin chung'
+      }
     });
   } catch (err) {
     return res.status(500).send(err.message);
@@ -33,29 +34,29 @@ exports.view = async (req, res) => {
 };
 
 exports.search = async (req, res) => {
-  let perPage = 10;
-  let page = req.query.page || 1;
+  const perPage = 10;
+  const page = req.query.page || 1;
   try {
-    let searchTerm = req.body.searchTerm;
+    const searchTerm = req.body.searchTerm;
+    if (typeof searchTerm !== 'string') throw new Error("Từ khóa không hợp lệ!")
+    if (!searchTerm) return res.redirect('/ward/location'); 
     const user = req.session.user;
     const locations = await Location.find({
-      address: { $regex: searchTerm, $options: 'i' },
       district: user.managed_district.name,
-      ward: user.managed_ward
+      ward: user.managed_ward,
+      $text: {
+        $search: `\"${searchTerm}\"`
+      }
     })
       .sort({ updatedAt: -1 })
       .skip(perPage * page - perPage)
       .limit(perPage)
       .exec();
 
-    if (!locations) {
-      return res.status(404).send("Location not found");
-    }
-
     const count = locations.length;
-
     res.render("ward/location/index", {
       locations,
+      user,
       perPage,
       current: page,
       pages: Math.ceil(count / perPage),
@@ -66,7 +67,8 @@ exports.search = async (req, res) => {
       },
     });
   } catch (err) {
-    return res.status(500).send(err.message);
+    req.flash('error', err.message);
+    return res.redirect('/ward/location');
   }
 };
 
@@ -79,13 +81,14 @@ exports.getDetail = async (req, res) => {
       ward: user.managed_ward
     });
     if (!location) throw new Error('Địa điểm không tồn tại!');
-    return res.render("ward/location/detail", {
+    return res.render('ward/location/detail', {
       location,
-      pageName: "location",
+      user,
+      pageName: 'location',
       header: {
-        navRoot: "Điểm đặt quảng cáo",
-        navCurrent: "Thông tin chi tiết",
-      },
+        navRoot: 'Điểm đặt quảng cáo',
+        navCurrent: 'Thông tin chi tiết'
+      }
     });
   } catch (err) {
     req.flash('error', 'Địa điểm không tồn tại!');
@@ -104,13 +107,14 @@ exports.renderUpdateInfo = async (req, res) => {
     if (!location) throw new Error('Địa điểm không tồn tại!');
     location.availableType = Location.getAvailableType();
     location.availableMethod = Location.getAvailableMethod();
-    return res.render("ward/location/update_info", {
+    return res.render('ward/location/update_info', {
       location,
-      pageName: "location",
+      user,
+      pageName: 'location',
       header: {
-        navRoot: "Điểm đặt quảng cáo",
-        navCurrent: "Cập nhật thông tin",
-      },
+        navRoot: 'Điểm đặt quảng cáo',
+        navCurrent: 'Cập nhật thông tin'
+      }
     });
   } catch (err) {
     req.flash('error', 'Địa điểm không tồn tại!');

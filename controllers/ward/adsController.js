@@ -1,5 +1,6 @@
 const { Ads } = require("../../models/Ads");
 const { Location } = require("../../models/Location");
+const { generateRegexQuery } = require('regex-vietnamese');
 const Proposal = require("../../models/Proposal");
 const uploadFile = require("../../utils/fileUpload");
 const moment = require("moment");
@@ -28,6 +29,7 @@ exports.view = async (req, res) => {
     const count = ads.length;
     res.render("ward/ads/index", {
       ads,
+      user,
       perPage,
       current: page,
       moment,
@@ -44,45 +46,74 @@ exports.view = async (req, res) => {
 };
 
 exports.search = async (req, res) => {
-  let perPage = 10;
-  let page = req.query.page || 1;
+  const perPage = 10;
+  const page = req.query.page || 1;
   try {
-    let searchTerm = req.body.searchTerm;
+    const searchTerm = req.body.searchTerm;
+    if (typeof searchTerm !== 'string')
+      throw new Error('Từ khóa không hợp lệ!');
+    if (!searchTerm) return res.redirect('/ward/ads'); 
+    const user = req.session.user;
+    const locations = await Location.find({
+      district: user.managed_district.name,
+      ward: user.managed_ward,
+      $text: {
+        $search: `\"${searchTerm}\"`
+      }
+    })
+      .distinct('_id')
+      .exec();
+    const managed_locations = await Location.find({
+      district: user.managed_district.name,
+      ward: user.managed_ward
+    })
+      .distinct('_id')
+      .exec();
+    // const location = await Location.findOne({
+    //   address: { $regex: searchTerm, $options: "i" },
+    // });
 
-    const location = await Location.findOne({
-      address: { $regex: searchTerm, $options: "i" },
-    });
-
-    if (!location) {
-      return res.status(404).send("Location not found");
-    }
-
+    // if (!location) {
+    //   return res.status(404).send("Location not found");
+    // }
+    const rgx = generateRegexQuery(searchTerm);
     const ads = await Ads.find({
-      location: location._id,
+      $or: [
+        {
+          location: { $in: locations }
+        },
+        {
+          location: { $in: managed_locations },
+          type: { $regex: rgx }
+        }
+      ]
     })
       .sort({ updatedAt: -1 })
       .skip(perPage * page - perPage)
       .limit(perPage)
       .populate({
-        path: "location",
-        select: ["address", "ward", "district", "method"],
+        path: 'location',
+        select: ['address', 'ward', 'district', 'method']
       })
       .exec();
-
+    
     const count = ads.length;
-    res.render("ward/ads/index", {
+    return res.render('ward/ads/index', {
       ads,
+      user,
       perPage,
+      moment,
       current: page,
       pages: Math.ceil(count / perPage),
-      pageName: "ads",
+      pageName: 'ads',
       header: {
-        navRoot: "Bảng quảng cáo",
-        navCurrent: "Thông tin chung",
-      },
+        navRoot: 'Bảng quảng cáo',
+        navCurrent: 'Thông tin chung'
+      }
     });
   } catch (err) {
-    return res.status(500).send(err.message);
+    req.flash('error', err.message);
+    return res.redirect('/ward/ads');
   }
 };
 
@@ -104,14 +135,15 @@ exports.getDetail = async (req, res) => {
         select: ['address', 'ward', 'district', 'method']
       })
       .exec();
-    res.render("ward/ads/detail", {
+    res.render('ward/ads/detail', {
       ads,
-      pageName: "ads",
+      user,
+      pageName: 'ads',
       moment,
       header: {
-        navRoot: "Bảng quảng cáo",
-        navCurrent: "Thông tin chi tiết",
-      },
+        navRoot: 'Bảng quảng cáo',
+        navCurrent: 'Thông tin chi tiết'
+      }
     });
   } catch (error) {
     req.flash('error', 'Bảng quảng cáo không tồn tại!');
@@ -136,14 +168,15 @@ exports.renderUpdateInfo = async (req, res) => {
       .exec();
     if (!ads) throw new Error('Bảng quảng cáo không tồn tại!');
     ads.availableType = Ads.getAvailableType();
-    return res.render("ward/ads/update_info", {
+    return res.render('ward/ads/update_info', {
       ads,
-      pageName: "ads",
+      user,
+      pageName: 'ads',
       moment,
       header: {
-        navRoot: "Bảng quảng cáo",
-        navCurrent: "Cập nhật thông tin",
-      },
+        navRoot: 'Bảng quảng cáo',
+        navCurrent: 'Cập nhật thông tin'
+      }
     });
   } catch (err) {
     req.flash('error', 'Bảng quảng cáo không tồn tại!');
