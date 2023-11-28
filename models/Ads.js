@@ -57,6 +57,5 @@ const adsSchema = new mongoose.Schema(
     }
   }
 );
-
 //Export the model
 module.exports = { adsSchema, Ads: mongoose.model('Ads', adsSchema) };

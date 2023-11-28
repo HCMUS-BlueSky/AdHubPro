@@ -26,6 +26,7 @@ exports.view = async (req, res) => {
     const count = request.length;
     res.render("ward/request/index", {
       request,
+      user,
       perPage,
       current: page,
       pages: Math.ceil(count / perPage),
@@ -53,14 +54,15 @@ exports.getDetail = async (req, res) => {
       _id: req.params.id,
       'ads.location': { $in: managed_locations }
     }).populate('ads.location', 'ward district address');
-    res.render("ward/request/detail", {
+    res.render('ward/request/detail', {
       request,
+      user,
       moment,
-      pageName: "request",
+      pageName: 'request',
       header: {
-        navRoot: "Yêu cầu cấp phép",
-        navCurrent: "Thông tin chi tiết",
-      },
+        navRoot: 'Yêu cầu cấp phép',
+        navCurrent: 'Thông tin chi tiết'
+      }
     });
   } catch (error) {
     req.flash('error', "Yêu cầu cấp phép không tồn tại!");
@@ -77,15 +79,16 @@ exports.renderCreateNew = async (req, res) => {
     }).exec();
     const availableAdsType = await Ads.getAvailableType();
     const availableLocationMethod = await Location.getAvailableMethod();
-    res.render("ward/request/create", {
+    res.render('ward/request/create', {
       locations,
+      user,
       availableAdsType,
       availableLocationMethod,
-      pageName: "request",
+      pageName: 'request',
       header: {
-        navRoot: "Yêu cầu cấp phép",
-        navCurrent: "Tạo yêu cầu mới",
-      },
+        navRoot: 'Yêu cầu cấp phép',
+        navCurrent: 'Tạo yêu cầu mới'
+      }
     });
   } catch (error) {
     req.flash('error', err.message);

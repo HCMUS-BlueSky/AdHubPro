@@ -6,7 +6,7 @@
   >
     <i class="bi bi-person-circle" style="font-size: 36px"></i>
     <div class="user-text ms-3 d-flex align-items-center">
-      <h6>Nguyen Khoi</h6>
+      <h6><%= user.fullname %></h6>
     </div>
   </div>
 </div>
@@ -25,3 +25,25 @@
     </li>
   </ol>
 </nav>
+<script>
+const handleUserMenu = () => {
+  const menu = document.querySelector(".menu");
+
+  if (menu) {
+    menu.remove();
+  } else {
+    const elm = document.createElement("div");
+    elm.innerHTML = `
+      <div class="info">
+          <h3><%= user.fullname %></h3>
+          <p><%= user.email %></p>
+      </div>
+      <div class="logout">
+          <a>Log out</a>
+      </div>
+    `;
+    elm.className = "menu";
+    document.querySelector(".menu-user").appendChild(elm);
+  }
+};
+</script>

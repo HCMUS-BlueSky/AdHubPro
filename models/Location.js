@@ -75,5 +75,13 @@ const locationSchema = new mongoose.Schema(
   }
 );
 
+locationSchema.index({
+  ward: 'text',
+  district: 'text',
+  address: 'text',
+  type: 'text',
+  method: 'text'
+});
+
 //Export the model
 module.exports = { locationSchema, Location: mongoose.model('Location', locationSchema) };

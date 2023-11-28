@@ -12,7 +12,7 @@ router.use(pathFor('ward_officer'));
 
 // Home
 router.get("/", (req, res) => {
-  res.render("ward/index", { layout: false });
+  return res.render("ward/index", { layout: false });
 });
 
 // Ads
@@ -30,6 +30,10 @@ router.post(
   adsController.updateInfo
 );
 
+router.all('/ads/*', (req, res) => {
+  return res.redirect('/ward/ads');
+});
+
 // Location
 router.get("/location", locationController.view);
 
@@ -45,6 +49,10 @@ router.post(
   locationController.updateInfo
 );
 
+router.all('/location/*', (req, res) => {
+  return res.redirect('/ward/location');
+});
+
 // Report
 router.get("/report", reportController.view);
 
@@ -53,6 +61,11 @@ router.get("/report/view/:id", reportController.getDetail);
 router.get("/report/process/:id", reportController.renderProcessReport);
 
 router.post('/report/process/:id', reportController.processReport);
+
+router.all('/report/*', (req, res) => {
+  return res.redirect('/ward/report');
+});
+
 // Request
 router.get("/request", requestController.view);
 
@@ -63,5 +76,13 @@ router.get("/request/create", requestController.renderCreateNew);
 router.post('/request/create', upload.array('images', 5), requestController.createNew);
 
 router.post('/request/:id/cancel', requestController.cancelRequest);
+
+router.all('/request/*', (req, res) => {
+  return res.redirect('/ward/request');
+});
+
+router.all('*', (req, res) => {
+  return res.redirect('/ward');
+});
 
 module.exports = router;
