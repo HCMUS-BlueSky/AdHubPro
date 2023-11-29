@@ -8,7 +8,7 @@ const upload = require("../middleware/multer");
 const router = express.Router();
 const path = require("path");
 
-router.use(pathFor('ward_officer'));
+router.use(pathFor("ward_officer"));
 
 // Home
 router.get("/", (req, res) => {
@@ -30,8 +30,8 @@ router.post(
   adsController.updateInfo
 );
 
-router.all('/ads/*', (req, res) => {
-  return res.redirect('/ward/ads');
+router.all("/ads/*", (req, res) => {
+  return res.redirect("/ward/ads");
 });
 
 // Location
@@ -49,8 +49,8 @@ router.post(
   locationController.updateInfo
 );
 
-router.all('/location/*', (req, res) => {
-  return res.redirect('/ward/location');
+router.all("/location/*", (req, res) => {
+  return res.redirect("/ward/location");
 });
 
 // Report
@@ -58,12 +58,14 @@ router.get("/report", reportController.view);
 
 router.get("/report/view/:id", reportController.getDetail);
 
+router.post("/report/search", reportController.search);
+
 router.get("/report/process/:id", reportController.renderProcessReport);
 
-router.post('/report/process/:id', reportController.processReport);
+router.post("/report/process/:id", reportController.processReport);
 
-router.all('/report/*', (req, res) => {
-  return res.redirect('/ward/report');
+router.all("/report/*", (req, res) => {
+  return res.redirect("/ward/report");
 });
 
 // Request
@@ -71,18 +73,24 @@ router.get("/request", requestController.view);
 
 router.get("/request/view/:id", requestController.getDetail);
 
+router.post("/request/search", requestController.search);
+
 router.get("/request/create", requestController.renderCreateNew);
 
-router.post('/request/create', upload.array('images', 5), requestController.createNew);
+router.post(
+  "/request/create",
+  upload.array("images", 5),
+  requestController.createNew
+);
 
-router.post('/request/:id/cancel', requestController.cancelRequest);
+router.post("/request/:id/cancel", requestController.cancelRequest);
 
-router.all('/request/*', (req, res) => {
-  return res.redirect('/ward/request');
+router.all("/request/*", (req, res) => {
+  return res.redirect("/ward/request");
 });
 
-router.all('*', (req, res) => {
-  return res.redirect('/ward');
+router.all("*", (req, res) => {
+  return res.redirect("/ward");
 });
 
 module.exports = router;
