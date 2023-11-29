@@ -445,10 +445,10 @@ async function initMap() {
     const features = e.features[0];
     clearSidebar();
     const adsInfo = await logAdsByLocation(features.properties._id);
-    if (adsInfo.length !== 0) {
-      const reportButton = document.querySelector(".report-btn");
-      const infoButton = document.querySelector(".info-btn");
+    const reportButton = document.querySelector(".report-btn");
+    const infoButton = document.querySelector(".info-btn");
 
+    if (adsInfo.length !== 0) {
       reportButton.classList.remove("active");
       infoButton.classList.add("active");
       removeOutSideBar(".report-card");
@@ -456,20 +456,23 @@ async function initMap() {
       const adsCard = AdsCardFactory(adsInfo[0]);
       addToSideBar(adsCard);
 
-      infoButton.addEventListener("click", () => {
-        infoButton.replaceWith(infoButton.cloneNode(true));
-        reportButton.classList.remove("active");
-        infoButton.classList.add("active");
+      const newInfoButton = infoButton.cloneNode(true);
+      infoButton.parentNode.replaceChild(newInfoButton, infoButton);
+      newInfoButton.addEventListener("click", async () => {
+        newReportButton.classList.remove("active");
+        newInfoButton.classList.add("active");
         removeOutSideBar(".report-card");
         removeOutSideBar(".ads-card");
         const adsCard = AdsCardFactory(adsInfo[0]);
         addToSideBar(adsCard);
       });
 
-      reportButton.addEventListener("click", async () => {
-        reportButton.replaceWith(reportButton.cloneNode(true));
-        infoButton.classList.remove("active");
-        reportButton.classList.add("active");
+      const newReportButton = reportButton.cloneNode(true);
+      reportButton.parentNode.replaceChild(newReportButton, reportButton);
+
+      newReportButton.addEventListener("click", async () => {
+        newInfoButton.classList.remove("active");
+        newReportButton.classList.add("active");
         removeOutSideBar(".report-card");
         removeOutSideBar(".ads-card");
         const reportInfo = await logReports(adsInfo[0]._id);

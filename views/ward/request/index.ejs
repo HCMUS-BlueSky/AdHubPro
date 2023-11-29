@@ -5,7 +5,7 @@
   <h2 class="fw-semibold">THÔNG TIN CÁC YÊU CẦU CẤP PHÉP ĐÃ ĐƯỢC GỬI</h2>
   <div class="row justify-content-center">
     <div class="col-3">
-     <form role="search" method="POST" action="/ward/request/search">
+      <form role="search" method="POST" action="/ward/request/search">
         <input
           class="form-control mr-sm-2"
           type="search"
@@ -37,8 +37,9 @@
       <tr>
         <th scope="row"><%= perPage * (current - 1) + index + 1 %></th>
         <td class="">
-          <%= (element.ads.location.address.length > 55 ? element.ads.location.address.substring(0, 55) +
-          '...' : element.ads.location.address) %>
+          <%= (element.ads.location.address.length > 55 ?
+          element.ads.location.address.substring(0, 55) + '...' :
+          element.ads.location.address) %>
         </td>
         <td class=""><%= element.ads.type %></td>
         <td class=""><%= element.company.name %></td>
