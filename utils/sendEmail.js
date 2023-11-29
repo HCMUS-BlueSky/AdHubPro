@@ -245,7 +245,7 @@ const genProcessingTemplate = (report) => {
         <div
           style="font-family:Montserrat, Segoe UI, Roboto, Open Sans, Helvetica Neue;font-size:14px;font-weight:500;line-height:22px;text-align:left;color:#555555;"
         >Báo cáo của bạn về ${
-          report.type == 'ads'
+          report.type == 'Bảng quảng cáo'
             ? 'bảng quảng cáo tại địa chỉ ' + report.location.address
             : 'địa điểm quảng cáo (' + report.location.address + ")"
         } đang được xử lí.</div>
@@ -550,7 +550,7 @@ const genFinishedTemplate = (report) => {
         <div
           style="font-family:Montserrat, Segoe UI, Roboto, Open Sans, Helvetica Neue;font-size:14px;font-weight:500;line-height:22px;text-align:left;color:#555555;"
         >Báo cáo của bạn về ${
-          report.type == 'ads'
+          report.type == 'Bảng quảng cáo'
             ? 'bảng quảng cáo tại địa chỉ ' + report.location.address
             : 'địa điểm quảng cáo (' + report.location.address + ')'
         } đã xử lí xong.</div>

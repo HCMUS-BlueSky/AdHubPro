@@ -49,14 +49,14 @@ router.post('/', upload.array("images", 5), async (req, res) => {
       typeof method !== 'string'
     )
       throw new Error('Invalid fields');
-
+    if (type !== 'Điểm đặt quảng cáo' && type !== 'Bảng quảng cáo') throw new Error('Invalid type');
     const report = new Report({type, content, method, reporter: {name, email, phone}});
     const location = req.body.location;
     if (!location || typeof location !== 'string') throw new Error('Invalid location');
     report.location = location;
-    if (type === "ads") {
+    if (type === 'Bảng quảng cáo') {
       const ads = req.body.ads;
-      if (!ads || typeof ads !== "string") throw new Error("Invalid ads");
+      if (!ads || typeof ads !== 'string') throw new Error('Invalid ads');
       report.ads = ads;
     }
     if (req.files) {

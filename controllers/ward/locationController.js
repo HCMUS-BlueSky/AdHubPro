@@ -148,10 +148,10 @@ exports.updateInfo = async (req, res) => {
       ...filtered,
     };
     const proposal = new Proposal({
-      type: "location",
+      type: 'Điểm đặt quảng cáo',
       location: location.id,
       updated_location,
-      content,
+      content
     });
     await proposal.save();
     req.flash("success", "Gửi yêu cầu thay đổi điểm đặt quảng cáo thành công!");

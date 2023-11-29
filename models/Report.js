@@ -4,7 +4,7 @@ const reportSchema = new mongoose.Schema(
   {
     type: {
       type: String,
-      enum: ['location', 'ads'],
+      enum: ['Điểm đặt quảng cáo', 'Bảng quảng cáo'],
       required: true
     },
     location: {

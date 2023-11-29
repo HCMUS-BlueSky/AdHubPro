@@ -208,10 +208,10 @@ exports.updateInfo = async (req, res) => {
       ...filtered,
     };
     const proposal = new Proposal({
-      type: "ads",
+      type: 'Bảng quảng cáo',
       ads: ads.id,
       updated_ads,
-      content,
+      content
     });
     await proposal.save();
     req.flash("success", "Gửi yêu cầu thay đổi bảng quảng cáo thành công!");

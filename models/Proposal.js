@@ -6,21 +6,21 @@ const proposalSchema = new mongoose.Schema(
   {
     type: {
       type: String,
-      enum: ['ads', 'location'],
+      enum: ['Điểm đặt quảng cáo', 'Bảng quảng cáo'],
       required: true
     },
     location: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Location',
       required: function () {
-        return this.type == 'location';
+        return this.type == 'Điểm đặt quảng cáo';
       }
     },
     ads: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Ads',
       required: function () {
-        return this.type == 'ads';
+        return this.type == 'Bảng quảng cáo';
       }
     },
     content: {
@@ -30,13 +30,13 @@ const proposalSchema = new mongoose.Schema(
     updated_location: {
       type: locationSchema,
       required: function () {
-        return this.type == 'location';
+        return this.type == 'Điểm đặt quảng cáo';
       }
     },
     updated_ads: {
       type: adsSchema,
       required: function () {
-        return this.type == 'ads';
+        return this.type == 'Bảng quảng cáo';
       }
     }
   },

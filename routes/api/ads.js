@@ -1,6 +1,7 @@
 const express = require('express');
 const {Location} = require('../../models/Location');
 const {Ads} = require('../../models/Ads');
+const Proposal = require('../../models/Proposal');
 const District = require('../../models/District');
 const upload = require('../../middleware/multer');
 const uploadFile = require('../../utils/fileUpload');
@@ -76,40 +77,27 @@ function generateRandomDate(from, to) {
 //   }
 // });
 
-router.get("/test2", async (req, res) => {
-  try {
-    const district = new District({name: "10"});
-    const wards = [
-      '1',
-      '2',
-      '4',
-      '5',
-      '6',
-      '7',
-      '8',
-      '9',
-      '10',
-      '11',
-      '12',
-      '13',
-      '14',
-      '15'
-    ];
-    // for(let i = 1; i <= 14; ++i) {
-    //   district.wards.push(i.toString());
-    // } 
-    district.wards = wards
-    await district.save()
-    // for(let location of locations) {
-    //   // const type = types[Math.floor(Math.random() * types.length)];
-    //   // const size = '2.5m x 10m';
-    //   await Ads.findOneAndDelete(
-    //     { location: location.id }
-    //   ).exec();
-    // }
-    return res.send(district);
-  } catch (err) {
-    return res.status(500).send(err.message);
-  }
-})
+// router.get("/test2", async (req, res) => {
+//   try {
+//     // for(let i = 1; i <= 14; ++i) {
+//     //   district.wards.push(i.toString());
+//     // } 
+//     await Proposal.updateMany({ type: 'ads' }, { type: 'Bảng quảng cáo' });
+//     await Proposal.updateMany(
+//       { type: 'location' },
+//       { type: 'Điểm đặt quảng cáo' }
+//     );
+
+//     // for(let location of locations) {
+//     //   // const type = types[Math.floor(Math.random() * types.length)];
+//     //   // const size = '2.5m x 10m';
+//     //   await Ads.findOneAndDelete(
+//     //     { location: location.id }
+//     //   ).exec();
+//     // }
+//     return res.sendStatus(204);
+//   } catch (err) {
+//     return res.status(500).send(err.message);
+//   }
+// })
 module.exports = router;

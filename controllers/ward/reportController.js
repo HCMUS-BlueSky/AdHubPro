@@ -1,5 +1,6 @@
 const Report = require("../../models/Report");
 const { Location } = require("../../models/Location");
+const { generateRegexQuery } = require('regex-vietnamese');
 const moment = require("moment");
 const {
   sendEmail,
@@ -52,28 +53,48 @@ exports.search = async (req, res) => {
   const page = req.query.page || 1;
   try {
     const searchTerm = req.body.searchTerm;
-    console.log(searchTerm);
     if (typeof searchTerm !== "string")
       throw new Error("Từ khóa không hợp lệ!");
     if (!searchTerm) return res.redirect("/ward/report");
     const user = req.session.user;
-    const managed_locations = await Location.find({
+    const locations = await Location.find({
       district: user.managed_district.name,
       ward: user.managed_ward,
       $text: {
-        $search: `\"${searchTerm}\"`,
-      },
+        $search: `\"${searchTerm}\"`
+      }
     })
-      .distinct("_id")
+      .distinct('_id')
+      .exec();
+    const managed_locations = await Location.find({
+      district: user.managed_district.name,
+      ward: user.managed_ward
+    })
+      .distinct('_id')
       .exec();
 
-    const reports = await Report.find({ location: { $in: managed_locations } })
+    const rgx = generateRegexQuery(searchTerm);
+    const reports = await Report.find({
+      $or: [
+        {
+          location: { $in: locations }
+        },
+        {
+          location: { $in: managed_locations },
+          type: { $regex: rgx }
+        },
+        {
+          location: { $in: managed_locations },
+          "reporter.name": { $regex: rgx }
+        }
+      ]
+    })
       .sort({ updatedAt: -1 })
       .skip(perPage * page - perPage)
       .limit(perPage)
       .populate({
-        path: "location",
-        select: ["address", "ward", "district", "method"],
+        path: 'location',
+        select: ['address', 'ward', 'district', 'method']
       })
       .exec();
 
@@ -187,10 +208,11 @@ exports.processReport = async (req, res) => {
     if (!report) throw new Error("Báo cáo không tồn tại!");
     if (status !== "processing" && status !== "done")
       throw new Error("Trạng thái không hợp lệ!");
+
+    if (status === report.status) throw new Error("Trạng thái mới không được giống trạng thái cũ!");
     await Report.findByIdAndUpdate(
       report.id,
-      { status, response },
-      { returnDocument: "after" }
+      { status, response }
     ).exec();
     report.response = response;
     report.status = status;
