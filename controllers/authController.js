@@ -114,3 +114,18 @@ exports.register = async (req, res) => {
 // exports.createNew = (req, res) => {
 //   res.render('ward/request/create');
 // };
+exports.logout = async (req, res) => {
+  // const cookies = req.cookies;
+  // const refreshToken = cookies?.refresh_token;
+  // if (!refreshToken) return res.sendStatus(204);
+  // const user = await User.findOne({ refresh_token: refreshToken }).exec();
+
+  // if (user) {
+  //   user.refresh_token = null;
+  //   await user.save();
+  // }
+  req.session = null
+  res.clearCookie('session');
+  res.clearCookie('session.sig');
+  return res.redirect('/');
+};

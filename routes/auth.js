@@ -12,6 +12,8 @@ router.get("/login", (req, res) => {
 
 router.post('/login', authController.login);
 
+router.post('/logout', authController.logout);
+
 router.get("/register", (req, res) => {
   return res.render("auth/register", { layout: "./layouts/auth" });
 });
