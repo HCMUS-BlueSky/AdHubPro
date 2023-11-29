@@ -69,13 +69,6 @@ exports.search = async (req, res) => {
     })
       .distinct('_id')
       .exec();
-    // const location = await Location.findOne({
-    //   address: { $regex: searchTerm, $options: "i" },
-    // });
-
-    // if (!location) {
-    //   return res.status(404).send("Location not found");
-    // }
     const rgx = generateRegexQuery(searchTerm);
     const ads = await Ads.find({
       $or: [

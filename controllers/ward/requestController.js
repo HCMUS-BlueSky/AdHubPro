@@ -1,12 +1,13 @@
 const { Location } = require("../../models/Location");
 const { Ads } = require('../../models/Ads');
+const { generateRegexQuery } = require('regex-vietnamese');
 const Request = require("../../models/Request");
 const uploadFile = require('../../utils/fileUpload');
 const moment = require('moment');
 
 exports.view = async (req, res) => {
-  let perPage = 10;
-  let page = req.query.page || 1;
+  const perPage = 10;
+  const page = req.query.page || 1;
   try {
     const user = req.session.user;
     const managed_locations = await Location.find({
@@ -39,6 +40,70 @@ exports.view = async (req, res) => {
   } catch (err) {
     return res.status(500).send(err.message);
   }
+};
+
+exports.search = async (req, res) => {
+  const perPage = 10;
+  const page = req.query.page || 1;
+  try {
+    const searchTerm = req.body.searchTerm;
+    if (typeof searchTerm !== 'string')
+      throw new Error('Từ khóa không hợp lệ!');
+    if (!searchTerm) return res.redirect('/ward/request');
+    const user = req.session.user;
+    const locations = await Location.find({
+      district: user.managed_district.name,
+      ward: user.managed_ward,
+      $text: {
+        $search: `\"${searchTerm}\"`
+      }
+    })
+      .distinct('_id')
+      .exec();
+    const managed_locations = await Location.find({
+      district: user.managed_district.name,
+      ward: user.managed_ward
+    })
+      .distinct('_id')
+      .exec();
+    const rgx = generateRegexQuery(searchTerm);
+    const request = await Request.find({
+      $or: [
+        {
+          'ads.location': { $in: locations }
+        },
+        {
+          'ads.location': { $in: managed_locations },
+          'company.name': { $regex: rgx }
+        },
+        {
+          'ads.location': { $in: managed_locations },
+          'ads.type': { $regex: rgx }
+        }
+      ]
+    })
+      .sort({ updatedAt: -1 })
+      .skip(perPage * page - perPage)
+      .limit(perPage)
+      .populate('ads.location', 'address')
+      .exec();
+    const count = request.length;
+    res.render('ward/request/index', {
+      request,
+      user,
+      perPage,
+      current: page,
+      pages: Math.ceil(count / perPage),
+      pageName: 'request',
+      header: {
+        navRoot: 'Yêu cầu cấp phép',
+        navCurrent: 'Thông tin chi tiết'
+      }
+    });
+   } catch (err) {
+     req.flash('error', err.message);
+     return res.redirect('/ward/request');
+   }
 };
 
 exports.getDetail = async (req, res) => {

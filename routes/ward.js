@@ -73,6 +73,8 @@ router.get("/request/view/:id", requestController.getDetail);
 
 router.get("/request/create", requestController.renderCreateNew);
 
+router.post('/request/search', requestController.search);
+
 router.post('/request/create', upload.array('images', 5), requestController.createNew);
 
 router.post('/request/:id/cancel', requestController.cancelRequest);

@@ -5,12 +5,15 @@
   <h2 class="fw-semibold">THÔNG TIN CÁC YÊU CẦU CẤP PHÉP ĐÃ ĐƯỢC GỬI</h2>
   <div class="row justify-content-center">
     <div class="col-3">
-      <input
-        class="form-control mr-sm-2"
-        type="search"
-        placeholder="Tìm kiếm"
-        aria-label="Search"
-      />
+     <form role="search" method="POST" action="/ward/request/search">
+        <input
+          class="form-control mr-sm-2"
+          type="search"
+          placeholder="Tìm kiếm"
+          aria-label="Search"
+          name="searchTerm"
+        />
+      </form>
     </div>
     <div class="col-3">
       <a href="/ward/request/create" class="btn btn-primary">
