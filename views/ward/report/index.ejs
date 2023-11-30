@@ -5,15 +5,6 @@
   <%- include('../../partials/flash.ejs') %>
   <h2 class="fw-semibold">THÔNG TIN CÁC BÁO CÁO</h2>
   <div class="row justify-content-end">
-    <div class="col-2">
-      <select class="form-select select-report" aria-label="select-report">
-        <option selected>Loại báo cáo</option>
-        <option value="tố giác">Tố giác sai phạm</option>
-        <option value="đăng ký">Đăng ký nội dung</option>
-        <option value="đóng góp">Đóng góp ý kiến</option>
-        <option value="giải đáp">Giải đáp thắc mắc</option>
-      </select>
-    </div>
     <div class="col-4">
       <form role="search" method="POST" action="/ward/report/search">
         <input
