@@ -11,7 +11,13 @@ async function logAdsByLocation(locationID) {
 }
 
 async function logReports(adsID) {
-  const response = await fetch(`api/map/report/${adsID}`);
+  const response = await fetch(`api/map/report/ads/${adsID}`);
+  const reports = await response.json();
+  return reports;
+}
+
+async function logReportsByLocation(locationID) {
+  const response = await fetch(`api/map/report/location/${locationID}`);
   const reports = await response.json();
   return reports;
 }
@@ -80,6 +86,23 @@ const AdsCardFactory = (ads) => {
   return elm;
 };
 
+const NonAdsCardFactory = () => {
+  const elem = document.createElement("div");
+  elem.className = "non-ads-card alert alert-primary d-flex mx-4";
+  elem.innerHTML = `
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-info-circle flex-shrink-0 me-2" viewBox="0 0 16 16">
+        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+        <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0"/>
+      </svg>
+      <div>
+        <h5>Thông tin bảng quảng cáo</h5>
+        <h5>Chưa có dữ liệu!</h5>
+        <h5>Vui lòng chọn điểm trên bản đồ để xem.</h5>
+      </div>
+  `;
+  return elem;
+};
+
 const locationCardFactory = (result) => {
   const elm = document.createElement("div");
   elm.innerHTML = `
@@ -95,6 +118,26 @@ const locationCardFactory = (result) => {
                     <h5>
                       ${result.place_name ? result.place_name : ""}
                     </h5>
+                  </div>`;
+  elm.className = "location-card alert alert-success d-flex mx-4";
+  return elm;
+};
+
+const locationAdsCardFactory = (result) => {
+  const elm = document.createElement("div");
+  elm.innerHTML = `
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-check2-circle flex-shrink-0 me-2" viewBox="0 0 16 16" role="img" aria-label="Warning:">
+                    <path d="M2.5 8a5.5 5.5 0 0 1 8.25-4.764.5.5 0 0 0 .5-.866A6.5 6.5 0 1 0 14.5 8a.5.5 0 0 0-1 0 5.5 5.5 0 1 1-11 0z"/>
+                    <path d="M15.354 3.354a.5.5 0 0 0-.708-.708L8 9.293 5.354 6.646a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0l7-7z"/>
+                  </svg>
+                  <div>
+                    <h5 class="font-weight-bold"> Thông tin địa điểm </h5>
+                    <h5 class="font-weight-bold">
+                      ${result.type}
+                    </h5>
+                    <h5>
+                      ${result.address}
+                    </h5>
                     <div class="d-flex justify-content-end">
                       <button type="button"
                         class="btn btn-danger"
@@ -104,7 +147,7 @@ const locationCardFactory = (result) => {
                       </button>
                     </div>
                   </div>`;
-  elm.className = "alert alert-success d-flex m-4";
+  elm.className = "location-ads-card alert alert-success d-flex mx-4";
   return elm;
 };
 
@@ -180,6 +223,77 @@ const detailCardFactory = (ads) => {
             </div>
           `;
   return elem;
+};
+
+const clearReportModal = () => {
+  document.querySelector("#name").value = "";
+  document.querySelector("#email").value = "";
+  document.querySelector("#phone").value = "";
+  document.querySelector('input[name="method"]:checked').value = "";
+  // tinymce.get("report-content").getContent() = "";
+  document.getElementById("file").value = "";
+};
+
+const handleReportModal = (typeReport, location_id, adsInfo) => {
+  const reportModalButton = document.querySelector(".report-modal-btn");
+  const newReportModalButton = reportModalButton.cloneNode(true);
+  reportModalButton.parentNode.replaceChild(
+    newReportModalButton,
+    reportModalButton
+  );
+  newReportModalButton.addEventListener("click", async (e) => {
+    e.preventDefault();
+
+    let type = typeReport;
+    let name = document.querySelector("#name").value;
+    let email = document.querySelector("#email").value;
+    let phone = document.querySelector("#phone").value;
+
+    let method = document.querySelector('input[name="method"]:checked').value;
+    let content = tinymce.get("report-content").getContent();
+    let location = location_id;
+
+    const data = new FormData();
+    if (type == "ads") {
+      data.append("type", "Bảng quảng cáo");
+    } else {
+      data.append("type", "Điểm đặt quảng cáo");
+    }
+    data.append("name", name);
+    data.append("email", email);
+    data.append("phone", phone);
+    data.append("method", method);
+    data.append("content", content);
+    data.append("location", location);
+
+    if (type == "ads") {
+      let ads = adsInfo._id;
+      data.append("ads", ads);
+    }
+
+    const fileInput = document.getElementById("file");
+    for (const file of fileInput.files) {
+      data.append("images", file);
+    }
+
+    try {
+      const response = await fetch("/api/report", {
+        method: "POST",
+        body: data,
+      });
+
+      if (response.ok) {
+        console.log("Report submitted successfully!");
+        document.querySelector("#feedback");
+        clearReportModal();
+      } else {
+        const errorMessage = await response.text();
+        console.error("Error:", errorMessage);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  });
 };
 
 const clearSidebar = () => {
@@ -434,10 +548,52 @@ async function initMap() {
     });
   });
 
-  geocoder.on("result", (e) => {
+  // Random locations
+  geocoder.on("result", async (e) => {
     clearSidebar();
+
+    const reportButton = document.querySelector(".report-btn");
+    const infoButton = document.querySelector(".info-btn");
+
+    reportButton.classList.remove("active");
+    infoButton.classList.add("active");
+    removeOutSideBar(".report-card");
+    removeOutSideBar(".location-card");
+    removeOutSideBar(".non-ads-card");
+    const nonAdsCard = NonAdsCardFactory();
+    addToSideBar(nonAdsCard);
     const locationCard = locationCardFactory(e.result);
     addToSideBar(locationCard);
+
+    const newInfoButton = infoButton.cloneNode(true);
+    infoButton.parentNode.replaceChild(newInfoButton, infoButton);
+    newInfoButton.addEventListener("click", async () => {
+      newReportButton.classList.remove("active");
+      newInfoButton.classList.add("active");
+      removeOutSideBar(".report-card");
+      removeOutSideBar(".location-card");
+      removeOutSideBar(".non-ads-card");
+      const nonAdsCard = NonAdsCardFactory();
+      addToSideBar(nonAdsCard);
+      const locationCard = locationCardFactory(e.result);
+      addToSideBar(locationCard);
+    });
+
+    const newReportButton = reportButton.cloneNode(true);
+    reportButton.parentNode.replaceChild(newReportButton, reportButton);
+
+    newReportButton.addEventListener("click", async () => {
+      newInfoButton.classList.remove("active");
+      newReportButton.classList.add("active");
+      removeOutSideBar(".report-card");
+      removeOutSideBar(".location-card");
+      removeOutSideBar(".non-ads-card");
+    });
+
+    const sidebar = document.getElementById("sidebar");
+    if (sidebar.classList.contains("collapsed")) {
+      toggleSidebar();
+    }
   });
 
   // Click on location
@@ -453,8 +609,10 @@ async function initMap() {
       infoButton.classList.add("active");
       removeOutSideBar(".report-card");
       removeOutSideBar(".ads-card");
-      const adsCard = AdsCardFactory(adsInfo[0]);
-      addToSideBar(adsCard);
+      adsInfo.forEach((el) => {
+        let adsCard = AdsCardFactory(el);
+        addToSideBar(adsCard);
+      });
 
       const newInfoButton = infoButton.cloneNode(true);
       infoButton.parentNode.replaceChild(newInfoButton, infoButton);
@@ -463,8 +621,18 @@ async function initMap() {
         newInfoButton.classList.add("active");
         removeOutSideBar(".report-card");
         removeOutSideBar(".ads-card");
-        const adsCard = AdsCardFactory(adsInfo[0]);
-        addToSideBar(adsCard);
+        adsInfo.forEach((el) => {
+          let adsCard = AdsCardFactory(el);
+          addToSideBar(adsCard);
+        });
+      });
+
+      const reportButtons = document.querySelectorAll(".ads-card .btn-danger");
+
+      reportButtons.forEach((button, index) => {
+        button.addEventListener("click", () => {
+          handleReportModal("ads", adsInfo[index].location._id, adsInfo[index]);
+        });
       });
 
       const newReportButton = reportButton.cloneNode(true);
@@ -475,66 +643,66 @@ async function initMap() {
         newReportButton.classList.add("active");
         removeOutSideBar(".report-card");
         removeOutSideBar(".ads-card");
-        const reportInfo = await logReports(adsInfo[0]._id);
+        const reportInfoArray = await Promise.all(
+          adsInfo.map(async (ads) => {
+            return await logReports(ads._id);
+          })
+        );
+        const reportInfoArrayFlat = reportInfoArray.flat();
+        reportInfoArrayFlat.forEach((report) => {
+          const reportCard = reportCardFactory(report);
+          addToSideBar(reportCard);
+        });
+      });
+
+      const detailIcons = document.querySelectorAll(".bi-info-circle");
+      detailIcons.forEach((detail, index) => {
+        detail.addEventListener("click", () => {
+          const infoDetailModal = document.querySelector(".modal-info-detail");
+          infoDetailModal.innerHTML = "";
+          const infoDetailCard = detailCardFactory(adsInfo[index]);
+          infoDetailModal.appendChild(infoDetailCard);
+        });
+      });
+    } else {
+      const locationAdsCard = locationAdsCardFactory(features.properties);
+      addToSideBar(locationAdsCard);
+      const nonAdsCard = NonAdsCardFactory();
+      addToSideBar(nonAdsCard);
+      reportButton.classList.remove("active");
+      infoButton.classList.add("active");
+
+      const newInfoButton = infoButton.cloneNode(true);
+      infoButton.parentNode.replaceChild(newInfoButton, infoButton);
+      newInfoButton.addEventListener("click", async () => {
+        newReportButton.classList.remove("active");
+        newInfoButton.classList.add("active");
+        removeOutSideBar(".report-card");
+        removeOutSideBar(".non-ads-card");
+        removeOutSideBar(".location-ads-card");
+        const locationAdsCard = locationAdsCardFactory(features.properties);
+        addToSideBar(locationAdsCard);
+        const nonAdsCard = NonAdsCardFactory();
+        addToSideBar(nonAdsCard);
+      });
+
+      const newReportButton = reportButton.cloneNode(true);
+      reportButton.parentNode.replaceChild(newReportButton, reportButton);
+
+      newReportButton.addEventListener("click", async () => {
+        newInfoButton.classList.remove("active");
+        newReportButton.classList.add("active");
+        removeOutSideBar(".report-card");
+        removeOutSideBar(".non-ads-card");
+        removeOutSideBar(".location-ads-card");
+        const reportInfo = await logReportsByLocation(features.properties._id);
         reportInfo.map((report) => {
           const reportCard = reportCardFactory(report);
           addToSideBar(reportCard);
         });
       });
 
-      const detailIcon = document.querySelector(".bi-info-circle");
-      detailIcon.addEventListener("click", () => {
-        const infoDetailModal = document.querySelector(".modal-info-detail");
-        const infoDetailCard = detailCardFactory(adsInfo[0]);
-        infoDetailModal.appendChild(infoDetailCard);
-      });
-
-      const reportModal = document.querySelector(".report-modal");
-      reportModal.addEventListener("submit", async (e) => {
-        e.preventDefault();
-
-        let type = "ads";
-        let name = document.querySelector("#name").value;
-        let email = document.querySelector("#email").value;
-        let phone = document.querySelector("#phone").value;
-
-        let method = document.querySelector(
-          'input[name="method"]:checked'
-        ).value;
-        let content = tinymce.get("report-content").getContent();
-        let location = adsInfo[0].location._id;
-        let ads = adsInfo[0]._id;
-        const data = new FormData();
-        data.append("type", type);
-        data.append("name", name);
-        data.append("email", email);
-        data.append("phone", phone);
-        data.append("method", method);
-        data.append("content", content);
-        data.append("location", location);
-        data.append("ads", ads);
-
-        const fileInput = document.getElementById("file");
-        for (const file of fileInput.files) {
-          data.append("images", file);
-        }
-
-        try {
-          const response = await fetch("api/report", {
-            method: "POST",
-            body: data,
-          });
-
-          if (response.ok) {
-            console.log("Report submitted successfully!");
-          } else {
-            const errorMessage = await response.text();
-            console.error("Error:", errorMessage);
-          }
-        } catch (error) {
-          console.error("Error:", error);
-        }
-      });
+      handleReportModal("location", features.properties._id, null);
     }
 
     const sidebar = document.getElementById("sidebar");

@@ -25,10 +25,20 @@ router.get("/ads/:location_id", async (req, res) => {
   }
 });
 
-router.get("/report/:ads_id", async (req, res) => {
+router.get("/report/ads/:ads_id", async (req, res) => {
   const adsID = req.params.ads_id;
   try {
     const reports = await Report.find({ ads: adsID }).exec();
+    return res.json(reports);
+  } catch (err) {
+    return res.status(500).send(err.message);
+  }
+});
+
+router.get("/report/location/:location_id", async (req, res) => {
+  const locationID = req.params.location_id;
+  try {
+    const reports = await Report.find({ location: locationID }).exec();
     return res.json(reports);
   } catch (err) {
     return res.status(500).send(err.message);
