@@ -1,86 +1,88 @@
 <!-- Right Part -->
 <div class="col p-3 border-start">
-  <div class="user-info d-flex justify-content-end">
-    <i class="bi bi-person-circle" style="font-size: 36px"></i>
-    <div class="user-text ms-3">
-      <h6>Elijah Scott</h6>
-      <p class="text-muted">elijarscott@gmail.com</p>
-    </div>
-  </div>
-  <nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-      <li class="breadcrumb-item">
-        <a href="." class="text-decoration-none text-muted">Bảng quảng cáo</a>
-      </li>
-      <li
-        class="breadcrumb-item active text-dark fw-semibold"
-        aria-current="page"
-      >
-        Cập nhật thông tin
-      </li>
-    </ol>
-  </nav>
+  <%- include('../../partials/header.ejs') %>
   <hr />
-  <div class="card bg-light mb-3">
+  <form
+    method="POST"
+    id="form"
+    class="card bg-light mb-3"
+    enctype="multipart/form-data"
+  >
     <div class="card-body p-4">
-      <h4 class="card-title py-2 fw-semibold">Cập nhật thông tin</h4>
+      <h4 class="card-title py-2 fw-semibold">Yêu cầu cập nhật thông tin</h4>
       <div class="d-flex flex-column pb-4 px-3">
-        <label for="" class="form-label"
-          >Địa điểm<span class="text-danger"> *</span></label
-        >
+        <label for="" class="form-label">Địa điểm</label>
         <div
-          class="d-flex flex-row gap-3 align-items-start text-secondary w-75"
+          class="d-flex flex-row gap-3 align-items-start text-secondary w-100"
         >
           <input
             type="text"
             class="form-control w-auto flex-grow-1"
-            required
+            disabled
             id=""
             aria-describedby="helpId"
             placeholder="Địa chỉ"
+            value="<%= ads.location.address %>"
           />
           <input
             type="text"
             class="form-control w-auto"
-            required
+            disabled
             id=""
             aria-describedby="helpId"
             placeholder="Phường"
+            value="<%= ads.location.ward %>"
           />
           <input
             type="text"
             class="form-control w-auto"
-            required
+            disabled
             id=""
             aria-describedby="helpId"
             placeholder="Quận"
+            value="<%= ads.location.district %>"
           />
         </div>
         <label for="method_select" class="form-label pt-3"
-          >Hình thức quảng cáo<span class="text-danger"> *</span></label
+          >Loại bảng quảng cáo</label
         >
         <div>
           <select
             class="form-select text-secondary w-50"
-            name=""
-            id="method_select"
+            name="type"
+            id="type_select"
           >
-            <option selected>Vui lòng chọn</option>
-            <option value="">Cổ động chính trị</option>
-            <option value="">Quảng cáo thương mại</option>
-            <option value="">Xã hội hoá</option>
+            <% if(!ads?.availableType) {%>
+              <option value="" selected> >Vui lòng chọn</option>
+            <% } else {%>
+              <% ads?.availableType?.forEach((type, index) => { %>
+                <option value="<%= type %>" <%= ads.type === type ? 'selected' : ''%> ><%= type %></option>
+              <% })%>
+            <% }%>
           </select>
         </div>
-        <label for="method_select" class="form-label pt-3"
-          >Thời hạn hợp đồng<span class="text-danger"> *</span></label
+        <label for="" class="form-label pt-3">Kích thước bảng quảng cáo</label>
+        <input
+          type="text"
+          class="form-control w-50"
+          required
+          id=""
+          aria-describedby="helpId"
+          placeholder="2.5m x 10m"
+          name="size"
+          value="<%= ads.size %>"
+        />
+
+        <label for="date_input" class="form-label pt-3"
+          >Thời hạn hợp đồng</label
         >
-        <div class="input-group input-daterange w-50">
-          <input type="date" class="form-control text-secondary" />
+        <div class="input-group input-daterange w-50" id="date_input">
+          <input type="date" class="form-control text-secondary" disabled value="<%= moment(ads.effective).format('YYYY-MM-DD'); %>"/>
           <div class="input-group-text">to</div>
-          <input type="date" class="form-control text-secondary" />
+          <input type="date" class="form-control text-secondary" disabled value="<%= moment(ads.expiration).format('YYYY-MM-DD'); %>"/>
         </div>
         <label for="file_inp" class="form-label pt-3"
-          >Hình ảnh thực tế<span class="text-danger"> *</span></label
+          >Hình ảnh thực tế</label
         >
         <div class="input-group input-daterange">
           <input
@@ -89,9 +91,12 @@
             id="file_inp"
             placeholder="Chưa có file được chọn"
             aria-describedby="fileHelpId"
+            name="images"
             multiple
           />
         </div>
+        <label for="text-area" class="form-label pt-3">Lý do chỉnh sửa<span class="text-danger"> *</span></label>
+        <textarea name="content" class="form-control" id="text-area" rows="4" placeholder="Lý do chỉnh sửa ..." value=""></textarea>
         <div
           class="d-flex flex-row justify-content-center align-items-center gap-4 pt-5"
         >
@@ -109,27 +114,27 @@
             id=""
             class="btn btn-primary px-4"
             data-bs-toggle="modal"
-            data-bs-target="#exampleModal"
+            data-bs-target="#confirmModal"
           >
-            Cập nhật thông tin
+            Gửi yêu cầu
           </button>
         </div>
       </div>
     </div>
-  </div>
+  </form>
 </div>
 
 <div
   class="modal fade"
-  id="exampleModal"
+  id="confirmModal"
   tabindex="-1"
-  aria-labelledby="exampleModalLabel"
+  aria-labelledby="confirmModalLabel"
   aria-hidden="true"
 >
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">Xác nhận</h1>
+        <h1 class="modal-title fs-5" id="confirmModalLabel">Xác nhận</h1>
         <button
           type="button"
           class="btn-close"
@@ -138,16 +143,21 @@
         ></button>
       </div>
       <div class="modal-body">
-        Bạn có chắc chắn muốn cập nhật những thay đổi này?
+        Bạn có chắc chắn muốn gửi yêu cầu thay đổi?
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
           Đóng
         </button>
-        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">
-          Cập nhật
+        <button type="button" class="btn btn-primary" id="submit-btn">
+          Gửi yêu cầu
         </button>
       </div>
     </div>
   </div>
 </div>
+<script>
+  document.getElementById("submit-btn").addEventListener("click", () => {
+    form.submit();
+  });
+</script>

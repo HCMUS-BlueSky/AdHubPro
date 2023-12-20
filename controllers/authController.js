@@ -47,16 +47,17 @@ exports.login = async (req, res) => {
     const sessUser = user.toObject();
     delete sessUser["password"];
     req.session.user = sessUser;
+    req.session.user.workDir = "/"; 
     if (user.role === "ward_officer") {
-      req.session.workDir = "/ward";
+      req.session.user.workDir = '/ward';
       return res.redirect("/ward");
     }
     if (user.role === "district_officer") {
-      req.session.workDir = "/district";
+      req.session.user.workDir = '/district';
       return res.redirect("/district");
     }
     if (user.role === "department_officer") {
-      req.session.workDir = "/department";
+      req.session.user.workDir = '/department';
       return res.redirect("/department");
     }
     return res.redirect("/");

@@ -1,47 +1,27 @@
 <div class="col p-3 border-start">
-  <div class="user-info d-flex justify-content-end">
-    <i class="bi bi-person-circle" style="font-size: 36px"></i>
-    <div class="user-text ms-3">
-      <h6>Elijah Scott</h6>
-      <p class="text-muted">elijarscott@gmail.com</p>
-    </div>
-  </div>
-  <nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-      <li class="breadcrumb-item">
-        <a href="/district/ads" class="text-decoration-none text-muted">Bảng quảng cáo</a>
-      </li>
-      <li
-        class="breadcrumb-item active text-dark fw-semibold"
-        aria-current="page"
-      >
-        Thông tin chung
-      </li>
-    </ol>
-  </nav>
+  <%- include('../../partials/header.ejs') %>
   <hr />
+  <%- include('../../partials/flash.ejs') %>
   <h2 class="fw-semibold">THÔNG TIN CÁC BẢNG QUẢNG CÁO</h2>
-  <div class="row justify-content-center">
-    <div class="col-3">
-      <input
-        class="form-control mr-sm-2"
-        type="search"
-        placeholder="Tìm kiếm"
-        aria-label="Search"
-      />
-    </div>
-    <div class="col-3">
-      <select class="form-select" aria-label="Default select example">
-        <option selected>Sắp xếp</option>
-      </select>
+  <div class="row justify-content-end">
+    <div class="col-4">
+      <form role="search" method="POST" action="/district/ads/search">
+        <input
+          class="form-control mr-sm-2"
+          type="search"
+          placeholder="Tìm kiếm"
+          aria-label="Search"
+          name="searchTerm"
+        />
+      </form>
     </div>
   </div>
   <table class="table border border-2 rounded py-3 mt-3">
     <thead>
       <tr>
         <th scope="col">STT</th>
-        <th scope="col">Địa chỉ</th>
-        <th scope="col">Hình thức</th>
+        <th scope="col" class="col-5">Địa chỉ</th>
+        <th scope="col">Loại bảng</th>
         <th scope="col">Ngày bắt đầu</th>
         <th scope="col">Ngày hết hạn</th>
         <th scope="col"></th>
@@ -52,10 +32,14 @@
       <% ads.forEach((element, index) => { %>
       <tr>
         <th scope="row"><%= perPage * (current - 1) + index + 1 %></th>
-        <td class=""><%= element.location.address %></td>
+        <td>
+          <%= (element.location.address.length > 55 ?
+          element.location.address.substring(0, 55) + '...' :
+          element.location.address) %>
+        </td>
         <td class=""><%= element.type %></td>
-        <td class=""><%= element.created_at.toLocaleTimeString("en-US") %></td>
-        <td class=""><%= element.updated_at.toLocaleTimeString("en-US") %></td>
+        <td class=""><%= moment(element.effective).format('DD-MM-YYYY') %></td>
+        <td class=""><%= moment(element.expiration).format('DD-MM-YYYY') %></td>
         <td class="">
           <a href="/district/ads/view/<%= element._id %>">
             <i class="bi bi-eye-fill"></i>

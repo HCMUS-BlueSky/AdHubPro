@@ -1,25 +1,6 @@
 <!-- Right Part -->
 <div class="col p-3 border-start">
-  <div class="user-info d-flex justify-content-end">
-    <i class="bi bi-person-circle" style="font-size: 36px"></i>
-    <div class="user-text ms-3">
-      <h6>Elijah Scott</h6>
-      <p class="text-muted">elijarscott@gmail.com</p>
-    </div>
-  </div>
-  <nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-      <li class="breadcrumb-item">
-        <a href="." class="text-decoration-none text-muted">Bảng quảng cáo</a>
-      </li>
-      <li
-        class="breadcrumb-item active text-dark fw-semibold"
-        aria-current="page"
-      >
-        Thông tin chi tiết
-      </li>
-    </ol>
-  </nav>
+  <%- include('../../partials/header.ejs') %>
   <hr />
   <div class="card mb-3">
     <svg
@@ -36,7 +17,10 @@
     </svg>
     <div class="card-body">
       <h5 class="card-title fw-semibold fs-3"><%= ads.location.method %></h5>
-      <p class="text-muted">Khu vực: Phường <%= ads.location.ward %>, Quận <%= ads.location.district %></p>
+      <p class="text-muted">
+        Khu vực: Phường <%= ads.location.ward %>, Quận <%= ads.location.district
+        %>
+      </p>
       <div class="row border border-2 rounded">
         <div class="col-3">
           <p class="text-muted pt-3">Địa chỉ:</p>
@@ -50,7 +34,9 @@
           <p class="text-muted pt-3">Ngày bắt đầu hợp đồng:</p>
         </div>
         <div class="col-9">
-          <p class="pt-3"><%= ads.created_at %></p>
+          <p class="pt-3">
+            <%= moment(ads.effective).format('DD-MM-YYYY'); %>
+          </p>
         </div>
       </div>
       <div class="row border border-2 rounded">
@@ -58,7 +44,9 @@
           <p class="text-muted pt-3">Ngày kết thúc hợp đồng:</p>
         </div>
         <div class="col-9">
-          <p class="pt-3"><%= ads.updated_at %></p>
+          <p class="pt-3">
+            <%= moment(ads.expiration).format('DD-MM-YYYY') %>
+          </p>
         </div>
       </div>
       <div
@@ -77,6 +65,7 @@
           class="btn btn-primary px-4"
           data-bs-toggle="modal"
           data-bs-target="#imageSlideShow"
+          <%= ads.images.length ? "" : "disabled" %>
         >
           Xem tất cả hình
         </button>
@@ -84,7 +73,7 @@
           name=""
           id=""
           class="btn btn-primary px-4"
-          href="/district/ads/update-info/<%= ads.location._id %>"
+          href="/district/ads/update-info/<%= ads._id %>"
           role="button"
           >Cập nhật thông tin</a
         >
@@ -104,63 +93,38 @@
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-body modal-info-detail">
-        <div id="demo" class="carousel slide" data-bs-ride="carousel">
+        <div id="slide" class="carousel slide" data-bs-ride="carousel">
           <!-- Indicators/dots -->
           <div class="carousel-indicators">
-            <button
-              type="button"
-              data-bs-target="#demo"
-              data-bs-slide-to="0"
-              class="active"
-            ></button>
-            <button
-              type="button"
-              data-bs-target="#demo"
-              data-bs-slide-to="1"
-            ></button>
-            <button
-              type="button"
-              data-bs-target="#demo"
-              data-bs-slide-to="2"
-            ></button>
+            <% ads.images.forEach((img, index) => { %>
+              <button
+                type="button"
+                data-bs-target="#slide"
+                data-bs-slide-to="<%= index %>"
+                class="<%= index == 0 ? 'active' : '' %>"
+              ></button>
+            <% }) %>
           </div>
 
           <!-- The slideshow/carousel -->
           <div class="carousel-inner">
-            <div class="carousel-item active">
-              <img
-                src="../../images/ads1.jpg"
-                alt="ads-1"
-                class="d-block"
-                style="width: 100%"
-                loading="lazy"
-              />
-            </div>
-            <div class="carousel-item">
-              <img
-                src="../../images/ads2.jpg"
-                alt="ads-2"
-                class="d-block"
-                style="width: 100%"
-                loading="lazy"
-              />
-            </div>
-            <div class="carousel-item">
-              <img
-                src="../../images/ads3.jpg"
-                alt="ads-3"
-                class="d-block"
-                style="width: 100%"
-                loading="lazy"
-              />
-            </div>
+            <% ads.images.forEach((img, index) => { %>
+              <div class="carousel-item <%= index == 0 ? 'active' : '' %>">
+                <img
+                  src="<%= img %>"
+                  alt="image-<%= index %>"
+                  class="d-block"
+                  style="width: 100%"
+                  loading="lazy"
+                />
+              </div>
+            <% }) %>
           </div>
-
           <!-- Left and right controls/icons -->
           <button
             class="carousel-control-prev"
             type="button"
-            data-bs-target="#demo"
+            data-bs-target="#slide"
             data-bs-slide="prev"
           >
             <span class="carousel-control-prev-icon"></span>
@@ -168,7 +132,7 @@
           <button
             class="carousel-control-next"
             type="button"
-            data-bs-target="#demo"
+            data-bs-target="#slide"
             data-bs-slide="next"
           >
             <span class="carousel-control-next-icon"></span>
@@ -176,7 +140,10 @@
         </div>
         <div class="container-fluid mt-3">
           <p class="text-center">Địa điểm</p>
-          <p class="text-center">Khu vực: Phường <%= ads.location.ward %>, Quận <%= ads.location.district %></p>
+          <p class="text-center">
+            Khu vực: Phường <%= ads.location.ward %>, Quận <%=
+            ads.location.district %>
+          </p>
         </div>
       </div>
     </div>

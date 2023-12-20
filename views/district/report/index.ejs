@@ -1,40 +1,20 @@
 <!-- Right Part -->
 <div class="col p-3 border-start">
-  <div class="user-info d-flex justify-content-end">
-    <i class="bi bi-person-circle" style="font-size: 36px"></i>
-    <div class="user-text ms-3">
-      <h6>Elijah Scott</h6>
-      <p class="text-muted">elijarscott@gmail.com</p>
-    </div>
-  </div>
-  <nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-      <li class="breadcrumb-item">
-        <a href="/district/report" class="text-decoration-none text-muted">Báo cáo</a>
-      </li>
-      <li
-        class="breadcrumb-item active text-dark fw-semibold"
-        aria-current="page"
-      >
-        Thông tin chung
-      </li>
-    </ol>
-  </nav>
+  <%- include('../../partials/header.ejs') %>
   <hr />
+  <%- include('../../partials/flash.ejs') %>
   <h2 class="fw-semibold">THÔNG TIN CÁC BÁO CÁO</h2>
-  <div class="row justify-content-center">
-    <div class="col-3">
-      <input
-        class="form-control mr-sm-2"
-        type="search"
-        placeholder="Tìm kiếm"
-        aria-label="Search"
-      />
-    </div>
-    <div class="col-3">
-      <select class="form-select" aria-label="Default select example">
-        <option selected>Sắp xếp</option>
-      </select>
+  <div class="row justify-content-end">
+    <div class="col-4">
+      <form role="search" method="POST" action="/district/report/search">
+        <input
+          class="form-control mr-sm-2"
+          type="search"
+          placeholder="Tìm kiếm"
+          aria-label="Search"
+          name="searchTerm"
+        />
+      </form>
     </div>
   </div>
   <table class="table border border-2 rounded py-3 mt-3">
@@ -42,7 +22,7 @@
       <tr>
         <th scope="col">STT</th>
         <th scope="col">THỜI GIAN</th>
-        <th scope="col">ĐỊA CHỈ</th>
+        <th scope="col" class="col-5">ĐỊA CHỈ</th>
         <th scope="col">LOẠI</th>
         <th scope="col">NGƯỜI GỬI</th>
         <th scope="col">TRẠNG THÁI</th>
@@ -53,21 +33,23 @@
       <% reports.forEach((element, index) => { %>
       <tr>
         <th scope="row"><%= perPage * (current - 1) + index + 1 %></th>
-        <td class=""><%= element.created_at.toLocaleTimeString("en-US") %></td>
-        <td class=""><%= element.location.address %></td>
+        <td class=""><%= moment(element.created_at).format("DD-MM-YYYY") %></td>
         <td class="">
-          <% if (element.type == "ads") { %>
-            Bảng quảng cáo
-          <% } else {%> 
-            Điểm đặt quảng cáo
-          <% } %>
+          <%= (element.location.address.length > 55 ?
+          element.location.address.substring(0, 55) + '...' :
+          element.location.address) %>
+        </td>
+        <td class="">
+          <%= element.type %>
         </td>
         <td class=""><%= element.reporter.name %></td>
-        <td class=""> 
-          <% if (element.processed) { %>
-            <span class="badge bg-success w-100">Đã xử lí</span>
-          <% } else {%> 
-            <span class="badge bg-danger w-100">Chưa xử lí</span>
+        <td class="">
+          <% if (element.status === 'done') { %>
+          <span class="badge bg-success w-100">Đã xử lí</span>
+          <% } else if (element.status === 'processing') { %>
+          <span class="badge bg-warning w-100">Đang xử lí</span>
+          <% } else {%>
+          <span class="badge bg-danger w-100">Chưa xử lí</span>
           <% } %>
         </td>
         <td class="">
@@ -88,7 +70,7 @@
       </li>
       <% } else { %>
       <li class="page-item">
-        <a href="/district/ads?page=1" class="page-link">First</a>
+        <a href="/district/report?page=1" class="page-link">First</a>
       </li>
       <% } %> <% i = (Number(current) > 5 ? Number(current) - 4 : 1) %> <% if (i
       != 1) { %>
@@ -100,7 +82,7 @@
       </li>
       <% } else { %>
       <li class="page-item">
-        <a href="/district/ads?page=<%= i %>" class="page-link"><%= i %></a>
+        <a href="/district/report?page=<%= i %>" class="page-link"><%= i %></a>
       </li>
       <% } %> <% if (i == Number (current) + 4 && i < pages) { %>
       <li class="page-item disabled"><a href="#" class="page-link">...</a></li>
@@ -108,7 +90,7 @@
       <li class="page-item disabled"><a href="#" class="page-link">Last</a></li>
       <% } else { %>
       <li class="page-item">
-        <a href="/district/ads?page=<%= pages %>" class="page-link">Last</a>
+        <a href="/district/report?page=<%= pages %>" class="page-link">Last</a>
       </li>
       <% } %>
     </ul>

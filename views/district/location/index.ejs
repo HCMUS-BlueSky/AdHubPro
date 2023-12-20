@@ -1,51 +1,28 @@
-<!-- Right Part -->
 <div class="col p-3 border-start">
-  <div class="user-info d-flex justify-content-end">
-    <i class="bi bi-person-circle" style="font-size: 36px"></i>
-    <div class="user-text ms-3">
-      <h6>Elijah Scott</h6>
-      <p class="text-muted">elijarscott@gmail.com</p>
-    </div>
-  </div>
-  <nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-      <li class="breadcrumb-item">
-        <a href="/district/location" class="text-decoration-none text-muted"
-          >Điểm đặt quảng cáo</a
-        >
-      </li>
-      <li
-        class="breadcrumb-item active text-dark fw-semibold"
-        aria-current="page"
-      >
-        Thông tin chung
-      </li>
-    </ol>
-  </nav>
+  <%- include('../../partials/header.ejs') %>
   <hr />
+  <%- include('../../partials/flash.ejs') %>
   <h2 class="fw-semibold">THÔNG TIN CÁC ĐIỂM ĐẶT QUẢNG CÁO</h2>
-  <div class="row justify-content-center">
-    <div class="col-3">
-      <input
-        class="form-control mr-sm-2"
-        type="search"
-        placeholder="Tìm kiếm"
-        aria-label="Search"
-      />
-    </div>
-    <div class="col-3">
-      <select class="form-select" aria-label="Default select example">
-        <option selected>Sắp xếp</option>
-      </select>
+  <div class="row justify-content-end">
+    <div class="col-4">
+      <form role="search" method="POST" action="/district/location/search">
+        <input
+          class="form-control mr-sm-2"
+          type="search"
+          placeholder="Tìm kiếm"
+          aria-label="Search"
+          name="searchTerm"
+        />
+      </form>
     </div>
   </div>
   <table class="table border border-2 rounded py-3 mt-3">
     <thead>
       <tr>
         <th scope="col">STT</th>
-        <th scope="col">Địa chỉ</th>
+        <th scope="col" class="col-5">Địa chỉ</th>
         <th scope="col">Phân loại</th>
-        <th scope="col">Hình thức</th>
+        <th scope="col" class="col-2">Hình thức</th>
         <th scope="col">Tình trạng</th>
         <th scope="col"></th>
         <th scope="col"></th>
@@ -55,8 +32,14 @@
       <% locations.forEach((location, index) => { %>
       <tr>
         <th scope="row"><%= perPage * (current - 1) + index + 1 %></th>
-        <td class=""><%= location.address %></td>
-        <td class=""><%= location.type %></td>
+        <td class="">
+          <%= (location.address.length > 55 ? location.address.substring(0, 55)
+          + '...' : location.address) %>
+        </td>
+        <td class="">
+          <%= (location.type.length > 20 ? location.type.substring(0, 20) +
+          '...' : location.type) %>
+        </td>
         <td class=""><%= location.method %></td>
         <td class="">
           <% if (location.accepted) { %>

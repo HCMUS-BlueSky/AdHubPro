@@ -1,7 +1,7 @@
 <!-- Sidebar -->
 <div class="col-auto col-md-3 col-xl-2 px-sm-3 px-0 bg-dark">
   <div class="d-flex flex-column align-items-center pt-2 min-vh-100 pt-5">
-    <a href="/ward" class="pb-5 mb-md-0">
+    <a href="<%= user.workDir %>" class="pb-5 mb-md-0">
       <img src="/images/AdHubPro.png" alt="" />
     </a>
     <ul class="nav nav-pills flex-column gap-2 mb-sm-auto mb-0 w-100" id="menu">
@@ -9,7 +9,7 @@
         class="nav-item w-100 p-2 rounded <%= pageName === 'home' && 'current-nav-item' %>"
       >
         <a
-          href="/ward"
+          href="<%= user.workDir %>"
           class="d-flex flex-row gap-1 align-items-center text-decoration-none text-light"
         >
           <i class="fs-4 bi-house"></i>
@@ -20,7 +20,7 @@
         class="nav-item w-100 p-2 rounded <%= pageName === 'location' && 'current-nav-item' %>"
       >
         <a
-          href="/ward/location"
+          href="<%= user.workDir %>/location"
           class="d-flex flex-row gap-1 align-items-center text-decoration-none text-light"
         >
           <i class="fs-4 bi-geo-alt"></i>
@@ -33,7 +33,7 @@
         class="nav-item w-100 p-2 rounded <%= pageName === 'ads' && 'current-nav-item' %>"
       >
         <a
-          href="/ward/ads"
+          href="<%= user.workDir %>/ads"
           class="d-flex flex-row gap-1 align-items-center text-decoration-none text-light"
         >
           <i class="fs-4 bi-badge-ad"></i>
@@ -46,7 +46,7 @@
         class="nav-item w-100 p-2 rounded <%= pageName === 'report' && 'current-nav-item' %>"
       >
         <a
-          href="/ward/report"
+          href="<%= user.workDir %>/report"
           class="d-flex flex-row gap-1 align-items-center text-decoration-none text-light"
         >
           <i class="fs-4 bi-exclamation-octagon"></i>
@@ -57,7 +57,7 @@
         class="nav-item w-100 p-2 rounded <%= pageName === 'request' && 'current-nav-item' %>"
       >
         <a
-          href="/ward/request"
+          href="<%= user.workDir %>/request"
           class="d-flex flex-row gap-1 align-items-center text-decoration-none text-light"
         >
           <i class="fs-4 bi-envelope"></i>

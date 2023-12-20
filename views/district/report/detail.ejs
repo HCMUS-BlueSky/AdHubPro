@@ -1,41 +1,21 @@
 <div class="col p-3 border-start">
-  <div class="user-info d-flex justify-content-end">
-    <i class="bi bi-person-circle" style="font-size: 36px"></i>
-    <div class="user-text ms-3">
-      <h6>Elijah Scott</h6>
-      <p class="text-muted"> elijarscott@gmail.com </p>
-    </div>
-  </div>
-  <nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-      <li class="breadcrumb-item">
-        <a href=".." class="text-decoration-none text-muted">Báo cáo</a>
-      </li>
-      <li
-        class="breadcrumb-item active text-dark fw-semibold"
-        aria-current="page"
-      >
-        Thông tin chi tiết
-      </li>
-    </ol>
-  </nav>
+  <%- include('../../partials/header.ejs') %>
   <hr />
   <div class="card bg-light mb-3">
     <!-- <div class="card-header">Xử lý báo cáo</div> -->
     <div class="card-body p-4">
       <h4 class="card-title py-2"><%= report.location.address %></h4>
-      <p class="text-muted">Khu vực: Phường <%= report.location.ward %>, Quận <%= report.location.district %></p>
+      <p class="text-muted">
+        Khu vực: Phường <%= report.location.ward %>, Quận <%=
+        report.location.district %>
+      </p>
       <div class="row border border-2 rounded">
         <div class="col-2">
           <p class="text-muted pt-3">Loại báo cáo:</p>
         </div>
         <div class="col-10">
           <p class="pt-3">
-            <% if (report.type == "ads") { %>
-              Bảng quảng cáo
-            <% } else {%> 
-              Điểm đặt quảng cáo
-            <% } %>
+            <%= report.type %>
           </p>
         </div>
       </div>
@@ -44,7 +24,10 @@
           <p class="text-muted pt-3">Thông tin người gửi:</p>
         </div>
         <div class="col-10">
-          <p class="pt-3"><%= report.reporter.name %> - <%= report.reporter.phone %> - <%= report.reporter.email %></p>
+          <p class="pt-3">
+            <%= report.reporter.name %> - <%= report.reporter.phone %> - <%=
+            report.reporter.email %>
+          </p>
         </div>
       </div>
       <div class="row border border-2 rounded">
@@ -54,7 +37,9 @@
               <p class="text-muted pt-3">Thời gian gửi báo cáo:</p>
             </div>
             <div class="col-8">
-              <p class="pt-3"><%= report.created_at.toLocaleTimeString("en-US") %></p>
+              <p class="pt-3">
+                <%= report.created_at.toLocaleTimeString("en-US") %>
+              </p>
             </div>
           </div>
         </div>
@@ -75,11 +60,14 @@
         </div>
         <div class="col-10">
           <p class="pt-3">
-          <% if (report.processed) { %>
-            Đã xử lí
-          <% } else {%> 
-            Chưa xử lí
-          <% } %></p>
+            <% if (report.status === 'done') { %>
+            <span class="badge bg-success">Đã xử lí</span>
+            <% } else if (report.status === 'processing') { %>
+            <span class="badge bg-warning">Đang xử lí</span>
+            <% } else {%>
+            <span class="badge bg-danger">Chưa xử lí</span>
+            <% } %>
+          </p>
         </div>
       </div>
       <div class="row border border-2 rounded mb-3">
@@ -87,74 +75,63 @@
           <p class="text-muted pt-3">Nội dung báo cáo:</p>
         </div>
         <div class="col-10">
-          <p class="pt-3">
-            <%= report.content %>
-          </p>
+          <div class="pt-3"><%- report.content %></div>
         </div>
       </div>
 
       <div class="d-flex justify-content-center">
         <a href="..">
-          <button type="button" class="btn btn-secondary me-4">
-            Trở về
-          </button>
+          <button type="button" class="btn btn-secondary me-4">Trở về</button>
         </a>
         <button
           type="button"
           class="btn btn-primary me-4"
           data-bs-toggle="modal"
-          data-bs-target="#detail"
+          data-bs-target="#imageSlideShow"
+          <%= report.images.length ? "" : "disabled" %>
         >
           Xem tất cả hình
         </button>
         <a href="../process/<%= report._id %>">
-          <button type="button" class="btn btn-primary">
-            Xử lý báo cáo
-          </button>
+          <button type="button" class="btn btn-primary">Xử lý báo cáo</button>
         </a>
       </div>
     </div>
   </div>
 </div>
 <div
-class="modal fade"
-id="detail"
-aria-hidden="true"
-aria-labelledby="detail"
-tabindex="-1"
+  class="modal fade"
+  id="imageSlideShow"
+  aria-hidden="true"
+  aria-labelledby="imageSlideShow"
+  tabindex="-1"
 >
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
-      <!-- <div class="modal-header">
-        <button
-          type="button"
-          class="btn-close"
-          data-bs-dismiss="modal"
-          aria-label="Close"
-        ></button>
-      </div> -->
       <div class="modal-body modal-info-detail">
-        <div id="demo" class="carousel slide" data-bs-ride="carousel">
+        <div id="slide" class="carousel slide" data-bs-ride="carousel">
           <!-- Indicators/dots -->
-          <div class="carousel-indicators">  
-             <% report.images.forEach((image, index) => { %>
+          <div class="carousel-indicators">
+            <% report.images.forEach((img, index) => { %>
               <button
                 type="button"
-                data-bs-target="#demo"
+                data-bs-target="#slide"
                 data-bs-slide-to="<%= index %>"
+                class="<%= index == 0 ? 'active' : '' %>"
               ></button>
             <% }) %>
           </div>
 
           <!-- The slideshow/carousel -->
           <div class="carousel-inner">
-            <% report.images.forEach((image, index) => { %>
-              <div class="carousel-item <%= index ? '': 'active' %>">
+            <% report.images.forEach((img, index) => { %>
+              <div class="carousel-item <%= index == 0 ? 'active' : '' %>">
                 <img
-                  src="<%= image %>"
-                  alt="ads-<%= index + 1 %>"
+                  src="<%= img %>"
+                  alt="image-<%= index %>"
                   class="d-block"
                   style="width: 100%"
+                  loading="lazy"
                 />
               </div>
             <% }) %>
@@ -164,7 +141,7 @@ tabindex="-1"
           <button
             class="carousel-control-prev"
             type="button"
-            data-bs-target="#demo"
+            data-bs-target="#slide"
             data-bs-slide="prev"
           >
             <span class="carousel-control-prev-icon"></span>
@@ -172,7 +149,7 @@ tabindex="-1"
           <button
             class="carousel-control-next"
             type="button"
-            data-bs-target="#demo"
+            data-bs-target="#slide"
             data-bs-slide="next"
           >
             <span class="carousel-control-next-icon"></span>
@@ -182,3 +159,4 @@ tabindex="-1"
     </div>
   </div>
 </div>
+
