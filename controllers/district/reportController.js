@@ -16,17 +16,16 @@ exports.view = async (req, res) => {
     const user = req.session.user;
     const managed_locations = await Location.find({
       district: user.managed_district.name,
-      ward: user.managed_ward,
     })
       .distinct("_id")
       .exec();
     const reports = await Report.find({ location: { $in: managed_locations } })
-      .sort({ updatedAt: -1 })
+      .sort({ created_at: -1 })
       .skip(perPage * page - perPage)
       .limit(perPage)
       .populate({
-        path: "location",
-        select: ["address", "ward", "district", "method"],
+        path: 'location',
+        select: ['address', 'ward', 'district', 'method']
       })
       .exec();
     const count = reports.length;
@@ -59,7 +58,6 @@ exports.search = async (req, res) => {
     const user = req.session.user;
     const locations = await Location.find({
       district: user.managed_district.name,
-      ward: user.managed_ward,
       $text: {
         $search: `\"${searchTerm}\"`
       }
@@ -68,7 +66,6 @@ exports.search = async (req, res) => {
       .exec();
     const managed_locations = await Location.find({
       district: user.managed_district.name,
-      ward: user.managed_ward
     })
       .distinct('_id')
       .exec();
@@ -85,11 +82,11 @@ exports.search = async (req, res) => {
         },
         {
           location: { $in: managed_locations },
-          "reporter.name": { $regex: rgx }
+          'reporter.name': { $regex: rgx }
         }
       ]
     })
-      .sort({ updatedAt: -1 })
+      .sort({ created_at: -1 })
       .skip(perPage * page - perPage)
       .limit(perPage)
       .populate({
@@ -123,7 +120,6 @@ exports.getDetail = async (req, res) => {
     const user = req.session.user;
     const managed_locations = await Location.find({
       district: user.managed_district.name,
-      ward: user.managed_ward,
     })
       .distinct("_id")
       .exec();
@@ -158,7 +154,6 @@ exports.renderProcessReport = async (req, res) => {
     const user = req.session.user;
     const managed_locations = await Location.find({
       district: user.managed_district.name,
-      ward: user.managed_ward,
     })
       .distinct("_id")
       .exec();
@@ -195,7 +190,6 @@ exports.processReport = async (req, res) => {
     const user = req.session.user;
     const managed_locations = await Location.find({
       district: user.managed_district.name,
-      ward: user.managed_ward,
     })
       .distinct("_id")
       .exec();

@@ -12,15 +12,14 @@ exports.view = async (req, res) => {
     const user = req.session.user;
     const managed_locations = await Location.find({
       district: user.managed_district.name,
-      ward: user.managed_ward,
     })
       .distinct("_id")
       .exec();
     const request = await Request.find({
-      "ads.location": { $in: managed_locations },
+      'ads.location': { $in: managed_locations }
     })
-      .populate("ads.location", "address")
-      .sort({ updatedAt: -1 })
+      .populate('ads.location', 'address')
+      .sort({ created_at: -1 })
       .skip(perPage * page - perPage)
       .limit(perPage)
       .exec();
@@ -53,7 +52,6 @@ exports.search = async (req, res) => {
     const user = req.session.user;
     const locations = await Location.find({
       district: user.managed_district.name,
-      ward: user.managed_ward,
       $text: {
         $search: `\"${searchTerm}\"`
       }
@@ -62,7 +60,6 @@ exports.search = async (req, res) => {
       .exec();
     const managed_locations = await Location.find({
       district: user.managed_district.name,
-      ward: user.managed_ward
     })
       .distinct('_id')
       .exec();
@@ -82,7 +79,7 @@ exports.search = async (req, res) => {
         }
       ]
     })
-      .sort({ updatedAt: -1 })
+      .sort({ created_at: -1 })
       .skip(perPage * page - perPage)
       .limit(perPage)
       .populate('ads.location', 'address')
@@ -111,7 +108,6 @@ exports.getDetail = async (req, res) => {
     const user = req.session.user;
     const managed_locations = await Location.find({
       district: user.managed_district.name,
-      ward: user.managed_ward,
     })
       .distinct("_id")
       .exec();
@@ -140,7 +136,6 @@ exports.renderCreateNew = async (req, res) => {
     const user = req.session.user;
     const locations = await Location.find({
       district: user.managed_district.name,
-      ward: user.managed_ward,
     }).exec();
     const availableAdsType = await Ads.getAvailableType();
     const availableLocationMethod = await Location.getAvailableMethod();
@@ -202,7 +197,6 @@ exports.createNew = async (req, res) => {
     const exists = await Location.exists({
       _id: location,
       district: user.managed_district.name,
-      ward: user.managed_ward,
     }).exec();
     if (!exists) throw new Error("Địa điểm không hợp lệ");
     const request = new Request({
@@ -242,7 +236,6 @@ exports.cancelRequest = async (req, res) => {
     const user = req.session.user;
     const managed_locations = await Location.find({
       district: user.managed_district.name,
-      ward: user.managed_ward,
     })
       .distinct("_id")
       .exec();

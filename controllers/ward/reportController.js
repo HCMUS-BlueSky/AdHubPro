@@ -21,12 +21,12 @@ exports.view = async (req, res) => {
       .distinct("_id")
       .exec();
     const reports = await Report.find({ location: { $in: managed_locations } })
-      .sort({ updatedAt: -1 })
+      .sort({ created_at: -1 })
       .skip(perPage * page - perPage)
       .limit(perPage)
       .populate({
-        path: "location",
-        select: ["address", "ward", "district", "method"],
+        path: 'location',
+        select: ['address', 'ward', 'district', 'method']
       })
       .exec();
     const count = reports.length;
@@ -85,11 +85,11 @@ exports.search = async (req, res) => {
         },
         {
           location: { $in: managed_locations },
-          "reporter.name": { $regex: rgx }
+          'reporter.name': { $regex: rgx }
         }
       ]
     })
-      .sort({ updatedAt: -1 })
+      .sort({ created_at: -1 })
       .skip(perPage * page - perPage)
       .limit(perPage)
       .populate({

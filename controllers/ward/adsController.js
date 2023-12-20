@@ -17,7 +17,7 @@ exports.view = async (req, res) => {
       .distinct('_id')
       .exec();
     const ads = await Ads.find({ location: { $in: managed_locations } })
-      .sort({ updatedAt: -1 })
+      .sort({ created_at: -1 })
       .skip(perPage * page - perPage)
       .limit(perPage)
       .populate({
@@ -81,7 +81,7 @@ exports.search = async (req, res) => {
         }
       ]
     })
-      .sort({ updatedAt: -1 })
+      .sort({ created_at: -1 })
       .skip(perPage * page - perPage)
       .limit(perPage)
       .populate({

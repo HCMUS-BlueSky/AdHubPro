@@ -17,10 +17,10 @@ exports.view = async (req, res) => {
       .distinct("_id")
       .exec();
     const request = await Request.find({
-      "ads.location": { $in: managed_locations },
+      'ads.location': { $in: managed_locations }
     })
-      .populate("ads.location", "address")
-      .sort({ updatedAt: -1 })
+      .populate('ads.location', 'address')
+      .sort({ created_at: -1 })
       .skip(perPage * page - perPage)
       .limit(perPage)
       .exec();
@@ -82,7 +82,7 @@ exports.search = async (req, res) => {
         }
       ]
     })
-      .sort({ updatedAt: -1 })
+      .sort({ created_at: -1 })
       .skip(perPage * page - perPage)
       .limit(perPage)
       .populate('ads.location', 'address')

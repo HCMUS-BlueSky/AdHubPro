@@ -11,7 +11,7 @@ exports.view = async (req, res) => {
       district: user.managed_district.name,
       ward: user.managed_ward
     })
-      .sort({ updatedAt: -1 })
+      .sort({ created_at: -1 })
       .skip(perPage * page - perPage)
       .limit(perPage)
       .exec();
@@ -48,7 +48,7 @@ exports.search = async (req, res) => {
         $search: `\"${searchTerm}\"`
       }
     })
-      .sort({ updatedAt: -1 })
+      .sort({ created_at: -1 })
       .skip(perPage * page - perPage)
       .limit(perPage)
       .exec();

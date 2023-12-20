@@ -10,7 +10,7 @@ exports.view = async (req, res) => {
     const locations = await Location.find({
       district: user.managed_district.name
     })
-      .sort({ updatedAt: -1 })
+      .sort({ created_at: -1 })
       .skip(perPage * page - perPage)
       .limit(perPage)
       .exec();
@@ -46,7 +46,7 @@ exports.search = async (req, res) => {
         $search: `\"${searchTerm}\"`
       }
     })
-      .sort({ updatedAt: -1 })
+      .sort({ created_at: -1 })
       .skip(perPage * page - perPage)
       .limit(perPage)
       .exec();
