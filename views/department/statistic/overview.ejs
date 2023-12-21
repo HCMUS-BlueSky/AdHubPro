@@ -1,33 +1,9 @@
 <!-- Right Part -->
 <div class="col p-3 border-start">
-  <div class="user-info d-flex justify-content-end">
-    <i class="bi bi-person-circle" style="font-size: 36px"></i>
-    <div class="user-text ms-3">
-      <h6>Elijah Scott</h6>
-      <p class="text-muted">elijarscott@gmail.com</p>
-    </div>
-  </div>
-  <nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-      <li class="breadcrumb-item">
-        <a href="." class="text-decoration-none text-muted">Thống kê</a>
-      </li>
-      <li
-        class="breadcrumb-item active text-dark fw-semibold"
-        aria-current="page"
-      >
-        Thông tin chung
-      </li>
-    </ol>
-  </nav>
+  <%- include('../../partials/header.ejs') %>
   <hr />
   <h2 class="fw-semibold">THỐNG KÊ BÁO CÁO VÀ CÁCH XỬ LÝ</h2>
   <div class="row justify-content-center">
-    <div class="col-3">
-      <select class="form-select" aria-label="Default select example">
-        <option selected>Thời gian</option>
-      </select>
-    </div>
     <div class="col-3">
       <input
         class="form-control mr-sm-2"
@@ -42,7 +18,7 @@
       </select>
     </div>
     <div class="col-2">
-      <a class="btn btn-primary" href="./index.html" role="button"
+      <a class="btn btn-primary" href="/department/statistic" role="button"
         >Xem biểu đồ</a
       >
     </div>
@@ -50,8 +26,8 @@
   <table class="table border border-2 rounded py-3 mt-3">
     <thead>
       <tr>
-        <th scope="col">Quận</th>
-        <th scope="col">Phường</th>
+        <th scope="col">STT</th>
+        <th scope="col">Địa chỉ</th>
         <th scope="col">Người báo cáo</th>
         <th scope="col">Thời gian</th>
         <th scope="col">Tình trạng</th>
@@ -59,76 +35,32 @@
       </tr>
     </thead>
     <tbody>
+      <% reports.forEach((report, index) => { %>
       <tr>
-        <th scope="row">1</th>
-        <td class="">1</td>
-        <td class="">Nguyễn Văn A</td>
-        <td class="">11/11/2023</td>
-        <td class="">
-          <span class="badge bg-success w-100">Đã xử lý</span>
+        <th scope="row"><%= perPage * (current - 1) + index + 1 %></th>
+        <td>
+          <%= (report.location.address.length > 55 ?
+          report.location.address.substring(0, 55) + '...' :
+          report.location.address) %>
         </td>
+        <td class=""><%= report.reporter.name %></td>
+        <td class=""><%= moment(report.created_at).format('DD-MM-YYYY') %></td>
         <td class="">
-          <a href="./detail.html">
-            <i class="bi bi-eye-fill"></i>
-          </a>
-        </td>
-      </tr>
-      <tr>
-        <th scope="row">1</th>
-        <td class="">1</td>
-        <td class="">Nguyễn Văn A</td>
-        <td class="">11/11/2023</td>
-        <td class="">
-          <span class="badge bg-danger w-100">Chưa xử lý</span>
-        </td>
-        <td class="">
-          <a href="./detail.html">
-            <i class="bi bi-eye-fill"></i>
-          </a>
-        </td>
-      </tr>
-      <tr>
-        <th scope="row">1</th>
-        <td class="">1</td>
-        <td class="">Nguyễn Văn A</td>
-        <td class="">11/11/2023</td>
-        <td class="">
-          <span class="badge bg-danger w-100">Chưa xử lý</span>
-        </td>
-        <td class="">
-          <a href="./detail.html">
-            <i class="bi bi-eye-fill"></i>
-          </a>
-        </td>
-      </tr>
-      <tr>
-        <th scope="row">1</th>
-        <td class="">1</td>
-        <td class="">Nguyễn Văn A</td>
-        <td class="">11/11/2023</td>
-        <td class="">
+          <% if (report.status == 'pending') { %>
+          <span class="badge bg-danger w-100">Chờ xử lý</span>
+          <% } else if (report.status == 'processing') { %>
           <span class="badge bg-warning w-100">Đang xử lý</span>
-        </td>
-        <td class="">
-          <a href="./detail.html">
-            <i class="bi bi-eye-fill"></i>
-          </a>
-        </td>
-      </tr>
-      <tr>
-        <th scope="row">1</th>
-        <td class="">1</td>
-        <td class="">Nguyễn Văn A</td>
-        <td class="">11/11/2023</td>
-        <td class="">
+          <% } else { %>
           <span class="badge bg-success w-100">Đã xử lý</span>
+          <% } %>
         </td>
         <td class="">
-          <a href="./detail.html">
+          <a href="/department/report/view/<%= report._id %>">
             <i class="bi bi-eye-fill"></i>
           </a>
         </td>
       </tr>
+      <% }) %>
     </tbody>
   </table>
 </div>

@@ -16,39 +16,37 @@
         aria-label="Search"
       />
     </div>
-    <div class="col-3">
-      <select class="form-select" aria-label="Default select example">
-        <option selected>Sắp xếp</option>
-      </select>
-    </div>
   </div>
   <table class="table border border-2 rounded py-3 mt-3">
     <thead>
       <tr>
         <th scope="col">STT</th>
-        <th scope="col">Hình thức quảng cáo</th>
         <th scope="col">Điểm đặt</th>
+        <th scope="col">Bảng quảng cáo</th>
         <th scope="col">Công ty</th>
+        <th scope="col">Thời hạn hợp đồng</th>
         <th scope="col">Tình trạng</th>
-        <th scope="col"></th>
         <th scope="col"></th>
       </tr>
     </thead>
     <tbody>
-      <% request.forEach((element, index) => { %>
+      <% requests.forEach((request, index) => { %>
       <tr>
         <th scope="row"><%= perPage * (current - 1) + index + 1 %></th>
-        <td class=""><%= element.method %></td>
-        <td class=""><%= element.address %></td>
-        <td class=""><%= element.company_name %></td>
+        <td class=""><%= %></td>
+        <td class=""><%= request.description %></td>
+        <td class=""><%= request.company.name %></td>
         <td class="">
-          <% if (element.accepted) { %>
+          <%= moment(request.ads.effective).format('DD/MM/YYYY') %> - <%=
+          moment(request.ads.expiration).format('DD/MM/YYYY') %>
+        </td>
+        <td class="">
+          <% if (request.accepted) { %>
           <span class="badge bg-success w-100">Đã duyệt</span> <% } else { %>
           <span class="badge bg-danger w-100">Chưa duyệt</span> <% } %>
         </td>
-        <!-- toLocaleTimeString("en-US") -->
         <td class="">
-          <a href="/department/request/view/<%= element._id %>">
+          <a href="/department/request/view/<%= request._id %>">
             <i class="bi bi-eye-fill"></i>
           </a>
         </td>
@@ -65,7 +63,7 @@
       <% }) %>
     </tbody>
   </table>
-  <% if (request.length >= 0) { %>
+  <% if (requests.length >= 0) { %>
   <nav aria-label="Dashboard Pagination">
     <ul class="pagination justify-content-center mt-5">
       <% if (current == 1) { %>
@@ -86,7 +84,9 @@
       </li>
       <% } else { %>
       <li class="page-item">
-        <a href="/department/request?page=<%= i %>" class="page-link"><%= i %></a>
+        <a href="/department/request?page=<%= i %>" class="page-link"
+          ><%= i %></a
+        >
       </li>
       <% } %> <% if (i == Number (current) + 4 && i < pages) { %>
       <li class="page-item disabled"><a href="#" class="page-link">...</a></li>
@@ -94,7 +94,9 @@
       <li class="page-item disabled"><a href="#" class="page-link">Last</a></li>
       <% } else { %>
       <li class="page-item">
-        <a href="/department/request?page=<%= pages %>" class="page-link">Last</a>
+        <a href="/department/request?page=<%= pages %>" class="page-link"
+          >Last</a
+        >
       </li>
       <% } %>
     </ul>

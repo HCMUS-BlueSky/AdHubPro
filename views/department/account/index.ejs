@@ -1,27 +1,6 @@
 <!-- Right Part -->
 <div class="col p-3 border-start">
-  <div class="user-info d-flex justify-content-end">
-    <i class="bi bi-person-circle" style="font-size: 36px"></i>
-    <div class="user-text ms-3">
-      <h6>Elijah Scott</h6>
-      <p class="text-muted">elijarscott@gmail.com</p>
-    </div>
-  </div>
-  <nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-      <li class="breadcrumb-item">
-        <a href="." class="text-decoration-none text-muted"
-          >Quản lí tài khoản</a
-        >
-      </li>
-      <li
-        class="breadcrumb-item active text-dark fw-semibold"
-        aria-current="page"
-      >
-        Thông tin chung
-      </li>
-    </ol>
-  </nav>
+  <%- include('../../partials/header.ejs') %>
   <hr />
   <h2 class="fw-semibold">QUẢN LÍ TÀI KHOẢN CÁN BỘ PHƯỜNG, QUẬN</h2>
   <div class="row justify-content-center">
@@ -39,7 +18,7 @@
       </select>
     </div>
     <div class="col-3">
-      <a href="./create.html">
+      <a href="/department/account/create">
         <button class="btn btn-primary px-4" type="button">
           Thêm tài khoản
         </button>
@@ -58,17 +37,26 @@
       </tr>
     </thead>
     <tbody>
+      <% accounts.forEach((account, index) => { %>
       <tr>
-        <th scope="row">1</th>
-        <td class="">abc@gmail.com</td>
-        <td class="">Nguyễn Văn A</td>
-        <td class="">Cán bộ Phường</td>
-        <td class="">09 043 422 69</td>
+        <th scope="row"><%= perPage * (current - 1) + index + 1 %></th>
+        <td class=""><%= account.email %></td>
+        <td class=""><%= account.fullname %></td>
+        <td class="">
+          <% if (account.role == 'ward_officer') { %>
+          <span>Cán bộ phường</span>
+          <% } else if (account.role == 'district_officer') { %>
+          <span>Cán bộ quận</span>
+          <% } else { %>
+          <span>Cán bộ sở</span>
+          <% } %>
+        </td>
+        <td class=""><%= account.phone %></td>
         <td class="d-flex gap-4 fs-5">
-          <a href="./detail.html">
+          <a href="/department/account/view/<%= account._id %>">
             <i class="bi bi-eye-fill"></i>
           </a>
-          <a href="./update.html">
+          <a href="/department/account/update-info/<%= account._id %>">
             <i class="bi bi-pencil-square"></i>
           </a>
           <i
@@ -79,69 +67,7 @@
           ></i>
         </td>
       </tr>
-      <tr>
-        <th scope="row">2</th>
-        <td class="">abc@gmail.com</td>
-        <td class="">Nguyễn Văn A</td>
-        <td class="">Cán bộ Phường</td>
-        <td class="">09 043 422 69</td>
-        <td class="d-flex gap-4 fs-5">
-          <a href="./detail.html">
-            <i class="bi bi-eye-fill"></i>
-          </a>
-          <a href="./update.html">
-            <i class="bi bi-pencil-square"></i>
-          </a>
-          <i
-            role="button"
-            class="bi bi-x-circle-fill bi-cursor"
-            data-bs-toggle="modal"
-            data-bs-target="#removeAccount"
-          ></i>
-        </td>
-      </tr>
-      <tr>
-        <th scope="row">3</th>
-        <td class="">abc@gmail.com</td>
-        <td class="">Nguyễn Văn A</td>
-        <td class="">Cán bộ Phường</td>
-        <td class="">09 043 422 69</td>
-        <td class="d-flex gap-4 fs-5">
-          <a href="./detail.html">
-            <i class="bi bi-eye-fill"></i>
-          </a>
-          <a href="./detail.html">
-            <i class="bi bi-pencil-square"></i>
-          </a>
-          <i
-            role="button"
-            class="bi bi-x-circle-fill bi-cursor"
-            data-bs-toggle="modal"
-            data-bs-target="#removeAccount"
-          ></i>
-        </td>
-      </tr>
-      <tr>
-        <th scope="row">4</th>
-        <td class="">abc@gmail.com</td>
-        <td class="">Nguyễn Văn A</td>
-        <td class="">Cán bộ Phường</td>
-        <td class="">09 043 422 69</td>
-        <td class="d-flex gap-4 fs-5">
-          <a href="./detail.html">
-            <i class="bi bi-eye-fill"></i>
-          </a>
-          <a href="./detail.html">
-            <i class="bi bi-pencil-square"></i>
-          </a>
-          <i
-            role="button"
-            class="bi bi-x-circle-fill bi-cursor"
-            data-bs-toggle="modal"
-            data-bs-target="#removeAccount"
-          ></i>
-        </td>
-      </tr>
+      <% }) %>
     </tbody>
   </table>
 </div>

@@ -13,10 +13,7 @@
           <p class="text-muted pt-3">Thông tin công ty:</p>
         </div>
         <div class="col-10">
-          <p class="pt-3">
-            <%= request.company_name %> - <%= request.company_code %> - <%=
-            request.company_address %>
-          </p>
+          <p class="pt-3"><%= request.company.name %></p>
         </div>
       </div>
       <div class="row border border-2 rounded">
@@ -25,7 +22,8 @@
         </div>
         <div class="col-10">
           <p class="pt-3">
-            <%= request.start_date %> - <%= request.end_date %>
+            <%= moment(request.ads.effective).format('DD/MM/YYYY') %> - <%=
+            moment(request.ads.expiration).format('DD/MM/YYYY') %>
           </p>
         </div>
       </div>
@@ -35,7 +33,7 @@
         </div>
         <div class="col-10">
           <p class="pt-3">
-            <%= request.company_email %> - <%= request.company_phone %>
+            <%= request.company.email %> - <%= request.company.phone %>
           </p>
         </div>
       </div>
@@ -52,10 +50,11 @@
       </div>
       <div class="row border border-2 rounded">
         <div class="col-2">
-          <p class="text-muted pt-3">Hình ảnh: </p>
+          <p class="text-muted pt-3">Hình ảnh:</p>
         </div>
         <div class="col-10">
-          <p class="pt-3"><a href="https://www.google.com/">Xem tất cả hình ảnh</a></p>
+          <p class="pt-3">
+            <a href="https://www.google.com/">Xem tất cả hình ảnh</a>
           </p>
         </div>
       </div>
@@ -73,7 +72,9 @@
           <button type="button" class="btn btn-secondary me-4">Trở về</button>
         </a>
         <a href="/department/request">
-          <button type="button" class="btn btn-secondary me-4 bg-danger">Từ chối xét duyệt</button>
+          <button type="button" class="btn btn-secondary me-4 bg-danger">
+            Từ chối xét duyệt
+          </button>
         </a>
         <button
           type="button"
