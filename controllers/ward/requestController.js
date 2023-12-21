@@ -48,7 +48,7 @@ exports.search = async (req, res) => {
   const perPage = 10;
   const page = req.query.page || 1;
   try {
-    const searchTerm = req.body.searchTerm;
+    const searchTerm = req.query.searchTerm;
     if (typeof searchTerm !== 'string')
       throw new Error('Từ khóa không hợp lệ!');
     if (!searchTerm) return res.redirect('/ward/request');
@@ -89,7 +89,21 @@ exports.search = async (req, res) => {
       .limit(perPage)
       .populate('ads.location', 'address')
       .exec();
-    const count = request.length;
+    const count = await Request.count({
+      $or: [
+        {
+          'ads.location': { $in: locations }
+        },
+        {
+          'ads.location': { $in: managed_locations },
+          'company.name': { $regex: rgx }
+        },
+        {
+          'ads.location': { $in: managed_locations },
+          'ads.type': { $regex: rgx }
+        }
+      ]
+    });
     res.render('ward/request/index', {
       request,
       user,

@@ -1,0 +1,33 @@
+<nav aria-label="Dashboard Pagination">
+  <ul class="pagination justify-content-center mt-5">
+    <% if (current == 1) { %>
+    <li class="page-item disabled">
+      <a href="#" class="page-link">First</a>
+    </li>
+    <% } else { %>
+    <li class="page-item">
+      <a href="1" onclick="queryPage(event)" class="page-link">First</a>
+    </li>
+    <% } %> <% i = (Number(current) > 5 ? Number(current) - 4 : 1) %> <% if (i
+    != 1) { %>
+    <li class="page-item disabled"><a href="#" class="page-link">...</a></li>
+    <% } %> <% for(; i <= (Number(current) + 4) && i <= pages; i++ ) { %> <%
+    if (i == current) { %>
+    <li class="page-item disabled">
+      <a href="#" class="page-link"><%= i %></a>
+    </li>
+    <% } else { %>
+    <li class="page-item">
+      <a href="<%= i %>" onclick="queryPage(event)" class="page-link"><%= i %></a>
+    </li>
+    <% } %> <% if (i == Number (current) + 4 && i < pages) { %>
+    <li class="page-item disabled"><a href="#" class="page-link">...</a></li>
+    <% } %> <% } %> <% if (current == pages) { %>
+    <li class="page-item disabled"><a href="#" class="page-link">Last</a></li>
+    <% } else { %>
+    <li class="page-item">
+      <a href="<%= pages %>" onclick="queryPage(event)" class="page-link">Last</a>
+    </li>
+    <% } %>
+  </ul>
+</nav>

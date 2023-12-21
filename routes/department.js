@@ -23,7 +23,7 @@ router.get("/account/create", accountController.create);
 router.get("/location", locationController.view);
 router.get("/location/view/:id", locationController.getDetail);
 router.get("/location/update-info/:id", locationController.renderUpdateInfo);
-router.post('/location/search', locationController.search);
+router.get('/location/search', locationController.search);
 // router.post(
 //   '/location/update-info/:id',
 //   upload.array('images', 5),

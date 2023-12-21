@@ -40,7 +40,7 @@ exports.search = async (req, res) => {
   const perPage = 10;
   const page = req.query.page || 1;
   try {
-    const searchTerm = req.body.searchTerm;
+    const searchTerm = req.query.searchTerm;
     if (typeof searchTerm !== 'string') throw new Error("Từ khóa không hợp lệ!")
     if (!searchTerm) return res.redirect('/ward/location'); 
     const user = req.session.user;
@@ -56,7 +56,13 @@ exports.search = async (req, res) => {
       .limit(perPage)
       .exec();
 
-    const count = locations.length;
+    const count = await Location.count({
+      district: user.managed_district.name,
+      ward: user.managed_ward,
+      $text: {
+        $search: `\"${searchTerm}\"`
+      }
+    });
     res.render("ward/location/index", {
       locations,
       user,

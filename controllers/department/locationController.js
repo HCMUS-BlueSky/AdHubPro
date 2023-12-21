@@ -35,7 +35,7 @@ exports.search = async (req, res) => {
   const perPage = 10;
   const page = req.query.page || 1;
   try {
-    const searchTerm = req.body.searchTerm;
+    const searchTerm = req.query.searchTerm;
     if (typeof searchTerm !== 'string')
       throw new Error('Từ khóa không hợp lệ!');
     if (!searchTerm) return res.redirect('/department/location');

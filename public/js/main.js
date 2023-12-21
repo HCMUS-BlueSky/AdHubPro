@@ -4,6 +4,13 @@
 
 ("use strict");
 
+function queryPage(event) {
+  event.preventDefault();
+  let params = (new URL(document.location)).searchParams
+  params.set('page', event.target.getAttribute("href"));
+  document.location.assign(window.location.origin + window.location.pathname + "?" + params.toString());
+}
+
 window.addEventListener("load", function () {
   var loader = document.querySelector(".loader");
   var preloader = document.getElementById("preloder");
