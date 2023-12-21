@@ -29,7 +29,7 @@ exports.view = async (req, res) => {
         select: ['address', 'ward', 'district', 'method']
       })
       .exec();
-    const count = reports.length;
+    const count = await Report.count({ location: { $in: managed_locations } });
     res.render("ward/report/index", {
       reports,
       user,

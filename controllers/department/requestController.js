@@ -7,7 +7,8 @@ exports.view = async (req, res) => {
   try {
     const user = req.session.user;
     const requests = await Request.find({})
-      .sort({ updatedAt: -1 })
+      .populate('ads.location', 'address')
+      .sort({ created_at: -1 })
       .skip(perPage * page - perPage)
       .limit(perPage)
       .exec();

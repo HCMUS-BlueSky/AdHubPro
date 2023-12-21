@@ -8,11 +8,11 @@ exports.view = async (req, res) => {
   try {
     const user = req.session.user;
     const locations = await Location.find({})
-      .sort({ updatedAt: -1 })
+      .sort({ created_at: -1 })
       .skip(perPage * page - perPage)
-      .limit(perPage)
-      .exec();
-    const count = locations.length;
+      .limit(perPage);
+
+    const count = await Location.count();
     res.render("department/location/index", {
       locations,
       perPage,
@@ -31,41 +31,49 @@ exports.view = async (req, res) => {
   }
 };
 
-// exports.search = async (req, res) => {
-//   let perPage = 10;
-//   let page = req.query.page || 1;
-//   try {
-//     let searchTerm = req.body.searchTerm;
+exports.search = async (req, res) => {
+  const perPage = 10;
+  const page = req.query.page || 1;
+  try {
+    const searchTerm = req.body.searchTerm;
+    if (typeof searchTerm !== 'string')
+      throw new Error('Từ khóa không hợp lệ!');
+    if (!searchTerm) return res.redirect('/department/location');
+    const user = req.session.user;
+    const locations = await Location.find({
+      $text: {
+        $search: `\"${searchTerm}\"`
+      }
+    })
+      .sort({ created_at: -1 })
+      .skip(perPage * page - perPage)
+      .limit(perPage)
+      .exec();
 
-//     const locations = await Location.find({
-//       address: { $regex: searchTerm, $options: "i" },
-//     })
-//       .sort({ updatedAt: -1 })
-//       .skip(perPage * page - perPage)
-//       .limit(perPage)
-//       .exec();
+    const count = await Location.count({
+      $text: {
+        $search: `\"${searchTerm}\"`
+      }
+    });
+    res.render('department/location/index', {
+      locations,
+      user,
+      perPage,
+      current: page,
+      pages: Math.ceil(count / perPage),
+      pageName: 'location',
+      header: {
+        navRoot: 'Điểm đặt quảng cáo',
+        navCurrent: 'Thông tin chung'
+      },
+      layout: 'layouts/department'
+    });
+  } catch (err) {
+    req.flash('error', err.message);
+    return res.redirect('/department/location');
+  }
+};
 
-//     if (!locations) {
-//       return res.status(404).send("Location not found");
-//     }
-
-//     const count = locations.length;
-
-//     res.render("department/location/index", {
-//       locations,
-//       perPage,
-//       current: page,
-//       pages: Math.ceil(count / perPage),
-//       pageName: "location",
-//       header: {
-//         navRoot: "Điểm đặt quảng cáo",
-//         navCurrent: "Thông tin chung",
-//       },
-//     });
-//   } catch (err) {
-//     return res.status(500).send(err.message);
-//   }
-// };
 
 exports.getDetail = async (req, res) => {
   try {

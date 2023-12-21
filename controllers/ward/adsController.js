@@ -26,7 +26,7 @@ exports.view = async (req, res) => {
       })
       .exec();
 
-    const count = ads.length;
+    const count = await Ads.count({ location: { $in: managed_locations } });
     res.render("ward/ads/index", {
       ads,
       user,

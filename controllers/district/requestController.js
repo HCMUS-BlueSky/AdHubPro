@@ -23,7 +23,9 @@ exports.view = async (req, res) => {
       .skip(perPage * page - perPage)
       .limit(perPage)
       .exec();
-    const count = request.length;
+    const count = await Request.count({
+      'ads.location': { $in: managed_locations }
+    });
     res.render('district/request/index', {
       request,
       user,

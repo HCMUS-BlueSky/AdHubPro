@@ -15,7 +15,10 @@ exports.view = async (req, res) => {
       .skip(perPage * page - perPage)
       .limit(perPage)
       .exec();
-    const count = locations.length;
+    const count = await Location.count({
+      district: user.managed_district.name,
+      ward: user.managed_ward
+    });
     res.render('ward/location/index', {
       locations,
       perPage,

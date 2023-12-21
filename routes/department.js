@@ -10,6 +10,8 @@ const path = require("path");
 
 router.use(pathFor("department_officer"));
 
+router.get('/', (req, res) => res.redirect('/department/location'));
+
 // Account
 router.get("/account", accountController.view);
 router.get("/account/view/:id", accountController.getDetail);
@@ -21,6 +23,15 @@ router.get("/account/create", accountController.create);
 router.get("/location", locationController.view);
 router.get("/location/view/:id", locationController.getDetail);
 router.get("/location/update-info/:id", locationController.renderUpdateInfo);
+router.post('/location/search', locationController.search);
+// router.post(
+//   '/location/update-info/:id',
+//   upload.array('images', 5),
+//   locationController.updateInfo
+// );
+router.all('/location/*', (req, res) => {
+  return res.redirect('/district/location');
+});
 
 // Statistic
 router.get("/statistic", statisticController.view);

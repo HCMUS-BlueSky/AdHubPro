@@ -24,7 +24,6 @@
         <th scope="col">Điểm đặt</th>
         <th scope="col">Bảng quảng cáo</th>
         <th scope="col">Công ty</th>
-        <th scope="col">Thời hạn hợp đồng</th>
         <th scope="col">Tình trạng</th>
         <th scope="col"></th>
       </tr>
@@ -33,13 +32,13 @@
       <% requests.forEach((request, index) => { %>
       <tr>
         <th scope="row"><%= perPage * (current - 1) + index + 1 %></th>
-        <td class=""><%= %></td>
-        <td class=""><%= request.description %></td>
-        <td class=""><%= request.company.name %></td>
         <td class="">
-          <%= moment(request.ads.effective).format('DD/MM/YYYY') %> - <%=
-          moment(request.ads.expiration).format('DD/MM/YYYY') %>
+          <%= (request.ads.location.address.length > 55 ?
+          request.ads.location.address.substring(0, 55) + '...' :
+          request.ads.location.address) %>
         </td>
+        <td class=""><%= request.ads.type %></td>
+        <td class=""><%= request.company.name %></td>
         <td class="">
           <% if (request.accepted) { %>
           <span class="badge bg-success w-100">Đã duyệt</span> <% } else { %>

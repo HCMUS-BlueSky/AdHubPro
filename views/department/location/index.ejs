@@ -37,8 +37,14 @@
       <% locations.forEach((location, index) => { %>
       <tr>
         <th scope="row"><%= perPage * (current - 1) + index + 1 %></th>
-        <td class=""><%= location.address %></td>
-        <td class=""><%= location.type %></td>
+        <td class="">
+          <%= (location.address.length > 55 ? location.address.substring(0, 55)
+          + '...' : location.address) %>
+        </td>
+        <td class="">
+          <%= (location.type.length > 20 ? location.type.substring(0, 20) +
+          '...' : location.type) %>
+        </td>
         <td class=""><%= location.method %></td>
         <td class="">
           <% if (location.accepted) { %>
