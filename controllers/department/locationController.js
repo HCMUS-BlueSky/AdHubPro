@@ -1,5 +1,4 @@
 const { Location } = require("../../models/Location");
-const Proposal = require("../../models/Proposal");
 const uploadFile = require("../../utils/fileUpload");
 
 exports.view = async (req, res) => {
@@ -78,49 +77,56 @@ exports.search = async (req, res) => {
 exports.getDetail = async (req, res) => {
   try {
     const user = req.session.user;
-    const location = await Location.findOne({ _id: req.params.id });
-    if (!location) throw new Error("Location not found!");
-    return res.render("department/location/detail", {
-      user,
+    const location = await Location.findOne({
+      _id: req.params.id,
+    });
+    if (!location) throw new Error('Địa điểm không tồn tại!');
+    return res.render('department/location/detail', {
       location,
-      pageName: "location",
+      user,
+      pageName: 'location',
       header: {
-        navRoot: "Điểm đặt quảng cáo",
-        navCurrent: "Thông tin chi tiết",
-      },
-      layout: "layouts/department",
+        navRoot: 'Điểm đặt quảng cáo',
+        navCurrent: 'Thông tin chi tiết'
+      }
     });
   } catch (err) {
-    return res.redirect("/department/location");
+    req.flash('error', 'Địa điểm không tồn tại!');
+    return res.redirect('/department/location');
   }
 };
 
 exports.renderUpdateInfo = async (req, res) => {
   try {
     const user = req.session.user;
-    const location = await Location.findOne({ _id: req.params.id });
-    if (!location) throw new Error("Location not found!");
-    return res.render("department/location/update_info", {
-      user,
+    const location = await Location.findOne({
+      _id: req.params.id,
+    });
+    if (!location) throw new Error('Địa điểm không tồn tại!');
+    location.availableType = Location.getAvailableType();
+    location.availableMethod = Location.getAvailableMethod();
+    return res.render('department/location/update_info', {
       location,
-      pageName: "location",
+      user,
+      pageName: 'location',
       header: {
-        navRoot: "Điểm đặt quảng cáo",
-        navCurrent: "Thông tin chi tiết",
-      },
+        navRoot: 'Điểm đặt quảng cáo',
+        navCurrent: 'Cập nhật thông tin'
+      }
     });
   } catch (err) {
-    return res.redirect("/department/location");
+    req.flash('error', 'Địa điểm không tồn tại!');
+    return res.redirect('/department/location');
   }
 };
 
 exports.updateInfo = async (req, res) => {
   try {
-    const location = await Location.findOne({ _id: req.params.id });
-    if (!location) throw new Error("Location not found!");
-    const { longitude, latitude, images, content, ...filtered } = req.body;
-    if (!content || typeof content !== "string")
-      throw new Error("Invalid content");
+    const location = await Location.findOne({
+      _id: req.params.id,
+    });
+    if (!location) throw new Error('Địa điểm không tồn tại!');
+    const { longitude, latitude, images, ...filtered } = req.body;
     const new_images = [];
     if (req.files) {
       for (let file of req.files) {
@@ -129,20 +135,12 @@ exports.updateInfo = async (req, res) => {
       }
       filtered.images = new_images;
     }
-    const updated_location = {
-      longitude: location.longitude,
-      latitude: location.latitude,
-      ...filtered,
-    };
-    const proposal = new Proposal({
-      type: "location",
-      location: location.id,
-      updated_location,
-      content,
-    });
-    await proposal.save();
-    return res.redirect("/department/location");
+    Object.assign(location, filtered)
+    await location.save();
+    req.flash('success', 'Cập nhật điểm đặt quảng cáo thành công!');
+    return res.redirect('/department/location');
   } catch (err) {
-    return res.redirect("/department/location");
+    req.flash('error', err.message);
+    return res.redirect('/department/location');
   }
 };

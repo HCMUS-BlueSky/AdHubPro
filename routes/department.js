@@ -24,11 +24,11 @@ router.get("/location", locationController.view);
 router.get("/location/view/:id", locationController.getDetail);
 router.get("/location/update-info/:id", locationController.renderUpdateInfo);
 router.get('/location/search', locationController.search);
-// router.post(
-//   '/location/update-info/:id',
-//   upload.array('images', 5),
-//   locationController.updateInfo
-// );
+router.post(
+  '/location/update-info/:id',
+  upload.array('images', 5),
+  locationController.updateInfo
+);
 router.all('/location/*', (req, res) => {
   return res.redirect('/district/location');
 });
