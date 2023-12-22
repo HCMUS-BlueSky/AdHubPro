@@ -4,8 +4,8 @@
   <hr />
   <%- include('../../partials/flash.ejs') %>
   <h2 class="fw-semibold">THÔNG TIN CÁC ĐIỂM ĐẶT QUẢNG CÁO</h2>
-  <div class="row justify-content-end">
-    <div class="col-4">
+  <div class="row justify-content-center">
+    <div class="col-3">
       <form role="search" method="GET" action="/department/location/search">
         <input
           class="form-control mr-sm-2"
@@ -16,7 +16,11 @@
         />
       </form>
     </div>
-  </div>
+    <div class="col-3">
+      <a href="/department/location/create" class="btn btn-primary">
+        Thêm địa điểm mới
+      </a>
+    </div>
   <table class="table border border-2 rounded py-3 mt-3">
     <thead>
       <tr>

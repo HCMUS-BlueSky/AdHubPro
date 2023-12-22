@@ -81,11 +81,19 @@ function generateRandomDate(from, to) {
 //   try {
 //     // for(let i = 1; i <= 14; ++i) {
 //     //   district.wards.push(i.toString());
-//     // } 
-//     const locations = await Location.find({}).exec();
-//     for (let loc of locations) {
-//       const adscount = await Ads.count({ location: loc._id })
-//       await Location.findByIdAndUpdate(loc._id, { ads_count: adscount });
+//     // }
+//     // const locations = await Location.find({}).exec();
+//     // for (let loc of locations) {
+//     //   const adscount = await Ads.count({ location: loc._id })
+//     //   await Location.findByIdAndUpdate(loc._id, { ads_count: adscount });
+//     // }
+//     const proposals = await Proposal.find({}).exec();
+//     for (let pro of proposals) {
+//       if (pro.type == "Bảng quảng cáo") {
+//         await Proposal.findByIdAndUpdate(pro._id, {
+//           location: pro.updated_ads.location
+//         });
+//       }
 //     }
 
 //     // for(let location of locations) {

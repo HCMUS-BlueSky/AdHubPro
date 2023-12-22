@@ -24,6 +24,9 @@ router.get("/location", locationController.view);
 router.get("/location/view/:id", locationController.getDetail);
 router.get("/location/update-info/:id", locationController.renderUpdateInfo);
 router.get('/location/search', locationController.search);
+router.get('/location/create', locationController.renderCreate);
+router.post('/location/create', locationController.create);
+router.post('/location/:id/remove', locationController.remove);
 router.post(
   '/location/update-info/:id',
   upload.array('images', 5),

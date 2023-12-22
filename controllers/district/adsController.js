@@ -212,6 +212,7 @@ exports.updateInfo = async (req, res) => {
     };
     const proposal = new Proposal({
       type: 'Bảng quảng cáo',
+      location: ads.location,
       ads: ads.id,
       updated_ads,
       content

@@ -86,10 +86,20 @@
           role="button"
           >Cập nhật thông tin</a
         >
+        <button
+          type="button"
+          class="btn btn-danger px-4"
+          data-bs-toggle="modal"
+          data-bs-target="#removeLocation"
+        >
+          Xóa địa điểm
+        </button>
       </div>
     </div>
   </div>
 </div>
+<form method="POST" action="../<%= location._id %>/remove" id="removeForm" style="display: none;"></form>
+
 <!-- Modal -->
 <div
   class="modal fade"
@@ -157,3 +167,47 @@
     </div>
   </div>
 </div>
+
+<div
+  class="modal fade"
+  id="removeLocation"
+  aria-hidden="true"
+  aria-labelledby="removeLocation"
+  tabindex="-1"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Xác nhận</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <p>Bạn có chắc chắn muốn xóa địa điểm này? <br> (Xóa địa điểm sẽ xóa tất cả bảng quảng cáo, báo cáo, yêu cầu cấp phép và chỉnh sửa ở đó)</p>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            Đóng
+          </button>
+          <button type="button" class="btn btn-danger" id="remove-btn">
+            Xóa
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  document.getElementById("remove-btn").addEventListener("click", () => {
+    removeForm.submit();
+  });
+</script>

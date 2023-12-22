@@ -9,7 +9,8 @@ const reportSchema = new mongoose.Schema(
     },
     location: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Location'
+      ref: 'Location',
+      required: true
     },
     ads: {
       type: mongoose.Schema.Types.ObjectId,

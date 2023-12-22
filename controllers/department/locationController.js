@@ -1,4 +1,8 @@
+const { Ads } = require("../../models/Ads");
 const { Location } = require("../../models/Location");
+const Proposal = require("../../models/Proposal");
+const Report = require("../../models/Report");
+const Request = require("../../models/Request");
 const uploadFile = require("../../utils/fileUpload");
 
 exports.view = async (req, res) => {
@@ -140,6 +144,67 @@ exports.updateInfo = async (req, res) => {
     Object.assign(location, filtered)
     await location.save();
     req.flash('success', 'Cập nhật điểm đặt quảng cáo thành công!');
+    return res.redirect('/department/location');
+  } catch (err) {
+    req.flash('error', err.message);
+    return res.redirect('/department/location');
+  }
+};
+
+exports.remove = async (req, res) => {
+  try {
+    const location = await Location.findById(req.params.id).exec();
+    if (!location) throw new Error('Không tìm thế yêu cầu cấp phép!');
+    await Ads.deleteMany({ location: location._id }).exec();
+    await Report.deleteMany({ location: location._id }).exec();
+    await Proposal.deleteMany({ location: location._id }).exec();
+    await Request.deleteMany({ 'ads.location': location._id }).exec();
+    await Location.findByIdAndDelete(req.params.id);
+    req.flash('success', 'Xóa địa điểm thành công!');
+    return res.redirect('/department/location');
+  } catch (error) {
+    req.flash('error', 'Xóa địa điểm không thành công!');
+    return res.redirect('/department/location');
+  }
+};
+
+exports.renderCreate = async (req, res) => {
+  try {
+    const user = req.session.user;
+    availableType = Location.getAvailableType();
+    availableMethod = Location.getAvailableMethod();
+    return res.render('department/location/create', {
+      availableType,
+      availableMethod,
+      user,
+      pageName: 'location',
+      header: {
+        navRoot: 'Điểm đặt quảng cáo',
+        navCurrent: 'Tạo địa điểm'
+      },
+      layout: 'layouts/department'
+    });
+  } catch (err) {
+    console.log(err)
+    req.flash('error', 'Lỗi hệ thống!');
+    return res.redirect('/department/location');
+  }
+};
+
+exports.create = async (req, res) => {
+  try {
+    // const { longitude, latitude, images, ...filtered } = req.body;
+    // const new_images = [];
+    // if (req.files && req.files.length) {
+    //   for (let file of req.files) {
+    //     const url = await uploadFile(`assets/location/${location.id}`, file);
+    //     new_images.push(url);
+    //   }
+    //   filtered.images = new_images;
+    // }
+    // Object.assign(location, filtered);
+    // await location.save();
+    req.flash('success', 'Thêm điểm đặt quảng cáo thành công!');
     return res.redirect('/department/location');
   } catch (err) {
     req.flash('error', err.message);
