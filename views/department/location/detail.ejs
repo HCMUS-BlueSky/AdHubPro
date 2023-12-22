@@ -16,7 +16,7 @@
       <rect width="100%" height="100%" fill="#868e96"></rect>
     </svg>
     <div class="card-body">
-      <h5 class="card-title fw-semibold fs-3">Địa điểm</h5>
+      <h5 class="card-title fw-semibold fs-3"><%= location.address %></h5>
       <p class="text-muted">
         Khu vực: Phường <%= location.ward %>, Quận <%= location.district %>
       </p>
@@ -42,8 +42,11 @@
         </div>
         <div class="col-9">
           <p class="pt-3">
-            <% if (location.accepted) { %> Đã quy hoạch <% } else { %> Chưa quy
-            hoạch <% } %>
+            <% if (location.accepted) { %>
+            <span class="badge bg-success">Đã quy hoạch</span>
+            <% } else {%>
+            <span class="badge bg-danger">Chưa quy hoạch</span>
+            <% } %>
           </p>
         </div>
       </div>
@@ -52,7 +55,7 @@
           <p class="text-muted pt-3">Số lượng bảng quảng cáo:</p>
         </div>
         <div class="col-9">
-          <p class="pt-3"></p>
+          <p class="pt-3"><%= location.ads_count %></p>
         </div>
       </div>
       <div
@@ -71,6 +74,7 @@
           class="btn btn-primary px-4"
           data-bs-toggle="modal"
           data-bs-target="#imageSlideShow"
+          <%= location.images.length ? "" : "disabled" %>
         >
           Xem tất cả hình
         </button>
@@ -82,10 +86,20 @@
           role="button"
           >Cập nhật thông tin</a
         >
+        <button
+          type="button"
+          class="btn btn-danger px-4"
+          data-bs-toggle="modal"
+          data-bs-target="#removeLocation"
+        >
+          Xóa địa điểm
+        </button>
       </div>
     </div>
   </div>
 </div>
+<form method="POST" action="../<%= location._id %>/remove" id="removeForm" style="display: none;"></form>
+
 <!-- Modal -->
 <div
   class="modal fade"
@@ -97,63 +111,39 @@
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-body modal-info-detail">
-        <div id="demo" class="carousel slide" data-bs-ride="carousel">
+        <div id="slide" class="carousel slide" data-bs-ride="carousel">
           <!-- Indicators/dots -->
           <div class="carousel-indicators">
-            <button
-              type="button"
-              data-bs-target="#demo"
-              data-bs-slide-to="0"
-              class="active"
-            ></button>
-            <button
-              type="button"
-              data-bs-target="#demo"
-              data-bs-slide-to="1"
-            ></button>
-            <button
-              type="button"
-              data-bs-target="#demo"
-              data-bs-slide-to="2"
-            ></button>
+            <% location.images.forEach((img, index) => { %>
+              <button
+                type="button"
+                data-bs-target="#slide"
+                data-bs-slide-to="<%= index %>"
+                class="<%= index == 0 ? 'active' : '' %>"
+              ></button>
+            <% }) %>
           </div>
 
           <!-- The slideshow/carousel -->
           <div class="carousel-inner">
-            <div class="carousel-item active">
-              <img
-                src="/images/ads1.jpg"
-                alt="ads-1"
-                class="d-block"
-                style="width: 100%"
-                loading="lazy"
-              />
-            </div>
-            <div class="carousel-item">
-              <img
-                src="/images/ads2.jpg"
-                alt="ads-2"
-                class="d-block"
-                style="width: 100%"
-                loading="lazy"
-              />
-            </div>
-            <div class="carousel-item">
-              <img
-                src="/images/ads3.jpg"
-                alt="ads-3"
-                class="d-block"
-                style="width: 100%"
-                loading="lazy"
-              />
-            </div>
+            <% location.images.forEach((img, index) => { %>
+              <div class="carousel-item <%= index == 0 ? 'active' : '' %>">
+                <img
+                  src="<%= img %>"
+                  alt="image-<%= index %>"
+                  class="d-block"
+                  style="width: 100%"
+                  loading="lazy"
+                />
+              </div>
+            <% }) %>
           </div>
 
           <!-- Left and right controls/icons -->
           <button
             class="carousel-control-prev"
             type="button"
-            data-bs-target="#demo"
+            data-bs-target="#slide"
             data-bs-slide="prev"
           >
             <span class="carousel-control-prev-icon"></span>
@@ -161,7 +151,7 @@
           <button
             class="carousel-control-next"
             type="button"
-            data-bs-target="#demo"
+            data-bs-target="#slide"
             data-bs-slide="next"
           >
             <span class="carousel-control-next-icon"></span>
@@ -177,3 +167,47 @@
     </div>
   </div>
 </div>
+
+<div
+  class="modal fade"
+  id="removeLocation"
+  aria-hidden="true"
+  aria-labelledby="removeLocation"
+  tabindex="-1"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Xác nhận</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <p>Bạn có chắc chắn muốn xóa địa điểm này? <br> (Xóa địa điểm sẽ xóa tất cả bảng quảng cáo, báo cáo, yêu cầu cấp phép và chỉnh sửa ở đó)</p>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            Đóng
+          </button>
+          <button type="button" class="btn btn-danger" id="remove-btn">
+            Xóa
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  document.getElementById("remove-btn").addEventListener("click", () => {
+    removeForm.submit();
+  });
+</script>

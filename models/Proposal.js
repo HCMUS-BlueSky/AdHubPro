@@ -12,9 +12,7 @@ const proposalSchema = new mongoose.Schema(
     location: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Location',
-      required: function () {
-        return this.type == 'Điểm đặt quảng cáo';
-      }
+      required: true
     },
     ads: {
       type: mongoose.Schema.Types.ObjectId,

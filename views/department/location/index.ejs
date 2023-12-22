@@ -2,10 +2,11 @@
 <div class="col p-3 border-start">
   <%- include('../../partials/header.ejs') %>
   <hr />
+  <%- include('../../partials/flash.ejs') %>
   <h2 class="fw-semibold">THÔNG TIN CÁC ĐIỂM ĐẶT QUẢNG CÁO</h2>
   <div class="row justify-content-center">
     <div class="col-3">
-      <form role="search" method="POST" action="/department/location/search">
+      <form role="search" method="GET" action="/department/location/search">
         <input
           class="form-control mr-sm-2"
           type="search"
@@ -16,11 +17,10 @@
       </form>
     </div>
     <div class="col-3">
-      <select class="form-select" aria-label="Default select example">
-        <option selected>Sắp xếp</option>
-      </select>
+      <a href="/department/location/create" class="btn btn-primary">
+        Thêm địa điểm mới
+      </a>
     </div>
-  </div>
   <table class="table border border-2 rounded py-3 mt-3">
     <thead>
       <tr>
@@ -37,8 +37,14 @@
       <% locations.forEach((location, index) => { %>
       <tr>
         <th scope="row"><%= perPage * (current - 1) + index + 1 %></th>
-        <td class=""><%= location.address %></td>
-        <td class=""><%= location.type %></td>
+        <td class="">
+          <%= (location.address.length > 55 ? location.address.substring(0, 55)
+          + '...' : location.address) %>
+        </td>
+        <td class="">
+          <%= (location.type.length > 20 ? location.type.substring(0, 20) +
+          '...' : location.type) %>
+        </td>
         <td class=""><%= location.method %></td>
         <td class="">
           <% if (location.accepted) { %>
@@ -60,38 +66,6 @@
     </tbody>
   </table>
   <% if (locations.length > 0) { %>
-  <nav aria-label="Dashboard Pagination">
-    <ul class="pagination justify-content-center mt-5">
-      <% if (current == 1) { %>
-      <li class="page-item disabled">
-        <a href="#" class="page-link">First</a>
-      </li>
-      <% } else { %>
-      <li class="page-item">
-        <a href="/department/location?page=1" class="page-link">First</a>
-      </li>
-      <% } %> <% i = (Number(current) > 5 ? Number(current) - 4 : 1) %> <% if (i
-      != 1) { %>
-      <li class="page-item disabled"><a href="#" class="page-link">...</a></li>
-      <% } %> <% for(; i <= (Number(current) + 4) && i <= pages; i++ ) { %> <%
-      if (i == current) { %>
-      <li class="page-item disabled">
-        <a href="#" class="page-link"><%= i %></a>
-      </li>
-      <% } else { %>
-      <li class="page-item">
-        <a href="/department/location?page=<%= i %>" class="page-link"><%= i %></a>
-      </li>
-      <% } %> <% if (i == Number (current) + 4 && i < pages) { %>
-      <li class="page-item disabled"><a href="#" class="page-link">...</a></li>
-      <% } %> <% } %> <% if (current == pages) { %>
-      <li class="page-item disabled"><a href="#" class="page-link">Last</a></li>
-      <% } else { %>
-      <li class="page-item">
-        <a href="/department/location?page=<%= pages %>" class="page-link">Last</a>
-      </li>
-      <% } %>
-    </ul>
-  </nav>
+    <%- include('../../partials/pagination.ejs') %>
   <% } %>
 </div>

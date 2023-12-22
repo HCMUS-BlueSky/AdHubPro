@@ -20,7 +20,7 @@
       </form>
     </div>
     <div class="col-4">
-      <form role="search" method="POST" action="/district/ads/search">
+      <form role="search" method="GET" action="/district/ads/search">
         <input
           class="form-control mr-sm-2"
           type="search"
@@ -70,38 +70,6 @@
     </tbody>
   </table>
   <% if (ads.length > 0) { %>
-  <nav aria-label="Dashboard Pagination">
-    <ul class="pagination justify-content-center mt-5">
-      <% if (current == 1) { %>
-      <li class="page-item disabled">
-        <a href="#" class="page-link">First</a>
-      </li>
-      <% } else { %>
-      <li class="page-item">
-        <a href="/district/ads?page=1" class="page-link">First</a>
-      </li>
-      <% } %> <% i = (Number(current) > 5 ? Number(current) - 4 : 1) %> <% if (i
-      != 1) { %>
-      <li class="page-item disabled"><a href="#" class="page-link">...</a></li>
-      <% } %> <% for(; i <= (Number(current) + 4) && i <= pages; i++ ) { %> <%
-      if (i == current) { %>
-      <li class="page-item disabled">
-        <a href="#" class="page-link"><%= i %></a>
-      </li>
-      <% } else { %>
-      <li class="page-item">
-        <a href="/district/ads?page=<%= i %>" class="page-link"><%= i %></a>
-      </li>
-      <% } %> <% if (i == Number (current) + 4 && i < pages) { %>
-      <li class="page-item disabled"><a href="#" class="page-link">...</a></li>
-      <% } %> <% } %> <% if (current == pages) { %>
-      <li class="page-item disabled"><a href="#" class="page-link">Last</a></li>
-      <% } else { %>
-      <li class="page-item">
-        <a href="/district/ads?page=<%= pages %>" class="page-link">Last</a>
-      </li>
-      <% } %>
-    </ul>
-  </nav>
+    <%- include('../../partials/pagination.ejs') %>
   <% } %>
 </div>

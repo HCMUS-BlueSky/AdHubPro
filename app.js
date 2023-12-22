@@ -46,10 +46,12 @@ app.use((req, res, next) => {
 
 app.use(express.static(__dirname + "/public"));
 
-app.get("/", async (req, res) => {
-  res.render("index", { layout: false });
-});
-
+// app.get("/", async (req, res) => {
+//   res.render("index", { layout: false });
+// });
+app.get("/", (req, res) => {
+  return res.redirect("/auth")
+})
 app.use("/api", apiRouter);
 app.use("/ward", wardRouter);
 app.use("/district", districtRouter);

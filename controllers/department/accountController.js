@@ -6,7 +6,7 @@ exports.view = async (req, res) => {
   try {
     const user = req.session.user;
     const accounts = await Account.find({});
-    const count = accounts.length;
+    const count = await Account.count();
     res.render("department/account/index", {
       user,
       accounts,

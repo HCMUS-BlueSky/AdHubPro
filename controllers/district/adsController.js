@@ -28,8 +28,7 @@ exports.view = async (req, res) => {
     const district = await District.findOne({
       name: user.managed_district.name,
     });
-
-    const count = ads.length;
+    const count = await Ads.count({ location: { $in: managed_locations } });
     res.render("district/ads/index", {
       district,
       ads,
@@ -99,7 +98,7 @@ exports.search = async (req, res) => {
   const perPage = 10;
   const page = req.query.page || 1;
   try {
-    const searchTerm = req.body.searchTerm;
+    const searchTerm = req.query.searchTerm;
     if (typeof searchTerm !== "string")
       throw new Error("Từ khóa không hợp lệ!");
     if (!searchTerm) return res.redirect("/district/ads");
@@ -138,7 +137,17 @@ exports.search = async (req, res) => {
       })
       .exec();
 
-    const count = ads.length;
+    const count = await Ads.count({
+      $or: [
+        {
+          location: { $in: locations },
+        },
+        {
+          location: { $in: managed_locations },
+          type: { $regex: rgx },
+        },
+      ],
+    });
     return res.render("district/ads/index", {
       ads,
       user,
@@ -241,7 +250,7 @@ exports.updateInfo = async (req, res) => {
     if (!content || typeof content !== "string")
       throw new Error("Nội dung yêu cầu không hợp lệ!");
     const new_images = [];
-    if (req.files) {
+    if (req.files && req.files.length) {
       for (let file of req.files) {
         const url = await uploadFile(`assets/ads/${ads.id}`, file);
         new_images.push(url);
@@ -254,6 +263,7 @@ exports.updateInfo = async (req, res) => {
     };
     const proposal = new Proposal({
       type: "Bảng quảng cáo",
+      location: ads.location,
       ads: ads.id,
       updated_ads,
       content,

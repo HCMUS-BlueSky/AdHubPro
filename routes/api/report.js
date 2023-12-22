@@ -59,7 +59,7 @@ router.post('/', upload.array("images", 5), async (req, res) => {
       if (!ads || typeof ads !== 'string') throw new Error('Invalid ads');
       report.ads = ads;
     }
-    if (req.files) {
+    if (req.files && req.files.length) {
       for (let file of req.files) {
         const url = await uploadFile(`reports/locations/${location}`, file);
         report.images.push(url);

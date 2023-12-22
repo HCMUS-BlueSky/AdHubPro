@@ -1,20 +1,19 @@
 <div class="col p-3 border-start">
   <%- include('../../partials/header.ejs') %>
   <hr />
+  <%- include('../../partials/flash.ejs') %>
   <h2 class="fw-semibold">THÔNG TIN CÁC YÊU CẦU CẤP PHÉP ĐÃ ĐƯỢC GỬI</h2>
-  <div class="row justify-content-center">
-    <div class="col-3">
-      <select class="form-select" aria-label="Default select example">
-        <option selected>Quận</option>
-      </select>
-    </div>
-    <div class="col-3">
-      <input
-        class="form-control mr-sm-2"
-        type="search"
-        placeholder="Tìm kiếm"
-        aria-label="Search"
-      />
+  <div class="row justify-content-end">
+    <div class="col-4">
+      <form role="search" method="GET" action="/department/request/search">
+        <input
+          class="form-control mr-sm-2"
+          type="search"
+          placeholder="Tìm kiếm"
+          aria-label="Search"
+          name="searchTerm"
+        />
+      </form>
     </div>
   </div>
   <table class="table border border-2 rounded py-3 mt-3">
@@ -24,7 +23,6 @@
         <th scope="col">Điểm đặt</th>
         <th scope="col">Bảng quảng cáo</th>
         <th scope="col">Công ty</th>
-        <th scope="col">Thời hạn hợp đồng</th>
         <th scope="col">Tình trạng</th>
         <th scope="col"></th>
       </tr>
@@ -33,111 +31,29 @@
       <% requests.forEach((request, index) => { %>
       <tr>
         <th scope="row"><%= perPage * (current - 1) + index + 1 %></th>
-        <td class=""><%= %></td>
-        <td class=""><%= request.description %></td>
+        <td class="">
+          <%= (request.ads.location.address.length > 55 ?
+          request.ads.location.address.substring(0, 55) + '...' :
+          request.ads.location.address) %>
+        </td>
+        <td class=""><%= request.ads.type %></td>
         <td class=""><%= request.company.name %></td>
         <td class="">
-          <%= moment(request.ads.effective).format('DD/MM/YYYY') %> - <%=
-          moment(request.ads.expiration).format('DD/MM/YYYY') %>
-        </td>
-        <td class="">
-          <% if (request.accepted) { %>
+          <% if (request.status === 'pending') { %>
+          <span class="badge bg-warning w-100">Chờ duyệt</span> <% } else if (request.status === 'accepted') { %>
           <span class="badge bg-success w-100">Đã duyệt</span> <% } else { %>
-          <span class="badge bg-danger w-100">Chưa duyệt</span> <% } %>
+          <span class="badge bg-danger w-100">Không duyệt</span> <% } %>
         </td>
         <td class="">
           <a href="/department/request/view/<%= request._id %>">
             <i class="bi bi-eye-fill"></i>
           </a>
         </td>
-        <td class="">
-          <a
-            role="button"
-            data-bs-toggle="modal"
-            data-bs-target="#exampleModal"
-          >
-            <i class="bi bi-x-circle-fill"></i>
-          </a>
-        </td>
       </tr>
       <% }) %>
     </tbody>
   </table>
-  <% if (requests.length >= 0) { %>
-  <nav aria-label="Dashboard Pagination">
-    <ul class="pagination justify-content-center mt-5">
-      <% if (current == 1) { %>
-      <li class="page-item disabled">
-        <a href="#" class="page-link">First</a>
-      </li>
-      <% } else { %>
-      <li class="page-item">
-        <a href="/department/request?page=1" class="page-link">First</a>
-      </li>
-      <% } %> <% i = (Number(current) > 5 ? Number(current) - 4 : 1) %> <% if (i
-      != 1) { %>
-      <li class="page-item disabled"><a href="#" class="page-link">...</a></li>
-      <% } %> <% for(; i <= (Number(current) + 4) && i <= pages; i++ ) { %> <%
-      if (i == current) { %>
-      <li class="page-item disabled">
-        <a href="#" class="page-link"><%= i %></a>
-      </li>
-      <% } else { %>
-      <li class="page-item">
-        <a href="/department/request?page=<%= i %>" class="page-link"
-          ><%= i %></a
-        >
-      </li>
-      <% } %> <% if (i == Number (current) + 4 && i < pages) { %>
-      <li class="page-item disabled"><a href="#" class="page-link">...</a></li>
-      <% } %> <% } %> <% if (current == pages) { %>
-      <li class="page-item disabled"><a href="#" class="page-link">Last</a></li>
-      <% } else { %>
-      <li class="page-item">
-        <a href="/department/request?page=<%= pages %>" class="page-link"
-          >Last</a
-        >
-      </li>
-      <% } %>
-    </ul>
-  </nav>
+  <% if (requests.length > 0) { %>
+    <%- include('../../partials/pagination.ejs') %>
   <% } %>
 </div>
-<div
-  class="modal fade"
-  id="exampleModal"
-  tabindex="-1"
-  aria-labelledby="exampleModalLabel"
-  aria-hidden="true"
->
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">Xác nhận</h1>
-        <button
-          type="button"
-          class="btn-close"
-          data-bs-dismiss="modal"
-          aria-label="Close"
-        ></button>
-      </div>
-      <div class="modal-body">Bạn có chắc chắn muốn hủy bỏ yêu cầu này?</div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-          Đóng
-        </button>
-        <button type="button" class="btn btn-primary bg-danger">Xóa</button>
-      </div>
-    </div>
-  </div>
-</div>
-<script
-  src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
-  integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
-  crossorigin="anonymous"
-></script>
-<script
-  src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
-  integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
-  crossorigin="anonymous"
-></script>

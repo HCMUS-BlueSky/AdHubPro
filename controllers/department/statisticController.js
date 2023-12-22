@@ -32,7 +32,7 @@ exports.overview = async (req, res) => {
         select: ["address", "ward", "district", "method"],
       })
       .exec();
-    const count = reports.length;
+    const count = await Report.count();
     return res.render("department/statistic/overview", {
       reports,
       moment,

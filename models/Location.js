@@ -38,8 +38,8 @@ const locationSchema = new mongoose.Schema(
     },
     ads_count: {
       type: Number,
-      min: 1,
-      default: 1
+      min: 0,
+      default: 0
     },
     images: [
       {

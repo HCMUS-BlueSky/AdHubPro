@@ -23,7 +23,9 @@ exports.view = async (req, res) => {
       .skip(perPage * page - perPage)
       .limit(perPage)
       .exec();
-    const count = request.length;
+    const count = await Request.count({
+      'ads.location': { $in: managed_locations }
+    });
     res.render('district/request/index', {
       request,
       user,
@@ -45,7 +47,7 @@ exports.search = async (req, res) => {
   const perPage = 10;
   const page = req.query.page || 1;
   try {
-    const searchTerm = req.body.searchTerm;
+    const searchTerm = req.query.searchTerm;
     if (typeof searchTerm !== 'string')
       throw new Error('Từ khóa không hợp lệ!');
     if (!searchTerm) return res.redirect('/district/request');
@@ -84,7 +86,21 @@ exports.search = async (req, res) => {
       .limit(perPage)
       .populate('ads.location', 'address')
       .exec();
-    const count = request.length;
+    const count = await Request.count({
+      $or: [
+        {
+          'ads.location': { $in: locations }
+        },
+        {
+          'ads.location': { $in: managed_locations },
+          'company.name': { $regex: rgx }
+        },
+        {
+          'ads.location': { $in: managed_locations },
+          'ads.type': { $regex: rgx }
+        }
+      ]
+    });
     res.render('district/request/index', {
       request,
       user,
@@ -94,7 +110,7 @@ exports.search = async (req, res) => {
       pageName: 'request',
       header: {
         navRoot: 'Yêu cầu cấp phép',
-        navCurrent: 'Thông tin chi tiết'
+        navCurrent: 'Thông tin chung'
       }
     });
    } catch (err) {
@@ -216,7 +232,7 @@ exports.createNew = async (req, res) => {
         address: company_address,
       },
     });
-    if (req.files) {
+    if (req.files && req.files.length) {
       for (let file of req.files) {
         const url = await uploadFile(`assets/request/${request._id}`, file);
         request.ads.images.push(url);
@@ -244,8 +260,8 @@ exports.cancelRequest = async (req, res) => {
       "ads.location": { $in: managed_locations },
     });
     if (!request) throw new Error("Không tìm thế yêu cầu cấp phép!");
-    if (request.accepted)
-      throw new Error("Không thể xóa yêu cầu đã được duyệt!");
+    if (request.status != "pending")
+      throw new Error("Không thể xóa yêu cầu đã được xử lí!");
     await Request.findByIdAndDelete(req.params.id);
     req.flash("success", "Hủy yêu cầu cấp phép thành công!");
     return res.redirect("/district/request");

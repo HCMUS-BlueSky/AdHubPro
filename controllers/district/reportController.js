@@ -28,7 +28,7 @@ exports.view = async (req, res) => {
         select: ['address', 'ward', 'district', 'method']
       })
       .exec();
-    const count = reports.length;
+    const count = await Report.count({ location: { $in: managed_locations } });
     res.render('district/report/index', {
       reports,
       user,
@@ -51,7 +51,7 @@ exports.search = async (req, res) => {
   const perPage = 10;
   const page = req.query.page || 1;
   try {
-    const searchTerm = req.body.searchTerm;
+    const searchTerm = req.query.searchTerm;
     if (typeof searchTerm !== "string")
       throw new Error("Từ khóa không hợp lệ!");
     if (!searchTerm) return res.redirect('/district/report');
@@ -95,7 +95,21 @@ exports.search = async (req, res) => {
       })
       .exec();
 
-    const count = reports.length;
+    const count = await Report.count({
+      $or: [
+        {
+          location: { $in: locations }
+        },
+        {
+          location: { $in: managed_locations },
+          type: { $regex: rgx }
+        },
+        {
+          location: { $in: managed_locations },
+          'reporter.name': { $regex: rgx }
+        }
+      ]
+    });
     res.render('district/report/index', {
       reports,
       moment,
