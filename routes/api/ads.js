@@ -82,11 +82,11 @@ function generateRandomDate(from, to) {
 //     // for(let i = 1; i <= 14; ++i) {
 //     //   district.wards.push(i.toString());
 //     // } 
-//     await Proposal.updateMany({ type: 'ads' }, { type: 'Bảng quảng cáo' });
-//     await Proposal.updateMany(
-//       { type: 'location' },
-//       { type: 'Điểm đặt quảng cáo' }
-//     );
+//     const locations = await Location.find({}).exec();
+//     for (let loc of locations) {
+//       const adscount = await Ads.count({ location: loc._id })
+//       await Location.findByIdAndUpdate(loc._id, { ads_count: adscount });
+//     }
 
 //     // for(let location of locations) {
 //     //   // const type = types[Math.floor(Math.random() * types.length)];

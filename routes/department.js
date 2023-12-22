@@ -30,7 +30,7 @@ router.post(
   locationController.updateInfo
 );
 router.all('/location/*', (req, res) => {
-  return res.redirect('/district/location');
+  return res.redirect('/department/location');
 });
 
 // Statistic
@@ -41,5 +41,14 @@ router.get("/report/view/:id", statisticController.getDetail);
 // Request
 router.get("/request", requestDepartmentController.view);
 router.get("/request/view/:id", requestDepartmentController.getDetail);
+router.get('/request/search', requestDepartmentController.search);
+router.post('/request/:id/approve', requestDepartmentController.approveRequest);
+router.post('/request/:id/reject', requestDepartmentController.rejectRequest);
+router.all('/request/*', (req, res) => {
+  return res.redirect('/department/request');
+});
 
+router.all('*', (req, res) => {
+  return res.redirect('/department');
+});
 module.exports = router;

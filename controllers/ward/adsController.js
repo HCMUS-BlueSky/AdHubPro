@@ -206,7 +206,7 @@ exports.updateInfo = async (req, res) => {
     if (!content || typeof content !== "string")
       throw new Error("Nội dung yêu cầu không hợp lệ!");
     const new_images = [];
-    if (req.files) {
+    if (req.files && req.files.length) {
       for (let file of req.files) {
         const url = await uploadFile(`assets/ads/${ads.id}`, file);
         new_images.push(url);

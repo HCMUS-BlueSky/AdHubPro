@@ -4,6 +4,7 @@ const { adsSchema } = require('./Ads')
 const requestSchema = new mongoose.Schema(
   {
     ads: {
+      _id: false,
       type: adsSchema,
       required: true
     },
@@ -12,13 +13,10 @@ const requestSchema = new mongoose.Schema(
       min: 1,
       default: 1
     },
-    method: {
+    status: {
       type: String,
-      trim: true
-    },
-    accepted: {
-      type: Boolean,
-      default: false
+      enum: ['pending', 'rejected', 'accepted'],
+      default: 'pending'
     },
     description: {
       type: String

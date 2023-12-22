@@ -46,10 +46,12 @@
         </div>
         <div class="col-10">
           <p class="pt-3">
-            <% if (request.accepted) { %>
-            <span class="badge bg-success">Đã duyệt</span>
-            <% } else {%>
-            <span class="badge bg-danger">Chưa duyệt</span>
+            <% if (request.status === 'pending') { %>
+              <span class="badge bg-warning">Chờ duyệt</span> 
+            <% } else if (request.status === 'accepted') { %>
+              <span class="badge bg-success">Đã duyệt</span> 
+            <% } else { %>
+              <span class="badge bg-danger">Không duyệt</span> 
             <% } %>
           </p>
         </div>
@@ -81,7 +83,7 @@
           class="btn btn-danger me-4"
           data-bs-toggle="modal"
           data-bs-target="#cancelRequest"
-          <%= request.accepted ? "disabled" : "" %>
+          <%= request.status !== 'pending' ? "disabled" : "" %>
         >
           Hủy yêu cầu
         </button>
@@ -179,7 +181,7 @@
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
           Đóng
         </button>
-        <button type="button" class="btn btn-danger" id="delete-btn">Xóa</button>
+        <button type="button" class="btn btn-danger" id="delete-btn">Có</button>
       </div>
     </div>
   </div>

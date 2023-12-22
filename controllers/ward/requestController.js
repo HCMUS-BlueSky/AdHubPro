@@ -113,7 +113,7 @@ exports.search = async (req, res) => {
       pageName: 'request',
       header: {
         navRoot: 'Yêu cầu cấp phép',
-        navCurrent: 'Thông tin chi tiết'
+        navCurrent: 'Thông tin chung'
       }
     });
    } catch (err) {
@@ -238,7 +238,7 @@ exports.createNew = async (req, res) => {
         address: company_address,
       },
     });
-    if (req.files) {
+    if (req.files && req.files.length) {
       for (let file of req.files) {
         const url = await uploadFile(`assets/request/${request._id}`, file);
         request.ads.images.push(url);
@@ -267,8 +267,8 @@ exports.cancelRequest = async (req, res) => {
       "ads.location": { $in: managed_locations },
     });
     if (!request) throw new Error("Không tìm thế yêu cầu cấp phép!");
-    if (request.accepted)
-      throw new Error("Không thể xóa yêu cầu đã được duyệt!");
+    if (request.status != 'pending')
+      throw new Error('Không thể xóa yêu cầu đã được xử lí!');
     await Request.findByIdAndDelete(req.params.id);
     req.flash("success", "Hủy yêu cầu cấp phép thành công!");
     return res.redirect("/ward/request");

@@ -88,7 +88,8 @@ exports.getDetail = async (req, res) => {
       header: {
         navRoot: 'Điểm đặt quảng cáo',
         navCurrent: 'Thông tin chi tiết'
-      }
+      },
+      layout: 'layouts/department'
     });
   } catch (err) {
     req.flash('error', 'Địa điểm không tồn tại!');
@@ -112,7 +113,8 @@ exports.renderUpdateInfo = async (req, res) => {
       header: {
         navRoot: 'Điểm đặt quảng cáo',
         navCurrent: 'Cập nhật thông tin'
-      }
+      },
+      layout: 'layouts/department'
     });
   } catch (err) {
     req.flash('error', 'Địa điểm không tồn tại!');
@@ -128,7 +130,7 @@ exports.updateInfo = async (req, res) => {
     if (!location) throw new Error('Địa điểm không tồn tại!');
     const { longitude, latitude, images, ...filtered } = req.body;
     const new_images = [];
-    if (req.files) {
+    if (req.files && req.files.length) {
       for (let file of req.files) {
         const url = await uploadFile(`assets/location/${location.id}`, file);
         new_images.push(url);

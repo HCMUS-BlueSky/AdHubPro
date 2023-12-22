@@ -44,9 +44,13 @@
         <td class=""><%= element.ads.type %></td>
         <td class=""><%= element.company.name %></td>
         <td class="">
-          <% if (element.accepted) { %>
-          <span class="badge bg-success w-100">Đã duyệt</span> <% } else { %>
-          <span class="badge bg-danger w-100">Chưa duyệt</span> <% } %>
+          <% if (element.status === 'pending') { %>
+          <span class="badge bg-warning w-100">Chờ duyệt</span> 
+          <% } else if (element.status === 'accepted') { %>
+          <span class="badge bg-success w-100">Đã duyệt</span> 
+          <% } else { %>
+          <span class="badge bg-danger w-100">Không duyệt</span> 
+          <% } %>
         </td>
         <!-- toLocaleTimeString("en-US") -->
         <td class="">
