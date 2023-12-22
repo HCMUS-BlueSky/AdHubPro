@@ -3,7 +3,22 @@
   <hr />
   <%- include('../../partials/flash.ejs') %>
   <h2 class="fw-semibold">THÔNG TIN CÁC BẢNG QUẢNG CÁO</h2>
-  <div class="row justify-content-end">
+  <div class="row justify-content-start">
+    <div class="col-4">
+      <form action="/district/ads/filter" method="POST" class="filter-wards">
+        <select
+          class="form-select"
+          name="select"
+          multiple
+          multiselect-search="true"
+          multiselect-select-all="true"
+        >
+          <% district.wards.forEach((ward, index) => { %>
+          <option value="<%= ward %>">Phường <%= ward %></option>
+          <% }) %>
+        </select>
+      </form>
+    </div>
     <div class="col-4">
       <form role="search" method="POST" action="/district/ads/search">
         <input

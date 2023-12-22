@@ -1,7 +1,8 @@
-const { Ads } = require("../../models/Ads");
+const { Ads, adsSchema } = require("../../models/Ads");
 const { Location } = require("../../models/Location");
-const { generateRegexQuery } = require('regex-vietnamese');
+const { generateRegexQuery } = require("regex-vietnamese");
 const Proposal = require("../../models/Proposal");
+const District = require("../../models/District");
 const uploadFile = require("../../utils/fileUpload");
 const moment = require("moment");
 
@@ -11,36 +12,86 @@ exports.view = async (req, res) => {
   try {
     const user = req.session.user;
     const managed_locations = await Location.find({
-      district: user.managed_district.name
+      district: user.managed_district.name,
     })
-      .distinct('_id')
+      .distinct("_id")
       .exec();
     const ads = await Ads.find({ location: { $in: managed_locations } })
       .sort({ created_at: -1 })
       .skip(perPage * page - perPage)
       .limit(perPage)
       .populate({
-        path: 'location',
-        select: ['address', 'ward', 'district', 'method']
+        path: "location",
+        select: ["address", "ward", "district", "method"],
       })
       .exec();
+    const district = await District.findOne({
+      name: user.managed_district.name,
+    });
 
     const count = ads.length;
-    res.render('district/ads/index', {
+    res.render("district/ads/index", {
+      district,
       ads,
       user,
       perPage,
       current: page,
       moment,
       pages: Math.ceil(count / perPage),
-      pageName: 'ads',
+      pageName: "ads",
       header: {
-        navRoot: 'Bảng quảng cáo',
-        navCurrent: 'Thông tin chung'
-      }
+        navRoot: "Bảng quảng cáo",
+        navCurrent: "Thông tin chung",
+      },
     });
   } catch (err) {
     return res.status(500).send(err.message);
+  }
+};
+
+exports.filter = async (req, res) => {
+  let perPage = 10;
+  let page = req.query.page || 1;
+  try {
+    const selectedWards = req.body.select;
+    const user = req.session.user;
+    const district = await District.findOne({
+      name: user.managed_district.name,
+    });
+    const managed_locations = await Location.find({
+      district: user.managed_district.name,
+      ward: { $in: selectedWards },
+    })
+      .distinct("_id")
+      .exec();
+
+    const ads = await Ads.find({ location: { $in: managed_locations } })
+      .sort({ created_at: -1 })
+      .skip(perPage * page - perPage)
+      .limit(perPage)
+      .populate({
+        path: "location",
+        select: ["address", "ward", "district", "method"],
+      })
+      .exec();
+    const count = ads.length;
+    res.render("district/ads/index", {
+      district,
+      ads,
+      user,
+      perPage,
+      current: page,
+      pages: Math.ceil(count / perPage),
+      pageName: "ads",
+      moment,
+      header: {
+        navRoot: "Bảng quảng cáo",
+        navCurrent: "Thông tin chung",
+      },
+    });
+  } catch (err) {
+    req.flash("error", err.message);
+    return res.redirect("/district/location");
   }
 };
 
@@ -49,61 +100,61 @@ exports.search = async (req, res) => {
   const page = req.query.page || 1;
   try {
     const searchTerm = req.body.searchTerm;
-    if (typeof searchTerm !== 'string')
-      throw new Error('Từ khóa không hợp lệ!');
-    if (!searchTerm) return res.redirect('/district/ads'); 
+    if (typeof searchTerm !== "string")
+      throw new Error("Từ khóa không hợp lệ!");
+    if (!searchTerm) return res.redirect("/district/ads");
     const user = req.session.user;
     const locations = await Location.find({
       district: user.managed_district.name,
       $text: {
-        $search: `\"${searchTerm}\"`
-      }
+        $search: `\"${searchTerm}\"`,
+      },
     })
-      .distinct('_id')
+      .distinct("_id")
       .exec();
     const managed_locations = await Location.find({
-      district: user.managed_district.name
+      district: user.managed_district.name,
     })
-      .distinct('_id')
+      .distinct("_id")
       .exec();
     const rgx = generateRegexQuery(searchTerm);
     const ads = await Ads.find({
       $or: [
         {
-          location: { $in: locations }
+          location: { $in: locations },
         },
         {
           location: { $in: managed_locations },
-          type: { $regex: rgx }
-        }
-      ]
+          type: { $regex: rgx },
+        },
+      ],
     })
       .sort({ created_at: -1 })
       .skip(perPage * page - perPage)
       .limit(perPage)
       .populate({
-        path: 'location',
-        select: ['address', 'ward', 'district', 'method']
+        path: "location",
+        select: ["address", "ward", "district", "method"],
       })
       .exec();
-    
+
     const count = ads.length;
-    return res.render('district/ads/index', {
+    return res.render("district/ads/index", {
       ads,
       user,
       perPage,
       moment,
       current: page,
       pages: Math.ceil(count / perPage),
-      pageName: 'ads',
+      pageName: "ads",
       header: {
-        navRoot: 'Bảng quảng cáo',
-        navCurrent: 'Thông tin chung'
-      }
+        navRoot: "Bảng quảng cáo",
+        navCurrent: "Thông tin chung",
+      },
     });
   } catch (err) {
-    req.flash('error', err.message);
-    return res.redirect('/district/ads');
+    req.flash("error", err.message);
+    return res.redirect("/district/ads");
   }
 };
 
@@ -111,32 +162,32 @@ exports.getDetail = async (req, res) => {
   try {
     const user = req.session.user;
     const managed_locations = await Location.find({
-      district: user.managed_district.name
+      district: user.managed_district.name,
     })
-      .distinct('_id')
+      .distinct("_id")
       .exec();
     const ads = await Ads.findOne({
       _id: req.params.id,
-      location: { $in: managed_locations }
+      location: { $in: managed_locations },
     })
       .populate({
-        path: 'location',
-        select: ['address', 'ward', 'district', 'method']
+        path: "location",
+        select: ["address", "ward", "district", "method"],
       })
       .exec();
-    res.render('district/ads/detail', {
+    res.render("district/ads/detail", {
       ads,
       user,
-      pageName: 'ads',
+      pageName: "ads",
       moment,
       header: {
-        navRoot: 'Bảng quảng cáo',
-        navCurrent: 'Thông tin chi tiết'
-      }
+        navRoot: "Bảng quảng cáo",
+        navCurrent: "Thông tin chi tiết",
+      },
     });
   } catch (error) {
-    req.flash('error', 'Bảng quảng cáo không tồn tại!');
-    return res.redirect('/district/ads');
+    req.flash("error", "Bảng quảng cáo không tồn tại!");
+    return res.redirect("/district/ads");
   }
 };
 
@@ -144,31 +195,31 @@ exports.renderUpdateInfo = async (req, res) => {
   try {
     const user = req.session.user;
     const managed_locations = await Location.find({
-      district: user.managed_district.name
+      district: user.managed_district.name,
     })
-      .distinct('_id')
+      .distinct("_id")
       .exec();
     const ads = await Ads.findOne({
       _id: req.params.id,
-      location: { $in: managed_locations }
+      location: { $in: managed_locations },
     })
-      .populate('location')
+      .populate("location")
       .exec();
-    if (!ads) throw new Error('Bảng quảng cáo không tồn tại!');
+    if (!ads) throw new Error("Bảng quảng cáo không tồn tại!");
     ads.availableType = Ads.getAvailableType();
-    return res.render('district/ads/update_info', {
+    return res.render("district/ads/update_info", {
       ads,
       user,
-      pageName: 'ads',
+      pageName: "ads",
       moment,
       header: {
-        navRoot: 'Bảng quảng cáo',
-        navCurrent: 'Cập nhật thông tin'
-      }
+        navRoot: "Bảng quảng cáo",
+        navCurrent: "Cập nhật thông tin",
+      },
     });
   } catch (err) {
-    req.flash('error', 'Bảng quảng cáo không tồn tại!');
-    return res.redirect('/district/ads');
+    req.flash("error", "Bảng quảng cáo không tồn tại!");
+    return res.redirect("/district/ads");
   }
 };
 
@@ -176,13 +227,13 @@ exports.updateInfo = async (req, res) => {
   try {
     const user = req.session.user;
     const managed_locations = await Location.find({
-      district: user.managed_district.name
+      district: user.managed_district.name,
     })
-      .distinct('_id')
+      .distinct("_id")
       .exec();
     const ads = await Ads.findOne({
       _id: req.params.id,
-      location: { $in: managed_locations }
+      location: { $in: managed_locations },
     });
     if (!ads) throw new Error("Bảng quảng cáo không tồn tại!");
     const { location, images, content, effective, expiration, ...filtered } =
@@ -202,16 +253,16 @@ exports.updateInfo = async (req, res) => {
       ...filtered,
     };
     const proposal = new Proposal({
-      type: 'Bảng quảng cáo',
+      type: "Bảng quảng cáo",
       ads: ads.id,
       updated_ads,
-      content
+      content,
     });
     await proposal.save();
     req.flash("success", "Gửi yêu cầu thay đổi bảng quảng cáo thành công!");
-    return res.redirect('/district/ads');
+    return res.redirect("/district/ads");
   } catch (err) {
-    req.flash('error', err.message);
-    return res.redirect('/district/ads');
+    req.flash("error", err.message);
+    return res.redirect("/district/ads");
   }
 };
