@@ -5,31 +5,32 @@
   <div class="card bg-light mb-3">
     <div class="card-body p-4">
       <h4 class="card-title py-2 fw-semibold">Cập nhật tài khoản</h4>
-      <div class="d-flex flex-column pb-4">
+      <form method="POST" class="d-flex flex-column pb-4" id="form">
         <div class="row py-3">
           <div class="col-5">
             <label for="" class="form-label"
-              >Họ tên<span class="text-danger"> *</span></label
+              >Họ tên</label
             >
-            <input type="text" class="form-control" placeholder="Họ tên" />
+            <input type="text" class="form-control" placeholder="Họ tên" name="fullname" value="<%= account.fullname %>" />
           </div>
           <div class="col-3">
             <label for="" class="form-label"
-              >Ngày sinh<span class="text-danger"> *</span></label
+              >Ngày sinh</label
             >
-            <input type="date" class="form-control text-secondary" />
+            <input type="date" class="form-control text-secondary" name="birthdate" <% if (account.birthdate != undefined ) { %> value="<%= moment(account.birthdate).format('YYYY-MM-DD'); %>" <% } %>/>
           </div>
           <div class="col-3">
             <label for="" class="form-label d-block"
-              >Giới tính<span class="text-danger"> *</span></label
+              >Giới tính</label
             >
             <div class="form-check form-check-inline">
               <input
                 class="form-check-input"
                 type="radio"
-                name="inlineRadioOptions"
+                name="gender"
                 id="inlineRadio1"
-                value="option1"
+                value="male"
+                <%= account.gender === true ? 'checked' : ''%>
               />
               <label class="form-check-label" for="inlineRadio1">Nam</label>
             </div>
@@ -37,18 +38,53 @@
               <input
                 class="form-check-input"
                 type="radio"
-                name="inlineRadioOptions"
+                name="gender"
                 id="inlineRadio2"
-                value="option2"
+                value="female"
+                <%= account.gender === false ? 'checked' : ''%>
               />
               <label class="form-check-label" for="inlineRadio2">Nữ</label>
             </div>
           </div>
         </div>
+
         <div class="row py-3">
           <div class="col-5">
             <label for="" class="form-label"
-              >Email<span class="text-danger"> *</span></label
+              >Số điện thoại</label
+            >
+            <input
+              type="phone"
+              class="form-control"
+              required
+              id=""
+              aria-describedby="helpId"
+              placeholder="Số điện thoại"
+              name="phone"
+              value="<%= account.phone %>"
+            />
+          </div>
+          <div class="col-5">
+            <label for="" class="form-label"
+              >CMND/CCCD</label
+            >
+            <input
+              type="text"
+              class="form-control"
+              required
+              id=""
+              aria-describedby="helpId"
+              name="identity_code"
+              placeholder="CMND/CCCD"
+              value="<%= account.identity_code %>"
+            />
+          </div>
+        </div>
+
+        <div class="row py-3">
+          <div class="col-5">
+            <label for="" class="form-label"
+              >Email</label
             >
             <input
               type="email"
@@ -57,11 +93,13 @@
               id=""
               aria-describedby="helpId"
               placeholder="Email"
+              name="email"
+              value="<%= account.email %>"
             />
           </div>
           <div class="col-5">
             <label for="" class="form-label"
-              >Password<span class="text-danger"> *</span></label
+              >Password</label
             >
             <input
               type="password"
@@ -70,6 +108,7 @@
               id=""
               aria-describedby="helpId"
               placeholder="Password"
+              name="password"
             />
           </div>
         </div>
@@ -95,7 +134,7 @@
             >Cập nhật</a
           >
         </div>
-      </div>
+      </form>
     </div>
   </div>
 </div>
@@ -130,7 +169,7 @@
           >
             Đóng
           </button>
-          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">
+          <button type="button" class="btn btn-primary" id="submit-btn" data-bs-dismiss="modal">
             Cập nhật
           </button>
         </div>
@@ -138,3 +177,8 @@
     </div>
   </div>
 </div>
+<script>
+  document.getElementById("submit-btn").addEventListener("click", () => {
+    form.submit();
+  });
+</script>

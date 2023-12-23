@@ -5,19 +5,19 @@
   <div class="card bg-light mb-3">
     <div class="card-body p-4">
       <h4 class="card-title py-2 fw-semibold">Tạo tài khoản</h4>
-      <div class="d-flex flex-column pb-4">
+      <form method="POST" id="form" class="d-flex flex-column pb-4">
         <div class="row py-3">
           <div class="col-5">
             <label for="" class="form-label"
               >Họ tên<span class="text-danger"> *</span></label
             >
-            <input type="text" class="form-control" placeholder="Họ tên" />
+            <input type="text" class="form-control" placeholder="Họ tên" name="fullname"/>
           </div>
           <div class="col-3">
             <label for="" class="form-label"
               >Ngày sinh<span class="text-danger"> *</span></label
             >
-            <input type="date" class="form-control text-secondary" />
+            <input type="date" class="form-control text-secondary" name="birthdate" />
           </div>
           <div class="col-3">
             <label for="" class="form-label d-block"
@@ -27,9 +27,9 @@
               <input
                 class="form-check-input"
                 type="radio"
-                name="inlineRadioOptions"
+                name="gender"
                 id="inlineRadio1"
-                value="option1"
+                value="male"
               />
               <label class="form-check-label" for="inlineRadio1">Nam</label>
             </div>
@@ -37,14 +37,46 @@
               <input
                 class="form-check-input"
                 type="radio"
-                name="inlineRadioOptions"
+                name="gender"
                 id="inlineRadio2"
-                value="option2"
+                value="female"
               />
               <label class="form-check-label" for="inlineRadio2">Nữ</label>
             </div>
           </div>
         </div>
+        
+        <div class="row py-3">
+          <div class="col-5">
+            <label for="" class="form-label"
+              >Số điện thoại<span class="text-danger"> *</span></label
+            >
+            <input
+              type="phone"
+              class="form-control"
+              required
+              id=""
+              aria-describedby="helpId"
+              placeholder="Số điện thoại"
+              name="phone"
+            />
+          </div>
+          <div class="col-5">
+            <label for="" class="form-label"
+              >CMND/CCCD<span class="text-danger"> *</span></label
+            >
+            <input
+              type="text"
+              class="form-control"
+              required
+              id=""
+              aria-describedby="helpId"
+              name="identity_code"
+              placeholder="CMND/CCCD"
+            />
+          </div>
+        </div>
+
         <div class="row py-3">
           <div class="col-5">
             <label for="" class="form-label"
@@ -57,6 +89,7 @@
               id=""
               aria-describedby="helpId"
               placeholder="Email"
+              name="email"
             />
           </div>
           <div class="col-5">
@@ -70,6 +103,7 @@
               id=""
               aria-describedby="helpId"
               placeholder="Password"
+              name="password"
             />
           </div>
         </div>
@@ -83,9 +117,9 @@
               <input
                 class="form-check-input"
                 type="radio"
-                name="exampleRadios"
+                name="role"
                 id="exampleRadios1"
-                value="option1"
+                value="ward_officer"
                 checked
               />
               <label class="form-check-label" for="exampleRadios1">
@@ -96,9 +130,9 @@
               <input
                 class="form-check-input"
                 type="radio"
-                name="exampleRadios"
+                name="role"
                 id="exampleRadios2"
-                value="option2"
+                value="district_officer"
               />
               <label class="form-check-label" for="exampleRadios2">
                 Cán bộ quận
@@ -107,7 +141,7 @@
           </div>
           <div class="col-4">
             <label for="" class="form-label"
-              >Quận<span class="text-danger"> *</span></label
+              >Quận</label
             >
             <select class="form-select" aria-label="Default select example">
               <option selected>Chọn quận</option>
@@ -118,7 +152,7 @@
           </div>
           <div class="col-4">
             <label for="" class="form-label"
-              >Phường<span class="text-danger"> *</span></label
+              >Phường</label
             >
             <select class="form-select" aria-label="Default select example">
               <option selected>Chọn phường</option>
@@ -139,7 +173,7 @@
             >Tạo tài khoản</a
           >
         </div>
-      </div>
+      </form>
     </div>
   </div>
 </div>

@@ -1,7 +1,8 @@
 <!-- Right Part -->
 <div class="col p-3 border-start">
   <%- include('../../partials/header.ejs') %>
-  <hr />
+  <hr/>
+  <%- include('../../partials/flash.ejs') %>
   <h2 class="fw-semibold">QUẢN LÍ TÀI KHOẢN CÁN BỘ PHƯỜNG, QUẬN</h2>
   <div class="row justify-content-center">
     <div class="col-3">
@@ -13,14 +14,9 @@
       />
     </div>
     <div class="col-3">
-      <select class="form-select" aria-label="Default select example">
-        <option selected>Sắp xếp</option>
-      </select>
-    </div>
-    <div class="col-3">
       <a href="/department/account/create">
         <button class="btn btn-primary px-4" type="button">
-          Thêm tài khoản
+          Tạo tài khoản
         </button>
       </a>
     </div>
@@ -56,20 +52,13 @@
           <a href="/department/account/view/<%= account._id %>">
             <i class="bi bi-eye-fill"></i>
           </a>
-          <a href="/department/account/update-info/<%= account._id %>">
-            <i class="bi bi-pencil-square"></i>
-          </a>
-          <i
-            role="button"
-            class="bi bi-x-circle-fill bi-cursor"
-            data-bs-toggle="modal"
-            data-bs-target="#removeAccount"
-          ></i>
         </td>
       </tr>
       <% }) %>
     </tbody>
   </table>
+  <% if (accounts.length > 0) { %> <%- include('../../partials/pagination.ejs') %> <%
+  } %>
 </div>
 <!-- Remove Account Modal -->
 <div

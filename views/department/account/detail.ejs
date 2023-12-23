@@ -6,8 +6,23 @@
     <!-- <div class="card-header">Xử lý báo cáo</div> -->
     <div class="card-body p-4">
       <h4 class="card-title py-2">Tài khoản</h4>
-      <p class="text-muted">Chức vụ:</p>
-      <p class="text-muted">Khu vực:</p>
+      <p class="text-muted">Chức vụ: <% if (account.role == 'ward_officer') { %>
+          <span>Cán bộ phường</span>
+          <% } else if (account.role == 'district_officer') { %>
+          <span>Cán bộ quận</span>
+          <% } else { %>
+          <span>Cán bộ sở</span>
+          <% } %>
+      </p>
+      <% if (account.role !== "department_officer") { %>
+      <p class="text-muted">Khu vực:  
+        <% if (account.role === 'ward_officer') { %> 
+        Phường <%= account.managed_ward %>, Quận <%= account.managed_district.name %> 
+        <% } else if (account.role === 'district_officer') { %> 
+        Quận <%= account.managed_district.name %> 
+        <% } %>
+      </p>
+      <% } %>
       <div class="row border border-2 rounded">
         <div class="col-2">
           <p class="text-muted pt-3">Họ tên:</p>
@@ -21,7 +36,7 @@
           <p class="text-muted pt-3">Giới tính:</p>
         </div>
         <div class="col-10">
-          <p class="pt-3"></p>
+          <p class="pt-3"><% if (account.gender != undefined ) { %><%= account.gender ? 'Nam' : 'Nữ' %> <% } %></p>
         </div>
       </div>
       <div class="row border border-2 rounded">
@@ -37,7 +52,7 @@
           <p class="text-muted pt-3">Ngày sinh:</p>
         </div>
         <div class="col-10">
-          <p class="pt-3"></p>
+          <p class="pt-3"><% if (account.birthdate != undefined ) { %><%= moment(account.birthdate).format('DD-MM-YYYY'); %> <% } %></p>
         </div>
       </div>
       <div class="row border border-2 rounded">
@@ -53,43 +68,29 @@
           <p class="text-muted pt-3">Số CMND/CCCD:</p>
         </div>
         <div class="col-10">
-          <p class="pt-3"></p>
+          <p class="pt-3"><% if (account.identity_code != undefined ) { %><%=account.identity_code%><% } %></p>
         </div>
       </div>
-      <div class="row border border-2 rounded mb-3">
+      <!-- <div class="row border border-2 rounded mb-3">
         <div class="col-2">
           <p class="text-muted pt-3">Mật khẩu:</p>
         </div>
         <div class="col-10">
           <p class="pt-3"></p>
         </div>
-      </div>
+      </div> -->
 
-      <div class="d-flex justify-content-center">
-        <a href="/department/account">
-          <button type="button" class="btn btn-secondary me-4">Trở về</button>
+      <div class="d-flex justify-content-center pt-3 gap-3">
+        <a role="button" class="btn btn-secondary" href="/department/account">
+          Trở về
         </a>
-        <a href="/department/account/update-info/<%= account._id %>">
-          <button
-            type="button"
-            class="btn btn-primary me-4"
-            data-bs-toggle="modal"
-            data-bs-target="#detail"
-          >
-            Cập nhật thông tin
-          </button>
+        <a role="button" class="btn btn-primary <%= account._id.toString() != user._id.toString() && account.role === 'department_officer' ? 'disabled': '' %>" href="/department/account/update-info/<%= account._id %>">
+          Cập nhật thông tin
         </a>
-        <a href="/department/account/assign/<%= account._id %>">
-          <button type="button" class="btn btn-primary">
-            Phân công khu vực
-          </button>
+        <a role="button" class="btn btn-primary <%= account.role === 'department_officer' ? 'disabled': '' %>" href="/department/account/assign/<%= account._id %>">
+          Phân công khu vực
         </a>
       </div>
     </div>
   </div>
 </div>
-<script
-  src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-  integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-  crossorigin="anonymous"
-></script>

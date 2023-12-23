@@ -11,6 +11,12 @@ const userSchema = new mongoose.Schema(
       type: Date,
       alias: 'dob'
     },
+    gender: {
+      type: Boolean
+    },
+    identity_code: {
+      type: String
+    },
     email: {
       type: String,
       required: true,

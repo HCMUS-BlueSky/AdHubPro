@@ -44,6 +44,9 @@ router.post(
   adsController.updateInfo
 );
 router.get('/ads/search', adsController.search);
+router.all('/ads/*', (req, res) => {
+  return res.redirect('/department/ads');
+});
 
 // Proposal
 router.get('/proposal', proposalController.view);
@@ -67,9 +70,17 @@ router.get('/report/view/:id', statisticController.getDetail);
 // Account
 router.get('/account', accountController.view);
 router.get('/account/view/:id', accountController.getDetail);
-router.get('/account/update-info/:id', accountController.updateInfo);
-router.get('/account/assign/:id', accountController.assign);
-router.get('/account/create', accountController.create);
+router.get('/account/update-info/:id', accountController.renderUpdateInfo);
+router.post('/account/update-info/:id', accountController.updateInfo);
+
+router.get('/account/assign/:id', accountController.renderAssign);
+router.post('/account/assign/:id', accountController.assign);
+router.get('/account/create', accountController.renderCreate);
+router.post('/account/create', accountController.create);
+
+router.all('/account/*', (req, res) => {
+  return res.redirect('/department/account');
+});
 
 router.all('*', (req, res) => {
   return res.redirect('/department');
