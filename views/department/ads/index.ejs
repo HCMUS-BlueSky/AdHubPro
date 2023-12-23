@@ -3,9 +3,9 @@
   <hr />
   <%- include('../../partials/flash.ejs') %>
   <h2 class="fw-semibold">THÔNG TIN CÁC BẢNG QUẢNG CÁO</h2>
-  <div class="row justify-content-end">
-    <div class="col-4">
-      <form role="search" method="GET" action="/ward/ads/search">
+  <div class="row justify-content-center">
+    <div class="col-3">
+      <form role="search" method="GET" action="/department/ads/search">
         <input
           class="form-control mr-sm-2"
           type="search"
@@ -14,6 +14,11 @@
           name="searchTerm"
         />
       </form>
+    </div>
+    <div class="col-3">
+      <a href="/department/ads/create" class="btn btn-primary">
+        Thêm bảng quảng cáo mới
+      </a>
     </div>
   </div>
   <table class="table border border-2 rounded py-3 mt-3">

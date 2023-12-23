@@ -126,14 +126,14 @@ exports.getDetail = async (req, res) => {
 exports.approveRequest = async (req, res) => {
   try {
     const request = await Request.findById(req.params.id).lean();
-    if (!request) throw new Error('Không tìm thế yêu cầu cấp phép!');
+    if (!request) throw new Error('Không tìm thấy yêu cầu cấp phép!');
     if (request.status != 'pending')
       throw new Error('Không thể duyệt yêu cầu đã được xử lí!');
     await Request.findByIdAndUpdate(req.params.id, { status: 'accepted' });
     const newAds = new Ads(request.ads);
     await newAds.save();
     await Location.findByIdAndUpdate(request.ads.location, {
-      $inc: { ads_count: request.ads_count },
+      $inc: { ads_count: 1 },
       accepted: true
     });
     req.flash('success', 'Duyệt yêu cầu cấp phép thành công!');
@@ -148,7 +148,7 @@ exports.approveRequest = async (req, res) => {
 exports.rejectRequest = async (req, res) => {
   try {
     const request = await Request.findById(req.params.id).exec();
-    if (!request) throw new Error('Không tìm thế yêu cầu cấp phép!');
+    if (!request) throw new Error('Không tìm thấy yêu cầu cấp phép!');
     if (request.status != 'pending')
       throw new Error('Không thể từ chối yêu cầu đã được xử lí!');
     await Request.findByIdAndUpdate(req.params.id, { status: 'rejected' });

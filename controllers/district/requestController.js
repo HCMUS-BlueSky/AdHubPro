@@ -154,12 +154,10 @@ exports.renderCreateNew = async (req, res) => {
       district: user.managed_district.name,
     }).exec();
     const availableAdsType = await Ads.getAvailableType();
-    const availableLocationMethod = await Location.getAvailableMethod();
     res.render('district/request/create', {
       locations,
       user,
       availableAdsType,
-      availableLocationMethod,
       pageName: 'request',
       header: {
         navRoot: 'Yêu cầu cấp phép',
@@ -178,7 +176,6 @@ exports.createNew = async (req, res) => {
       location,
       type,
       size,
-      ads_count,
       description,
       company_name,
       company_email,
@@ -193,8 +190,6 @@ exports.createNew = async (req, res) => {
       throw new Error("Loại quảng cáo không hợp lệ");
     if (!size || typeof size !== "string")
       throw new Error("Kích thước không hợp lệ");
-    if (!ads_count || typeof ads_count !== "string")
-      throw new Error("Số lượng bảng không hợp lệ");
     if (!description || typeof description !== "string")
       throw new Error("Nội dung quảng cáo không hợp lệ");
     if (!company_name || typeof company_name !== "string")
@@ -223,7 +218,6 @@ exports.createNew = async (req, res) => {
         effective,
         expiration,
       },
-      ads_count,
       description,
       company: {
         name: company_name,
@@ -259,7 +253,7 @@ exports.cancelRequest = async (req, res) => {
       _id: req.params.id,
       "ads.location": { $in: managed_locations },
     });
-    if (!request) throw new Error("Không tìm thế yêu cầu cấp phép!");
+    if (!request) throw new Error("Không tìm thấy yêu cầu cấp phép!");
     if (request.status != "pending")
       throw new Error("Không thể xóa yêu cầu đã được xử lí!");
     await Request.findByIdAndDelete(req.params.id);

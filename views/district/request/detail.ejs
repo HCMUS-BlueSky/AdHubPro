@@ -5,11 +5,31 @@
   <div class="card bg-light mb-3">
     <!-- <div class="card-header">Xử lý báo cáo</div> -->
     <div class="card-body p-4">
-      <h4 class="card-title py-2"><%= request.ads.type %>, <%= (request.ads.location.address.length > 55 ? request.ads.location.address.substring(0, 55) +
-          '...' : request.ads.location.address) %></h4>
+      <h4 class="card-title py-2"><%= request.ads.type %></h4>
       <p class="text-muted">
         Khu vực: Phường <%= request.ads.location.ward %>, Quận <%= request.ads.location.district %>
       </p>
+      <div class="row border border-2 rounded">
+        <div class="col-2">
+          <p class="text-muted pt-3">Địa chỉ:</p>
+        </div>
+        <div class="col-10">
+          <p class="pt-3">
+            <%= (request.ads.location.address.length > 100 ? request.ads.location.address.substring(0, 100) +
+            '...' : request.ads.location.address) %>
+          </p>
+        </div>
+      </div>
+      <div class="row border border-2 rounded">
+        <div class="col-2">
+          <p class="text-muted pt-3">Kích thước bảng:</p>
+        </div>
+        <div class="col-10">
+          <p class="pt-3">
+            <%= request.ads.size %>
+          </p>
+        </div>
+      </div>
       <div class="row border border-2 rounded">
         <div class="col-2">
           <p class="text-muted pt-3">Thông tin công ty:</p>

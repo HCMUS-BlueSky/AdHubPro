@@ -140,7 +140,7 @@ exports.updateInfo = async (req, res) => {
       ward: user.managed_ward
     });
     if (!location) throw new Error('Địa điểm không tồn tại!');
-    const { longitude, latitude, images, content, ...filtered } = req.body;
+    const { longitude, latitude, images, content, ads_count,...filtered } = req.body;
     if (!content || typeof content !== "string")
       throw new Error('Nội dung yêu cầu không hợp lệ!');
     const new_images = [];

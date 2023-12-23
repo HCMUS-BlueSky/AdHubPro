@@ -1,0 +1,129 @@
+<!-- Right Part -->
+<div class="col p-3 border-start">
+  <%- include('../../partials/header.ejs') %>
+  <hr />
+  <div class="card bg-light mb-3">
+    <form class="card-body p-4" method="POST" id="form" enctype="multipart/form-data">
+      <h2 class="fw-semibold mb-3">Tạo bảng quảng cáo</h2>
+      <h4>Thông tin bảng quảng cáo</h4>
+      <div class="row mt-3">
+        <div class="col-8">
+          <label for="place" class="form-label">Địa điểm<span class="text-danger"> *</span></label>
+          <select class="form-select" aria-label="" name="location">
+            <% locations.forEach(location => { %>
+            <option value="<%= location._id %>"><%= location.address %></option>
+            <% }) %>
+          </select>
+        </div>
+      </div>
+      <div class="row mt-3">
+        <div class="col-6">
+          <label for="method_select" class="form-label"
+            >Loại bảng quảng cáo<span class="text-danger"> *</span></label
+          >
+          <select
+            class="form-select text-secondary w-100"
+            name="type"
+            id="type_select"
+          >
+            <% if(!availableAdsType) {%>
+              <option value="" selected> >Vui lòng chọn</option>
+            <% } else {%>
+              <% availableAdsType?.forEach((type, index) => { %>
+                <option value="<%= type %>"><%= type %></option>
+              <% })%>
+            <% }%>
+          </select>
+        </div>
+        <div class="col-6">
+          <label for="adsSize" class="form-label"
+            >Kích thước bảng quảng cáo<span class="text-danger"> *</span></label
+          >
+          <input
+            type="text"
+            class="form-control w-100"
+            required
+            id="adsSize"
+            aria-describedby="helpId"
+            placeholder="2.5m x 10m"
+            name="size"
+            value=""
+          />
+        </div>
+      </div>
+      <div class="row mt-3">
+        <div class="col-6">
+          <label for="date" class="form-label">Thời hạn hợp đồng<span class="text-danger"> *</span></label>
+          <div class="input-group input-daterange" id="date">
+            <input type="date" class="form-control text-secondary" name="effective"/>
+            <div class="input-group-text">to</div>
+            <input type="date" class="form-control text-secondary" name="expiration" />
+          </div>
+        </div>
+      </div>
+      <div class="row my-3">
+        <div class="col-12">
+          <label for="ads-image" class="form-label">Hình ảnh minh họa</label>
+          <input class="form-control" type="file" id="ads-image" name="images" multiple />
+        </div>
+      </div>
+      <div class="d-flex justify-content-center mt-3">
+        <a href="/district/request">
+          <button type="button" class="btn btn-secondary me-4">Trở về</button>
+        </a>
+        <button
+          type="button"
+          class="btn btn-primary"
+          data-bs-toggle="modal"
+          data-bs-target="#confirmModal"
+        >
+          Thêm bảng quảng cáo
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!--Alert-->
+<div
+  class="modal fade"
+  id="confirmModal"
+  tabindex="-1"
+  aria-labelledby="confirmModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="confirmModalLabel">Xác nhận</h1>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        Bạn có chắc chắn muốn tạo bảng quảng cáo này?
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          data-bs-dismiss="modal"
+        >
+          Đóng
+        </button>
+        <button type="button" class="btn btn-primary" id="submit-btn">
+          Có
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.getElementById("submit-btn").addEventListener("click", () => {
+    form.submit();
+  });
+</script>

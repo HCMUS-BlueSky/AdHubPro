@@ -51,36 +51,6 @@
           />
         </div>
       </div>
-      <div class="row mt-3">
-        <div class="col-6">
-          <label for="" class="form-label">Hình thức quảng cáo</label>
-          <select
-            class="form-select text-secondary w-100"
-            name="method"
-            id="method_select"
-          >
-            <% if(!availableLocationMethod) {%>
-              <option value="" selected> >Vui lòng chọn</option>
-            <% } else {%>
-              <% availableLocationMethod?.forEach((method, index) => { %>
-                <option value="<%= method %>"><%= method %></option>
-              <% })%>
-            <% }%>
-          </select>
-        </div>
-        <div class="col-6">
-          <label for="amount" class="form-label">Số lượng<span class="text-danger"> *</span></label>
-          <input
-            type="number"
-            class="form-control"
-            id="amount"
-            placeholder="1"
-            min="1"
-            value="1"
-            name="ads_count"
-          />
-        </div>
-      </div>
       <div class="row my-3">
         <div class="col-8">
           <div class="form-group">

@@ -8,11 +8,6 @@ const requestSchema = new mongoose.Schema(
       type: adsSchema,
       required: true
     },
-    ads_count: {
-      type: Number,
-      min: 1,
-      default: 1
-    },
     status: {
       type: String,
       enum: ['pending', 'rejected', 'accepted'],

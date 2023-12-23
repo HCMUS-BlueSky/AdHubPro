@@ -132,7 +132,7 @@ exports.updateInfo = async (req, res) => {
       _id: req.params.id,
     });
     if (!location) throw new Error('Địa điểm không tồn tại!');
-    const { longitude, latitude, images, ...filtered } = req.body;
+    const { _id, longitude, latitude, images, ...filtered } = req.body;
     const new_images = [];
     if (req.files && req.files.length) {
       for (let file of req.files) {
@@ -154,7 +154,7 @@ exports.updateInfo = async (req, res) => {
 exports.remove = async (req, res) => {
   try {
     const location = await Location.findById(req.params.id).exec();
-    if (!location) throw new Error('Không tìm thế yêu cầu cấp phép!');
+    if (!location) throw new Error('Không tìm thấy địa điểm!');
     await Ads.deleteMany({ location: location._id }).exec();
     await Report.deleteMany({ location: location._id }).exec();
     await Proposal.deleteMany({ location: location._id }).exec();
@@ -171,8 +171,8 @@ exports.remove = async (req, res) => {
 exports.renderCreate = async (req, res) => {
   try {
     const user = req.session.user;
-    availableType = Location.getAvailableType();
-    availableMethod = Location.getAvailableMethod();
+    const availableType = Location.getAvailableType();
+    const availableMethod = Location.getAvailableMethod();
     return res.render('department/location/create', {
       availableType,
       availableMethod,
@@ -185,7 +185,6 @@ exports.renderCreate = async (req, res) => {
       layout: 'layouts/department'
     });
   } catch (err) {
-    console.log(err)
     req.flash('error', 'Lỗi hệ thống!');
     return res.redirect('/department/location');
   }
