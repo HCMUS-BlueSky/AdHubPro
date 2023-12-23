@@ -21,6 +21,11 @@ const proposalSchema = new mongoose.Schema(
         return this.type == 'Bảng quảng cáo';
       }
     },
+    status: {
+      type: String,
+      enum: ['pending', 'rejected', 'accepted'],
+      default: 'pending'
+    },
     content: {
       type: String,
       required: true
