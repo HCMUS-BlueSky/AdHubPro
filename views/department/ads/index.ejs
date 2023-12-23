@@ -1,0 +1,59 @@
+<div class="col p-3 border-start">
+  <%- include('../../partials/header.ejs') %>
+  <hr />
+  <%- include('../../partials/flash.ejs') %>
+  <h2 class="fw-semibold">THÔNG TIN CÁC BẢNG QUẢNG CÁO</h2>
+  <div class="row justify-content-end">
+    <div class="col-4">
+      <form role="search" method="GET" action="/ward/ads/search">
+        <input
+          class="form-control mr-sm-2"
+          type="search"
+          placeholder="Tìm kiếm"
+          aria-label="Search"
+          name="searchTerm"
+        />
+      </form>
+    </div>
+  </div>
+  <table class="table border border-2 rounded py-3 mt-3">
+    <thead>
+      <tr>
+        <th scope="col">STT</th>
+        <th scope="col" class="col-5">Địa chỉ</th>
+        <th scope="col">Loại bảng</th>
+        <th scope="col">Ngày bắt đầu</th>
+        <th scope="col">Ngày hết hạn</th>
+        <th scope="col"></th>
+        <th scope="col"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% ads.forEach((element, index) => { %>
+      <tr>
+        <th scope="row"><%= perPage * (current - 1) + index + 1 %></th>
+        <td>
+          <%= (element.location.address.length > 55 ?
+          element.location.address.substring(0, 55) + '...' :
+          element.location.address) %>
+        </td>
+        <td class=""><%= element.type %></td>
+        <td class=""><%= moment(element.effective).format('DD-MM-YYYY') %></td>
+        <td class=""><%= moment(element.expiration).format('DD-MM-YYYY') %></td>
+        <td class="">
+          <a href="/department/ads/view/<%= element._id %>">
+            <i class="bi bi-eye-fill"></i>
+          </a>
+        </td>
+        <td class="">
+          <a href="/department/ads/update-info/<%= element._id %>">
+            <i class="bi bi-pencil-square"></i>
+          </a>
+        </td>
+      </tr>
+      <% }) %>
+    </tbody>
+  </table>
+  <% if (ads.length > 0) { %> <%- include('../../partials/pagination.ejs') %> <%
+  } %>
+</div>

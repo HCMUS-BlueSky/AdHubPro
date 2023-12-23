@@ -13,7 +13,15 @@ const path = require("path");
 router.use(pathFor("district_officer"), getManagedWards);
 // Home
 router.get("/", (req, res) => {
-  return res.render("district/index", { layout: false });
+  const user = req.session.user;
+  return res.render("district/index", {
+    user,
+    header: {
+      navRoot: "Trang chủ",
+      navCurrent: "Bản đồ",
+    },
+    layout: false,
+  });
 });
 
 // Ads
@@ -26,6 +34,7 @@ router.get("/ads/update-info/:id", adsController.renderUpdateInfo);
 router.post("/ads/search", adsController.search);
 
 router.get("/ads/search", adsController.search);
+
 router.post("/ads/filter", adsController.filter);
 
 router.post(

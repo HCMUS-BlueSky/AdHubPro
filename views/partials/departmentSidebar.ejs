@@ -19,6 +19,32 @@
         </a>
       </li>
       <li
+        class="nav-item w-100 p-2 rounded <%= pageName === 'ads' && 'current-nav-item' %>"
+      >
+        <a
+          href="/department/ads"
+          class="d-flex flex-row gap-1 align-items-center text-decoration-none text-light"
+        >
+          <i class="fs-4 bi-badge-ad"></i>
+          <span class="ms-1 d-none d-sm-inline fw-semibold"
+            >Bảng quảng cáo</span
+          >
+        </a>
+      </li>
+      <li
+        class="nav-item w-100 p-2 rounded <%= pageName === 'proposal' && 'current-nav-item' %>"
+      >
+        <a
+          href="/department/proposal"
+          class="d-flex flex-row gap-1 align-items-center text-decoration-none text-light"
+        >
+          <i class="fs-4 bi bi-pen"></i>
+          <span class="ms-1 d-none d-sm-inline fw-semibold"
+            >Yêu cầu chỉnh sửa</span
+          >
+        </a>
+      </li>
+      <li
         class="nav-item w-100 p-2 rounded <%= pageName === 'request' && 'current-nav-item' %>"
       >
         <a

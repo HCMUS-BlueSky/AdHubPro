@@ -12,7 +12,15 @@ router.use(pathFor("ward_officer"));
 
 // Home
 router.get("/", (req, res) => {
-  return res.render("ward/index", { layout: false });
+  const user = req.session.user;
+  return res.render("ward/index", {
+    user,
+    header: {
+      navRoot: "Trang chủ",
+      navCurrent: "Bản đồ",
+    },
+    layout: false,
+  });
 });
 
 // Ads
