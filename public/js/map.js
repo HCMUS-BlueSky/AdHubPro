@@ -1,6 +1,7 @@
 async function logLocations() {
-  const response = await fetch("/api/map/locations");
+  const response = await fetch("/api/location/district");
   const locations = await response.json();
+  console.log(locations);
   return locations;
 }
 
@@ -70,14 +71,6 @@ const AdsCardFactory = (ads) => {
                       <div class="me-auto p-2 d-flex align-items-center">
                           <i data-bs-toggle="modal" data-bs-target="#ads-detail" class="bi bi-info-circle"></i>
                       </div>
-                      <div class="p-2">
-                        <button type="button"
-                          class="btn btn-danger"
-                          data-bs-toggle="modal"
-                          data-bs-target="#feedback">
-                          Báo cáo vi phạm
-                        </button>
-                      </div>
                     </div>
                   </div>
                 `;
@@ -138,14 +131,6 @@ const locationAdsCardFactory = (result) => {
                     <h5>
                       ${result.address}
                     </h5>
-                    <div class="d-flex justify-content-end">
-                      <button type="button"
-                        class="btn btn-danger"
-                        data-bs-toggle="modal"
-                        data-bs-target="#feedback">
-                        Báo cáo vi phạm
-                      </button>
-                    </div>
                   </div>`;
   elm.className = "location-ads-card alert alert-success d-flex mx-4";
   return elm;
@@ -165,15 +150,11 @@ const reportCardFactory = (report) => {
     elem.className = "report-card card text-white bg-success my-3";
   }
   elem.innerHTML = `
-            <div class="card-header text-center fw-bold fs-4 font-weight-bold py-3">${
-              report.method
-            }</div>
+            <div class="card-header text-center fw-bold fs-4 font-weight-bold py-3">${report.method}</div>
               <div class="card-body">
                 <h5 class="card-text">Báo cáo bởi: ${report.reporter.name}</h5>
                 <h5 class="card-text">Nội dung báo cáo: ${report.content}</h5>
-                <h5 class="card-text">Thời gian ghi nhận: ${moment(
-                  report.created_at
-                ).format("MMMM Do YYYY")}</h5>
+                <h5 class="card-text">Thời gian ghi nhận: ${report.created_at}</h5>
                 <h5 class="card-text">Trạng thái: ${statusLabel}</h5>
               </div>
             </div>
@@ -232,68 +213,6 @@ const clearReportModal = () => {
   document.querySelector('input[name="method"]:checked').value = "";
   // tinymce.get("report-content").getContent() = "";
   document.getElementById("file").value = "";
-};
-
-const handleReportModal = (typeReport, location_id, adsInfo) => {
-  const reportModalButton = document.querySelector(".report-modal-btn");
-  const newReportModalButton = reportModalButton.cloneNode(true);
-  reportModalButton.parentNode.replaceChild(
-    newReportModalButton,
-    reportModalButton
-  );
-  newReportModalButton.addEventListener("click", async (e) => {
-    e.preventDefault();
-
-    let type = typeReport;
-    let name = document.querySelector("#name").value;
-    let email = document.querySelector("#email").value;
-    let phone = document.querySelector("#phone").value;
-
-    let method = document.querySelector('input[name="method"]:checked').value;
-    let content = tinymce.get("report-content").getContent();
-    let location = location_id;
-
-    const data = new FormData();
-    if (type == "ads") {
-      data.append("type", "Bảng quảng cáo");
-    } else {
-      data.append("type", "Điểm đặt quảng cáo");
-    }
-    data.append("name", name);
-    data.append("email", email);
-    data.append("phone", phone);
-    data.append("method", method);
-    data.append("content", content);
-    data.append("location", location);
-
-    if (type == "ads") {
-      let ads = adsInfo._id;
-      data.append("ads", ads);
-    }
-
-    const fileInput = document.getElementById("file");
-    for (const file of fileInput.files) {
-      data.append("images", file);
-    }
-
-    try {
-      const response = await fetch("/api/report", {
-        method: "POST",
-        body: data,
-      });
-
-      if (response.ok) {
-        console.log("Report submitted successfully!");
-        document.querySelector("#feedback");
-        clearReportModal();
-      } else {
-        const errorMessage = await response.text();
-        console.error("Error:", errorMessage);
-      }
-    } catch (error) {
-      console.error("Error:", error);
-    }
-  });
 };
 
 const clearSidebar = () => {
@@ -627,14 +546,6 @@ async function initMap() {
         });
       });
 
-      const reportButtons = document.querySelectorAll(".ads-card .btn-danger");
-
-      reportButtons.forEach((button, index) => {
-        button.addEventListener("click", () => {
-          handleReportModal("ads", adsInfo[index].location._id, adsInfo[index]);
-        });
-      });
-
       const newReportButton = reportButton.cloneNode(true);
       reportButton.parentNode.replaceChild(newReportButton, reportButton);
 
@@ -701,8 +612,6 @@ async function initMap() {
           addToSideBar(reportCard);
         });
       });
-
-      handleReportModal("location", features.properties._id, null);
     }
 
     const sidebar = document.getElementById("sidebar");

@@ -1,6 +1,6 @@
 const Report = require("../../models/Report");
 const { Location } = require("../../models/Location");
-const { generateRegexQuery } = require('regex-vietnamese');
+const { generateRegexQuery } = require("regex-vietnamese");
 const moment = require("moment");
 const {
   sendEmail,
@@ -8,6 +8,7 @@ const {
   genFinishedTemplate,
 } = require("../../utils/sendEmail");
 const DOMPurify = require("isomorphic-dompurify");
+const District = require("../../models/District");
 
 exports.view = async (req, res) => {
   let perPage = 10;
@@ -24,23 +25,27 @@ exports.view = async (req, res) => {
       .skip(perPage * page - perPage)
       .limit(perPage)
       .populate({
-        path: 'location',
-        select: ['address', 'ward', 'district', 'method']
+        path: "location",
+        select: ["address", "ward", "district", "method"],
       })
       .exec();
+    const district = await District.findOne({
+      name: user.managed_district.name,
+    });
     const count = await Report.count({ location: { $in: managed_locations } });
-    res.render('district/report/index', {
+    res.render("district/report/index", {
+      district,
       reports,
       user,
       perPage,
       moment,
       current: page,
       pages: Math.ceil(count / perPage),
-      pageName: 'report',
+      pageName: "report",
       header: {
-        navRoot: 'Báo cáo',
-        navCurrent: 'Thông tin chung'
-      }
+        navRoot: "Báo cáo",
+        navCurrent: "Thông tin chung",
+      },
     });
   } catch (err) {
     return res.status(500).send(err.message);
@@ -54,78 +59,118 @@ exports.search = async (req, res) => {
     const searchTerm = req.query.searchTerm;
     if (typeof searchTerm !== "string")
       throw new Error("Từ khóa không hợp lệ!");
-    if (!searchTerm) return res.redirect('/district/report');
+    if (!searchTerm) return res.redirect("/district/report");
     const user = req.session.user;
     const locations = await Location.find({
       district: user.managed_district.name,
       $text: {
-        $search: `\"${searchTerm}\"`
-      }
+        $search: `\"${searchTerm}\"`,
+      },
     })
-      .distinct('_id')
+      .distinct("_id")
       .exec();
     const managed_locations = await Location.find({
       district: user.managed_district.name,
     })
-      .distinct('_id')
+      .distinct("_id")
       .exec();
 
     const rgx = generateRegexQuery(searchTerm);
     const reports = await Report.find({
       $or: [
         {
-          location: { $in: locations }
+          location: { $in: locations },
         },
         {
           location: { $in: managed_locations },
-          type: { $regex: rgx }
+          type: { $regex: rgx },
         },
         {
           location: { $in: managed_locations },
-          'reporter.name': { $regex: rgx }
-        }
-      ]
+          "reporter.name": { $regex: rgx },
+        },
+      ],
     })
       .sort({ created_at: -1 })
       .skip(perPage * page - perPage)
       .limit(perPage)
       .populate({
-        path: 'location',
-        select: ['address', 'ward', 'district', 'method']
+        path: "location",
+        select: ["address", "ward", "district", "method"],
       })
       .exec();
 
     const count = await Report.count({
       $or: [
         {
-          location: { $in: locations }
+          location: { $in: locations },
         },
         {
           location: { $in: managed_locations },
-          type: { $regex: rgx }
+          type: { $regex: rgx },
         },
         {
           location: { $in: managed_locations },
-          'reporter.name': { $regex: rgx }
-        }
-      ]
+          "reporter.name": { $regex: rgx },
+        },
+      ],
     });
-    res.render('district/report/index', {
+    res.render("district/report/index", {
       reports,
       moment,
       user,
       perPage,
       current: page,
       pages: Math.ceil(count / perPage),
-      pageName: 'report',
+      pageName: "report",
       header: {
-        navRoot: 'Báo cáo',
-        navCurrent: 'Thông tin chung'
-      }
+        navRoot: "Báo cáo",
+        navCurrent: "Thông tin chung",
+      },
     });
   } catch (err) {
     req.flash("error", err.message);
-    return res.redirect('/district/report');
+    return res.redirect("/district/report");
+  }
+};
+
+exports.filter = async (req, res) => {
+  let perPage = 10;
+  let page = req.query.page || 1;
+  try {
+    const selectedWards = req.body.select;
+    const user = req.session.user;
+    const district = await District.findOne({
+      name: user.managed_district.name,
+    });
+    const managed_locations = await Location.find({
+      ward: { $in: selectedWards },
+      district: user.managed_district.name,
+    })
+      .distinct("_id")
+      .exec();
+    const reports = await Report.find({ location: { $in: managed_locations } })
+      .sort({ created_at: -1 })
+      .skip(perPage * page - perPage)
+      .limit(perPage)
+      .exec();
+    const count = await Report.count({ location: { $in: managed_locations } });
+    res.render("district/report/index", {
+      district,
+      reports,
+      user,
+      perPage,
+      current: page,
+      pages: Math.ceil(count / perPage),
+      pageName: "report",
+      header: {
+        navRoot: "Báo cáo",
+        navCurrent: "Thông tin chung",
+      },
+    });
+  } catch (err) {
+    req.flash("error", err.message);
+    return res.redirect("/district/location");
   }
 };
 
@@ -148,18 +193,18 @@ exports.getDetail = async (req, res) => {
       .exec();
     if (!report) throw new Error("Báo cáo không tồn tại!");
     report.content = DOMPurify.sanitize(report.content);
-    res.render('district/report/detail', {
+    res.render("district/report/detail", {
       report,
       user,
-      pageName: 'report',
+      pageName: "report",
       header: {
-        navRoot: 'Báo cáo',
-        navCurrent: 'Thông tin chi tiết'
-      }
+        navRoot: "Báo cáo",
+        navCurrent: "Thông tin chi tiết",
+      },
     });
   } catch (err) {
     req.flash("error", "Báo cáo không tồn tại!");
-    return res.redirect('/district/report');
+    return res.redirect("/district/report");
   }
 };
 
@@ -176,18 +221,18 @@ exports.renderProcessReport = async (req, res) => {
       location: { $in: managed_locations },
     }).exec();
     if (!report) throw new Error("Báo cáo không tồn tại!");
-    res.render('district/report/process', {
+    res.render("district/report/process", {
       report,
       user,
-      pageName: 'report',
+      pageName: "report",
       header: {
-        navRoot: 'Báo cáo',
-        navCurrent: 'Xử lí báo cáo'
-      }
+        navRoot: "Báo cáo",
+        navCurrent: "Xử lí báo cáo",
+      },
     });
   } catch (err) {
     req.flash("error", "Báo cáo không tồn tại!");
-    return res.redirect('/district/report');
+    return res.redirect("/district/report");
   }
 };
 
@@ -217,11 +262,9 @@ exports.processReport = async (req, res) => {
     if (status !== "processing" && status !== "done")
       throw new Error("Trạng thái không hợp lệ!");
 
-    if (status === report.status) throw new Error("Trạng thái mới không được giống trạng thái cũ!");
-    await Report.findByIdAndUpdate(
-      report.id,
-      { status, response }
-    ).exec();
+    if (status === report.status)
+      throw new Error("Trạng thái mới không được giống trạng thái cũ!");
+    await Report.findByIdAndUpdate(report.id, { status, response }).exec();
     report.response = response;
     report.status = status;
     if (status === "processing") {
@@ -238,9 +281,9 @@ exports.processReport = async (req, res) => {
       );
     }
     req.flash("success", "Cập nhật trạng thái báo cáo thành công!");
-    return res.redirect('/district/report');
+    return res.redirect("/district/report");
   } catch (err) {
     req.flash("error", err.message);
-    return res.redirect('/district/report');
+    return res.redirect("/district/report");
   }
 };

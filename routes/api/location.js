@@ -1,11 +1,10 @@
-const express = require('express');
-const Location = require('../../models/Location');
-const Ads = require('../../models/Ads');
-const hasRoles = require('../../middleware/hasRoles');
+const express = require("express");
+const { Location } = require("../../models/Location");
+const Ads = require("../../models/Ads");
+const hasRoles = require("../../middleware/hasRoles");
 const router = express.Router();
 
-
-router.get('/', async (req, res) => {
+router.get("/", async (req, res) => {
   try {
     const locations = await Location.find({}).exec();
     return res.json(locations);
@@ -14,20 +13,25 @@ router.get('/', async (req, res) => {
   }
 });
 
-router.get('/ward', hasRoles('ward_officer'), async (req, res) => {
+router.get("/ward", hasRoles("ward_officer"), async (req, res) => {
   try {
     const user = req.user;
-    const locations = await Location.find({ district: user.managed_district, ward: user.managed_ward }).exec();
+    const locations = await Location.find({
+      district: user.managed_district,
+      ward: user.managed_ward,
+    }).exec();
     return res.json(locations);
   } catch (err) {
     return res.status(500).send(err.message);
   }
 });
 
-router.get('/district', hasRoles('district_officer'), async (req, res) => {
+router.get("/district", async (req, res) => {
   try {
-    const user = req.user;
-    const locations = await Location.find({ district: user.managed_district }).exec();
+    const user = req.session.user;
+    const locations = await Location.find({
+      district: user.managed_district.name,
+    }).exec();
     return res.json(locations);
   } catch (err) {
     return res.status(500).send(err.message);

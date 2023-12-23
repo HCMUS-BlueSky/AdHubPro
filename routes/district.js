@@ -75,7 +75,8 @@ router.get("/report", reportController.view);
 router.get("/report/view/:id", reportController.getDetail);
 
 router.get("/report/search", reportController.search);
-router.post("/report/search", reportController.search);
+
+router.post("/report/filter", reportController.search);
 
 router.get("/report/process/:id", reportController.renderProcessReport);
 

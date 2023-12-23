@@ -39,14 +39,14 @@ exports.search = async (req, res) => {
   const page = req.query.page || 1;
   try {
     const searchTerm = req.query.searchTerm;
-    if (typeof searchTerm !== 'string')
-      throw new Error('Từ khóa không hợp lệ!');
-    if (!searchTerm) return res.redirect('/department/location');
+    if (typeof searchTerm !== "string")
+      throw new Error("Từ khóa không hợp lệ!");
+    if (!searchTerm) return res.redirect("/department/location");
     const user = req.session.user;
     const locations = await Location.find({
       $text: {
-        $search: `\"${searchTerm}\"`
-      }
+        $search: `\"${searchTerm}\"`,
+      },
     })
       .sort({ created_at: -1 })
       .skip(perPage * page - perPage)
@@ -55,28 +55,27 @@ exports.search = async (req, res) => {
 
     const count = await Location.count({
       $text: {
-        $search: `\"${searchTerm}\"`
-      }
+        $search: `\"${searchTerm}\"`,
+      },
     });
-    res.render('department/location/index', {
+    res.render("department/location/index", {
       locations,
       user,
       perPage,
       current: page,
       pages: Math.ceil(count / perPage),
-      pageName: 'location',
+      pageName: "location",
       header: {
-        navRoot: 'Điểm đặt quảng cáo',
-        navCurrent: 'Thông tin chung'
+        navRoot: "Điểm đặt quảng cáo",
+        navCurrent: "Thông tin chung",
       },
-      layout: 'layouts/department'
+      layout: "layouts/department",
     });
   } catch (err) {
-    req.flash('error', err.message);
-    return res.redirect('/department/location');
+    req.flash("error", err.message);
+    return res.redirect("/department/location");
   }
 };
-
 
 exports.getDetail = async (req, res) => {
   try {
@@ -84,20 +83,20 @@ exports.getDetail = async (req, res) => {
     const location = await Location.findOne({
       _id: req.params.id,
     });
-    if (!location) throw new Error('Địa điểm không tồn tại!');
-    return res.render('department/location/detail', {
+    if (!location) throw new Error("Địa điểm không tồn tại!");
+    return res.render("department/location/detail", {
       location,
       user,
-      pageName: 'location',
+      pageName: "location",
       header: {
-        navRoot: 'Điểm đặt quảng cáo',
-        navCurrent: 'Thông tin chi tiết'
+        navRoot: "Điểm đặt quảng cáo",
+        navCurrent: "Thông tin chi tiết",
       },
-      layout: 'layouts/department'
+      layout: "layouts/department",
     });
   } catch (err) {
-    req.flash('error', 'Địa điểm không tồn tại!');
-    return res.redirect('/department/location');
+    req.flash("error", "Địa điểm không tồn tại!");
+    return res.redirect("/department/location");
   }
 };
 
@@ -107,22 +106,22 @@ exports.renderUpdateInfo = async (req, res) => {
     const location = await Location.findOne({
       _id: req.params.id,
     });
-    if (!location) throw new Error('Địa điểm không tồn tại!');
+    if (!location) throw new Error("Địa điểm không tồn tại!");
     location.availableType = Location.getAvailableType();
     location.availableMethod = Location.getAvailableMethod();
-    return res.render('department/location/update_info', {
+    return res.render("department/location/update_info", {
       location,
       user,
-      pageName: 'location',
+      pageName: "location",
       header: {
-        navRoot: 'Điểm đặt quảng cáo',
-        navCurrent: 'Cập nhật thông tin'
+        navRoot: "Điểm đặt quảng cáo",
+        navCurrent: "Cập nhật thông tin",
       },
-      layout: 'layouts/department'
+      layout: "layouts/department",
     });
   } catch (err) {
-    req.flash('error', 'Địa điểm không tồn tại!');
-    return res.redirect('/department/location');
+    req.flash("error", "Địa điểm không tồn tại!");
+    return res.redirect("/department/location");
   }
 };
 
@@ -131,7 +130,7 @@ exports.updateInfo = async (req, res) => {
     const location = await Location.findOne({
       _id: req.params.id,
     });
-    if (!location) throw new Error('Địa điểm không tồn tại!');
+    if (!location) throw new Error("Địa điểm không tồn tại!");
     const { _id, longitude, latitude, images, ...filtered } = req.body;
     const new_images = [];
     if (req.files && req.files.length) {
@@ -141,30 +140,30 @@ exports.updateInfo = async (req, res) => {
       }
       filtered.images = new_images;
     }
-    Object.assign(location, filtered)
+    Object.assign(location, filtered);
     await location.save();
-    req.flash('success', 'Cập nhật điểm đặt quảng cáo thành công!');
-    return res.redirect('/department/location');
+    req.flash("success", "Cập nhật điểm đặt quảng cáo thành công!");
+    return res.redirect("/department/location");
   } catch (err) {
-    req.flash('error', err.message);
-    return res.redirect('/department/location');
+    req.flash("error", err.message);
+    return res.redirect("/department/location");
   }
 };
 
 exports.remove = async (req, res) => {
   try {
     const location = await Location.findById(req.params.id).exec();
-    if (!location) throw new Error('Không tìm thấy địa điểm!');
+    if (!location) throw new Error("Không tìm thấy địa điểm!");
     await Ads.deleteMany({ location: location._id }).exec();
     await Report.deleteMany({ location: location._id }).exec();
     await Proposal.deleteMany({ location: location._id }).exec();
-    await Request.deleteMany({ 'ads.location': location._id }).exec();
+    await Request.deleteMany({ "ads.location": location._id }).exec();
     await Location.findByIdAndDelete(req.params.id);
-    req.flash('success', 'Xóa địa điểm thành công!');
-    return res.redirect('/department/location');
+    req.flash("success", "Xóa địa điểm thành công!");
+    return res.redirect("/department/location");
   } catch (error) {
-    req.flash('error', 'Xóa địa điểm không thành công!');
-    return res.redirect('/department/location');
+    req.flash("error", "Xóa địa điểm không thành công!");
+    return res.redirect("/department/location");
   }
 };
 
@@ -173,20 +172,20 @@ exports.renderCreate = async (req, res) => {
     const user = req.session.user;
     const availableType = Location.getAvailableType();
     const availableMethod = Location.getAvailableMethod();
-    return res.render('department/location/create', {
+    return res.render("department/location/create", {
       availableType,
       availableMethod,
       user,
-      pageName: 'location',
+      pageName: "location",
       header: {
-        navRoot: 'Điểm đặt quảng cáo',
-        navCurrent: 'Tạo địa điểm'
+        navRoot: "Điểm đặt quảng cáo",
+        navCurrent: "Tạo địa điểm",
       },
-      layout: 'layouts/department'
+      layout: "layouts/create",
     });
   } catch (err) {
-    req.flash('error', 'Lỗi hệ thống!');
-    return res.redirect('/department/location');
+    req.flash("error", "Lỗi hệ thống!");
+    return res.redirect("/department/location");
   }
 };
 
@@ -203,10 +202,10 @@ exports.create = async (req, res) => {
     // }
     // Object.assign(location, filtered);
     // await location.save();
-    req.flash('success', 'Thêm điểm đặt quảng cáo thành công!');
-    return res.redirect('/department/location');
+    req.flash("success", "Thêm điểm đặt quảng cáo thành công!");
+    return res.redirect("/department/location");
   } catch (err) {
-    req.flash('error', err.message);
-    return res.redirect('/department/location');
+    req.flash("error", err.message);
+    return res.redirect("/department/location");
   }
 };
