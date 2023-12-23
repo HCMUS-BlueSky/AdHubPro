@@ -1,23 +1,29 @@
 async function logLocations() {
-  const response = await fetch("/api/map/locations");
+  const response = await fetch("http://localhost:4000/api/map/locations");
   const locations = await response.json();
   return locations;
 }
 
 async function logAdsByLocation(locationID) {
-  const response = await fetch(`/api/map/ads/${locationID}`);
+  const response = await fetch(
+    `http://localhost:4000/api/map/ads/${locationID}`
+  );
   const ads = await response.json();
   return ads;
 }
 
 async function logReports(adsID) {
-  const response = await fetch(`api/map/report/ads/${adsID}`);
+  const response = await fetch(
+    `http://localhost:4000/api/map/report/ads/${adsID}`
+  );
   const reports = await response.json();
   return reports;
 }
 
 async function logReportsByLocation(locationID) {
-  const response = await fetch(`api/map/report/location/${locationID}`);
+  const response = await fetch(
+    `http://localhost:4000/api/map/report/location/${locationID}`
+  );
   const reports = await response.json();
   return reports;
 }
