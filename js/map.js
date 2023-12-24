@@ -283,7 +283,7 @@ const handleReportModal = (typeReport, location_id, adsInfo) => {
     }
 
     try {
-      const response = await fetch("/api/report", {
+      const response = await fetch("http://localhost:4000/api/report", {
         method: "POST",
         body: data,
       });
