@@ -74,6 +74,9 @@ exports.search = async (req, res) => {
     })
       .distinct("_id")
       .exec();
+    const district = await District.findOne({
+      name: user.managed_district.name,
+    });
 
     const rgx = generateRegexQuery(searchTerm);
     const reports = await Report.find({
@@ -118,6 +121,7 @@ exports.search = async (req, res) => {
     res.render("district/report/index", {
       reports,
       moment,
+      district,
       user,
       perPage,
       current: page,
@@ -153,6 +157,10 @@ exports.filter = async (req, res) => {
       .sort({ created_at: -1 })
       .skip(perPage * page - perPage)
       .limit(perPage)
+      .populate({
+        path: "location",
+        select: ["address", "ward", "district", "method"],
+      })
       .exec();
     const count = await Report.count({ location: { $in: managed_locations } });
     res.render("district/report/index", {
@@ -161,6 +169,7 @@ exports.filter = async (req, res) => {
       user,
       perPage,
       current: page,
+      moment,
       pages: Math.ceil(count / perPage),
       pageName: "report",
       header: {

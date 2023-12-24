@@ -3,7 +3,7 @@
   <hr />
   <%- include('../../partials/flash.ejs') %>
   <h2 class="fw-semibold">THÔNG TIN CÁC BẢNG QUẢNG CÁO</h2>
-  <div class="row justify-content-start">
+  <div class="row justify-content-center">
     <div class="col-4">
       <form action="/district/ads/filter" method="POST" class="filter-wards">
         <select
@@ -69,7 +69,6 @@
       <% }) %>
     </tbody>
   </table>
-  <% if (ads.length > 0) { %>
-    <%- include('../../partials/pagination.ejs') %>
-  <% } %>
+  <% if (ads.length > 0) { %> <%- include('../../partials/pagination.ejs') %> <%
+  } %>
 </div>

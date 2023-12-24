@@ -76,7 +76,7 @@ router.get("/report/view/:id", reportController.getDetail);
 
 router.get("/report/search", reportController.search);
 
-router.post("/report/filter", reportController.search);
+router.post("/report/filter", reportController.filter);
 
 router.get("/report/process/:id", reportController.renderProcessReport);
 
@@ -92,6 +92,8 @@ router.get("/request", requestController.view);
 router.get("/request/view/:id", requestController.getDetail);
 
 router.get("/request/search", requestController.search);
+
+router.post("/request/filter", requestController.filter);
 
 router.get("/request/create", requestController.renderCreateNew);
 
