@@ -56,7 +56,10 @@ exports.filter = async (req, res) => {
       .skip(perPage * page - perPage)
       .limit(perPage)
       .exec();
-    const count = locations.length;
+    const count = await Location.count({
+      ward: { $in: selectedWards },
+      district: user.managed_district.name,
+    });
     res.render("district/location/index", {
       district,
       locations,

@@ -41,23 +41,17 @@
             <label for="" class="form-label"
               >Quận<span class="text-danger"> *</span></label
             >
-            <select class="form-select" aria-label="Default select example">
-              <option selected>Chọn quận</option>
-              <option value="1">1</option>
-              <option value="2">2</option>
-              <option value="3">3</option>
+            <select class="form-select district-select" aria-label="">
+              <% districts.forEach(district => { %>
+              <option value="<%= district._id %>"><%= district.name %></option>
+              <% }) %>
             </select>
           </div>
           <div class="col-4">
             <label for="" class="form-label"
               >Phường<span class="text-danger"> *</span></label
             >
-            <select class="form-select" aria-label="Default select example">
-              <option selected>Chọn phường</option>
-              <option value="1">1</option>
-              <option value="2">2</option>
-              <option value="3">3</option>
-            </select>
+            <select class="form-select ward-select" aria-label=""></select>
           </div>
         </div>
 
@@ -126,3 +120,31 @@
     </div>
   </div>
 </div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    var districtSelect = document.querySelector(".district-select");
+    var wardSelect = document.querySelector(".ward-select");
+
+    districtSelect.addEventListener("change", async () => {
+      let selectedOption = districtSelect.options[districtSelect.selectedIndex];
+      let district = selectedOption.value;
+      const response = await fetch(`/utils/districts/${district}/wards`);
+      const data = await response.json();
+      populateWards(data.wards);
+    });
+
+    districtSelect.dispatchEvent(new Event("change"));
+
+    function populateWards(wards) {
+      wardSelect.innerHTML = "";
+
+      wards.forEach((ward) => {
+        let option = document.createElement("option");
+        option.value = ward;
+        option.innerHTML = ward;
+        wardSelect.appendChild(option);
+      });
+    }
+  });
+</script>

@@ -116,6 +116,9 @@ exports.search = async (req, res) => {
     })
       .distinct("_id")
       .exec();
+    const district = await District.findOne({
+      name: user.managed_district.name,
+    });
     const rgx = generateRegexQuery(searchTerm);
     const ads = await Ads.find({
       $or: [
@@ -151,6 +154,7 @@ exports.search = async (req, res) => {
     return res.render("district/ads/index", {
       ads,
       user,
+      district,
       perPage,
       moment,
       current: page,

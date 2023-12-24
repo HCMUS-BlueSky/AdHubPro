@@ -15,24 +15,102 @@
           <p class="text-muted pt-3">Trạng thái xét duyệt:</p>
         </div>
         <div class="col-10">
-          <p class="pt-3"> 
-          <% if (proposal.status === 'pending') { %>
-          <span class="badge bg-warning">Chờ duyệt</span> 
-          <% } else if (proposal.status === 'accepted') { %>
-          <span class="badge bg-success">Đã duyệt</span> 
-          <% } else { %>
-          <span class="badge bg-danger">Không duyệt</span> 
-          <% } %></p>
+          <p class="pt-3">
+            <% if (proposal.status === 'pending') { %>
+            <span class="badge bg-warning">Chờ duyệt</span>
+            <% } else if (proposal.status === 'accepted') { %>
+            <span class="badge bg-success">Đã duyệt</span>
+            <% } else { %>
+            <span class="badge bg-danger">Không duyệt</span>
+            <% } %>
+          </p>
         </div>
       </div>
       <div class="row border border-2 rounded">
         <div class="col-2">
-          <p class="text-muted pt-3">Thông tin cập nhật:</p>
+          <p class="text-muted pt-3">Thông tin hiện tại:</p>
         </div>
         <div class="col-10">
-          <p class="pt-3"></p>
+          <% if (proposal.type == 'Điểm đặt quảng cáo') { %>
+          <p class="pt-3">
+            <a
+              href="/department/location/view/<%= proposal.location._id %>"
+              target="_blank"
+              >Xem chi tiết</a
+            >
+          </p>
+          <% } else { %>
+          <p class="pt-3">
+            <a
+              href="/department/ads/view/<%= proposal.ads._id %>"
+              target="_blank"
+              >Xem chi tiết</a
+            >
+          </p>
+          <% } %>
         </div>
       </div>
+      <% if (proposal.type == 'Điểm đặt quảng cáo') { %>
+      <div class="row border border-2 rounded">
+        <div class="col-2">
+          <p class="text-muted pt-3">Địa chỉ (Cập nhật):</p>
+        </div>
+        <div class="col-10">
+          <p class="pt-3"><%= proposal.updated_location.address %></p>
+        </div>
+      </div>
+      <div class="row border border-2 rounded">
+        <div class="col-2">
+          <p class="text-muted pt-3">Phân loại vị trí (Cập nhật):</p>
+        </div>
+        <div class="col-10">
+          <p class="pt-3"><%= proposal.updated_location.type %></p>
+        </div>
+      </div>
+      <div class="row border border-2 rounded">
+        <div class="col-2">
+          <p class="text-muted pt-3">Hình thức quảng cáo (Cập nhật):</p>
+        </div>
+        <div class="col-10">
+          <p class="pt-3"><%= proposal.updated_location.method %></p>
+        </div>
+      </div>
+      <% } else { %>
+      <div class="row border border-2 rounded">
+        <div class="col-2">
+          <p class="text-muted pt-3">Loại bảng (Cập nhật):</p>
+        </div>
+        <div class="col-10">
+          <p class="pt-3"><%= proposal.updated_ads.type %></p>
+        </div>
+      </div>
+      <div class="row border border-2 rounded">
+        <div class="col-2">
+          <p class="text-muted pt-3">Kích thước (Cập nhật):</p>
+        </div>
+        <div class="col-10">
+          <p class="pt-3"><%= proposal.updated_ads.size %></p>
+        </div>
+      </div>
+      <div class="row border border-2 rounded">
+        <div class="col-2">
+          <p class="text-muted pt-3">Hình ảnh (Cập nhật):</p>
+        </div>
+        <div class="col-10">
+          <p class="pt-3">
+            <button
+              type="button"
+              class="btn btn-info"
+              data-bs-toggle="modal"
+              data-bs-target="#imageSlideShow"
+            >
+              Xem hình ảnh
+            </button>
+          </p>
+        </div>
+      </div>
+      <% } %>
+
       <div class="row border border-2 rounded mb-3">
         <div class="col-2">
           <p class="text-muted pt-3">Lý do chỉnh sửa:</p>
@@ -92,19 +170,29 @@
         <div id="slide" class="carousel slide" data-bs-ride="carousel">
           <!-- Indicators/dots -->
           <div class="carousel-indicators">
-            <% proposal.updated_location.images.forEach((img, index) => { %>
+            <% if (proposal.type == 'Điểm đặt quảng cáo') { %> <%
+            proposal.updated_location.images.forEach((img, index) => { %>
             <button
               type="button"
               data-bs-target="#slide"
               data-bs-slide-to="<%= index %>"
               class="<%= index == 0 ? 'active' : '' %>"
             ></button>
-            <% }) %>
+            <% }) %> <% } else { %> <% proposal.updated_ads.images.forEach((img,
+            index) => { %>
+            <button
+              type="button"
+              data-bs-target="#slide"
+              data-bs-slide-to="<%= index %>"
+              class="<%= index == 0 ? 'active' : '' %>"
+            ></button>
+            <% }) %> <% } %>
           </div>
 
           <!-- The slideshow/carousel -->
           <div class="carousel-inner">
-            <% proposal.updated_location.images.forEach((img, index) => { %>
+            <% if (proposal.type == 'Điểm đặt quảng cáo') { %> <%
+            proposal.updated_location.images.forEach((img, index) => { %>
             <div class="carousel-item <%= index == 0 ? 'active' : '' %>">
               <img
                 src="<%= img %>"
@@ -114,7 +202,18 @@
                 loading="lazy"
               />
             </div>
-            <% }) %>
+            <% }) %> <% } else { %> <% proposal.updated_ads.images.forEach((img,
+            index) => { %>
+            <div class="carousel-item <%= index == 0 ? 'active' : '' %>">
+              <img
+                src="<%= img %>"
+                alt="image-<%= index %>"
+                class="d-block"
+                style="width: 100%"
+                loading="lazy"
+              />
+            </div>
+            <% }) %> <% } %>
           </div>
 
           <!-- Left and right controls/icons -->

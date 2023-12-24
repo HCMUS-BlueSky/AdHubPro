@@ -1,9 +1,10 @@
 const { Location } = require("../../models/Location");
-const { Ads } = require('../../models/Ads');
-const { generateRegexQuery } = require('regex-vietnamese');
+const { Ads } = require("../../models/Ads");
+const { generateRegexQuery } = require("regex-vietnamese");
 const Request = require("../../models/Request");
 const uploadFile = require("../../utils/fileUpload");
 const moment = require("moment");
+const District = require("../../models/District");
 
 exports.view = async (req, res) => {
   const perPage = 10;
@@ -16,30 +17,80 @@ exports.view = async (req, res) => {
       .distinct("_id")
       .exec();
     const request = await Request.find({
-      'ads.location': { $in: managed_locations }
+      "ads.location": { $in: managed_locations },
     })
-      .populate('ads.location', 'address')
+      .populate("ads.location", "address")
       .sort({ created_at: -1 })
       .skip(perPage * page - perPage)
       .limit(perPage)
       .exec();
-    const count = await Request.count({
-      'ads.location': { $in: managed_locations }
+    const district = await District.findOne({
+      name: user.managed_district.name,
     });
-    res.render('district/request/index', {
+    const count = await Request.count({
+      "ads.location": { $in: managed_locations },
+    });
+    res.render("district/request/index", {
+      district,
       request,
       user,
       perPage,
       current: page,
       pages: Math.ceil(count / perPage),
-      pageName: 'request',
+      pageName: "request",
       header: {
-        navRoot: 'Yêu cầu cấp phép',
-        navCurrent: 'Thông tin chung'
-      }
+        navRoot: "Yêu cầu cấp phép",
+        navCurrent: "Thông tin chung",
+      },
     });
   } catch (err) {
     return res.status(500).send(err.message);
+  }
+};
+
+exports.filter = async (req, res) => {
+  let perPage = 10;
+  let page = req.query.page || 1;
+  try {
+    const selectedWards = req.body.select;
+    const user = req.session.user;
+    const district = await District.findOne({
+      name: user.managed_district.name,
+    });
+    const managed_locations = await Location.find({
+      ward: { $in: selectedWards },
+      district: user.managed_district.name,
+    })
+      .distinct("_id")
+      .exec();
+    const request = await Request.find({
+      "ads.location": { $in: managed_locations },
+    })
+      .sort({ created_at: -1 })
+      .skip(perPage * page - perPage)
+      .limit(perPage)
+      .populate("ads.location", "address")
+      .exec();
+    const count = await Request.count({
+      "ads.location": { $in: managed_locations },
+    });
+    res.render("district/request/index", {
+      district,
+      request,
+      user,
+      perPage,
+      current: page,
+      moment,
+      pages: Math.ceil(count / perPage),
+      pageName: "request",
+      header: {
+        navRoot: "Yêu cầu cấp phép",
+        navCurrent: "Thông tin chung",
+      },
+    });
+  } catch (err) {
+    req.flash("error", err.message);
+    return res.redirect("/district/location");
   }
 };
 
@@ -48,75 +99,79 @@ exports.search = async (req, res) => {
   const page = req.query.page || 1;
   try {
     const searchTerm = req.query.searchTerm;
-    if (typeof searchTerm !== 'string')
-      throw new Error('Từ khóa không hợp lệ!');
-    if (!searchTerm) return res.redirect('/district/request');
+    if (typeof searchTerm !== "string")
+      throw new Error("Từ khóa không hợp lệ!");
+    if (!searchTerm) return res.redirect("/district/request");
     const user = req.session.user;
     const locations = await Location.find({
       district: user.managed_district.name,
       $text: {
-        $search: `\"${searchTerm}\"`
-      }
+        $search: `\"${searchTerm}\"`,
+      },
     })
-      .distinct('_id')
+      .distinct("_id")
       .exec();
     const managed_locations = await Location.find({
       district: user.managed_district.name,
     })
-      .distinct('_id')
+      .distinct("_id")
       .exec();
     const rgx = generateRegexQuery(searchTerm);
     const request = await Request.find({
       $or: [
         {
-          'ads.location': { $in: locations }
+          "ads.location": { $in: locations },
         },
         {
-          'ads.location': { $in: managed_locations },
-          'company.name': { $regex: rgx }
+          "ads.location": { $in: managed_locations },
+          "company.name": { $regex: rgx },
         },
         {
-          'ads.location': { $in: managed_locations },
-          'ads.type': { $regex: rgx }
-        }
-      ]
+          "ads.location": { $in: managed_locations },
+          "ads.type": { $regex: rgx },
+        },
+      ],
     })
       .sort({ created_at: -1 })
       .skip(perPage * page - perPage)
       .limit(perPage)
-      .populate('ads.location', 'address')
+      .populate("ads.location", "address")
       .exec();
+    const district = await District.findOne({
+      name: user.managed_district.name,
+    });
     const count = await Request.count({
       $or: [
         {
-          'ads.location': { $in: locations }
+          "ads.location": { $in: locations },
         },
         {
-          'ads.location': { $in: managed_locations },
-          'company.name': { $regex: rgx }
+          "ads.location": { $in: managed_locations },
+          "company.name": { $regex: rgx },
         },
         {
-          'ads.location': { $in: managed_locations },
-          'ads.type': { $regex: rgx }
-        }
-      ]
+          "ads.location": { $in: managed_locations },
+          "ads.type": { $regex: rgx },
+        },
+      ],
     });
-    res.render('district/request/index', {
+    res.render("district/request/index", {
       request,
       user,
       perPage,
+      district,
       current: page,
       pages: Math.ceil(count / perPage),
-      pageName: 'request',
+      pageName: "request",
       header: {
-        navRoot: 'Yêu cầu cấp phép',
-        navCurrent: 'Thông tin chung'
-      }
+        navRoot: "Yêu cầu cấp phép",
+        navCurrent: "Thông tin chung",
+      },
     });
-   } catch (err) {
-     req.flash('error', err.message);
-     return res.redirect('/district/request');
-   }
+  } catch (err) {
+    req.flash("error", err.message);
+    return res.redirect("/district/request");
+  }
 };
 
 exports.getDetail = async (req, res) => {
@@ -131,19 +186,19 @@ exports.getDetail = async (req, res) => {
       _id: req.params.id,
       "ads.location": { $in: managed_locations },
     }).populate("ads.location", "ward district address");
-    res.render('district/request/detail', {
+    res.render("district/request/detail", {
       request,
       user,
       moment,
-      pageName: 'request',
+      pageName: "request",
       header: {
-        navRoot: 'Yêu cầu cấp phép',
-        navCurrent: 'Thông tin chi tiết'
-      }
+        navRoot: "Yêu cầu cấp phép",
+        navCurrent: "Thông tin chi tiết",
+      },
     });
   } catch (error) {
     req.flash("error", "Yêu cầu cấp phép không tồn tại!");
-    return res.redirect('/district/request');
+    return res.redirect("/district/request");
   }
 };
 
@@ -154,19 +209,19 @@ exports.renderCreateNew = async (req, res) => {
       district: user.managed_district.name,
     }).exec();
     const availableAdsType = await Ads.getAvailableType();
-    res.render('district/request/create', {
+    res.render("district/request/create", {
       locations,
       user,
       availableAdsType,
-      pageName: 'request',
+      pageName: "request",
       header: {
-        navRoot: 'Yêu cầu cấp phép',
-        navCurrent: 'Tạo yêu cầu mới'
-      }
+        navRoot: "Yêu cầu cấp phép",
+        navCurrent: "Tạo yêu cầu mới",
+      },
     });
   } catch (error) {
     req.flash("error", err.message);
-    return res.redirect('/district/request');
+    return res.redirect("/district/request");
   }
 };
 
@@ -234,10 +289,10 @@ exports.createNew = async (req, res) => {
     }
     await request.save();
     req.flash("success", "Gửi yêu cầu cấp phép thành công!");
-    return res.redirect('/district/request');
+    return res.redirect("/district/request");
   } catch (err) {
     req.flash("error", err.message);
-    return res.redirect('/district/request');
+    return res.redirect("/district/request");
   }
 };
 
@@ -261,6 +316,6 @@ exports.cancelRequest = async (req, res) => {
     return res.redirect("/district/request");
   } catch (error) {
     req.flash("error", "Hủy yêu cầu cấp phép không thành công!");
-    return res.redirect('/district/request');
+    return res.redirect("/district/request");
   }
 };

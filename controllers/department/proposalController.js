@@ -38,10 +38,13 @@ exports.getDetail = async (req, res) => {
     const user = req.session.user;
     const proposal = await Proposal.findOne({
       _id: req.params.id,
-    }).populate({
-      path: "location",
-      select: ["address", "ward", "district", "method"],
-    });
+    })
+      .populate({
+        path: "location",
+        select: ["address", "ward", "district", "method"],
+      })
+      .populate({ path: "ads", select: ["type", "size", "images"] });
+    console.log(proposal);
     res.render("department/proposal/detail", {
       proposal,
       user,
