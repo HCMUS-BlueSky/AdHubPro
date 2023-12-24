@@ -1,6 +1,7 @@
 const Account = require("../../models/User");
 const moment = require("moment");
 const District = require("../../models/District");
+const bcrypt = require('bcrypt');
 
 exports.view = async (req, res) => {
   let perPage = 10;
@@ -30,28 +31,73 @@ exports.view = async (req, res) => {
     return res.status(500).send(err.message);
   }
 };
+
 exports.getDetail = async (req, res) => {
-  const user = req.session.user;
-  const account = await Account.findOne({ _id: req.params.id }).populate(
-    "managed_district",
-    "name"
-  );
-  if (!account) throw new Error("Tài khoản không tồn tại!");
   try {
-    res.render("department/account/detail", {
+    const user = req.session.user;
+    const account = await Account.findOne({ _id: req.params.id }).populate(
+      'managed_district',
+      'name'
+    );
+    if (!account) throw new Error('Tài khoản không tồn tại!');
+    res.render('department/account/detail', {
       user,
       account,
       moment,
-      pageName: "account",
+      pageName: 'account',
       header: {
-        navRoot: "Quản lí tài khoản",
-        navCurrent: "Thông tin chi tiết",
+        navRoot: 'Quản lí tài khoản',
+        navCurrent: 'Thông tin chi tiết'
       },
-      layout: "layouts/department",
+      layout: 'layouts/department'
     });
   } catch (err) {
-    req.flash("error", "Tài khoản không tồn tại!");
-    return res.redirect("/department/account");
+    req.flash('error', 'Tài khoản không tồn tại!');
+    return res.redirect('/department/account');
+  }
+};
+
+exports.search = async (req, res) => {
+  const perPage = 10;
+  const page = req.query.page || 1;
+  try {
+    const searchTerm = req.query.searchTerm;
+    if (typeof searchTerm !== 'string')
+      throw new Error('Từ khóa không hợp lệ!');
+    if (!searchTerm) return res.redirect('/department/account');
+    const user = req.session.user;
+    const accounts = await Account.find({
+      $text: {
+        $search: `\"${searchTerm}\"`
+      }
+    })
+      .sort({ created_at: -1 })
+      .skip(perPage * page - perPage)
+      .limit(perPage)
+      .exec();
+
+    const count = await Account.count({
+      $text: {
+        $search: `\"${searchTerm}\"`
+      }
+    });
+    res.render('department/account/index', {
+      user,
+      accounts,
+      perPage,
+      user,
+      current: page,
+      pages: Math.ceil(count / perPage),
+      pageName: 'account',
+      header: {
+        navRoot: 'Quản lí tài khoản',
+        navCurrent: 'Thông tin chung'
+      },
+      layout: 'layouts/department'
+    });
+  } catch (err) {
+    req.flash('error', err.message);
+    return res.redirect('/department/account');
   }
 };
 
@@ -156,32 +202,100 @@ exports.renderCreate = async (req, res) => {
       layout: "layouts/department",
     });
   } catch (err) {
-    return res.status(500).send(err.message);
+    req.flash('error', 'Lỗi hệ thống');
+    return res.redirect('/department/account');
   }
 };
 
 exports.create = async (req, res) => {
   try {
-    const user = req.session.user;
-    res.render("department/account/create", {
-      user,
-      pageName: "account",
-      header: {
-        navRoot: "Quản lí tài khoản",
-        navCurrent: "Tạo tài khoản",
-      },
-      layout: "layouts/department",
+    const {
+      fullname,
+      birthdate,
+      gender,
+      phone,
+      identity_code,
+      email,
+      password,
+      role,
+      managed_district,
+      managed_ward
+    } = req.body;
+    if (!fullname || typeof fullname !== 'string') 
+      throw new Error("Họ tên không hợp lệ!");
+    if (!birthdate || typeof birthdate !== 'string')
+      throw new Error('Ngày sinh không hợp lệ!');
+    if (!gender || typeof gender !== 'string')
+      throw new Error('Giới tính không hợp lệ!');
+    if (!phone || typeof phone !== 'string')
+      throw new Error('Số điện thoại không hợp lệ!');
+    if (!identity_code || typeof identity_code !== 'string')
+      throw new Error('CMND/CCCD không hợp lệ!');
+    if (!email || typeof email !== 'string')
+      throw new Error('Email không hợp lệ!');
+    if (
+      !role ||
+      typeof role !== 'string' ||
+      (role !== 'ward_officer' && role !== 'district_officer')
+    )
+      throw new Error('Chức vụ không hợp lệ!');
+    if (!password || typeof password !== 'string')
+      throw new Error('Mật khẩu không hợp lệ!');
+    if (password.length < 8)
+      throw new Error('Mật khẩu quá ngắn, mật khẩu phải dài hơn 8 kí tự!');
+
+    const new_user = new Account({
+      fullname,
+      birthdate,
+      phone,
+      identity_code,
+      email,
+      role
     });
+    const hashedPassword = await bcrypt.hash(password, 10);
+    new_user.password = hashedPassword;
+    if (gender === "male") {
+      new_user.gender = true;
+    }
+    else if (gender === "female") {
+      new_user.gender = false;
+    }
+    else {
+      throw new Error('Giới tính không hợp lệ!');
+    }
+    if (!managed_district || typeof managed_district !== 'string')
+      throw new Error('Quận quản lí không hợp lệ!');
+    const exist_district = await District.exists({ _id: managed_district });
+    if (!exist_district) throw new Error('Quận quản lí không hợp lệ!');
+    new_user.managed_district = managed_district;
+    if (role === 'ward_officer') {
+      if (!managed_ward || typeof managed_ward !== 'string')
+        throw new Error('Phường quản lí không hợp lệ!');
+      const exist_ward = await District.exists({
+        _id: managed_district,
+        wards: managed_ward
+      });
+      if (!exist_ward) throw new Error('Phường quản lí không hợp lệ!');
+      new_user.managed_ward = managed_ward;
+    }
+    await new_user.save();
+    req.flash('success', 'Tạo tài khoản cán bộ thành công!');
+    return res.redirect('/department/account');
   } catch (err) {
-    return res.status(500).send(err.message);
+    req.flash('error', err.message);
+    return res.redirect('/department/account');
   }
 };
 
 exports.renderAssign = async (req, res) => {
   try {
     const user = req.session.user;
+    const account = await Account.findOne({ _id: req.params.id }).exec();
+    if (!account) throw new Error('Tài khoản không tồn tại!');
+    if (account.role === 'department_officer')
+      throw new Error('Không thể phân công khu vực cho cán bộ sở!');
     const districts = await District.find({});
-    res.render("department/account/assign", {
+    return res.render("department/account/assign", {
       user,
       districts,
       pageName: "account",
@@ -192,23 +306,48 @@ exports.renderAssign = async (req, res) => {
       layout: "layouts/department",
     });
   } catch (err) {
-    return res.status(500).send(err.message);
+    req.flash('error', err.message);
+    return res.redirect('/department/account');
   }
 };
 
 exports.assign = async (req, res) => {
   try {
+    const user_id = req.params.id;
     const user = req.session.user;
-    res.render("department/account/create", {
-      user,
-      pageName: "account",
-      header: {
-        navRoot: "Quản lí tài khoản",
-        navCurrent: "Tạo tài khoản",
-      },
-      layout: "layouts/department",
-    });
+    const account = await Account.findById(user_id).exec();
+    if (!account) throw new Error('Tài khoản không tồn tại!');
+    if (account.role === 'department_officer')
+      throw new Error('Không thể phân công khu vực cho cán bộ sở!');
+    const { role, managed_district, managed_ward } = req.body;
+    if (
+      !role ||
+      typeof role !== 'string' ||
+      (role !== 'ward_officer' && role !== 'district_officer')
+    )
+      throw new Error('Chức vụ không hợp lệ!');
+    
+    account.role = role;
+    if (!managed_district || typeof managed_district !== 'string')
+      throw new Error('Quận quản lí không hợp lệ!');
+    const exist_district = await District.exists({ _id: managed_district });
+    if (!exist_district) throw new Error('Quận quản lí không hợp lệ!');
+    account.managed_district = managed_district;
+    if (role === 'ward_officer') {
+      if (!managed_ward || typeof managed_ward !== 'string')
+        throw new Error('Phường quản lí không hợp lệ!');
+      const exist_ward = await District.exists({
+        _id: managed_district,
+        wards: managed_ward
+      });
+      if (!exist_ward) throw new Error('Phường quản lí không hợp lệ!');
+      account.managed_ward = managed_ward;
+    }
+    await account.save();   
+    req.flash('success', 'Phân công khu vực cho cán bộ thành công!');
+    return res.redirect('/department/account');
   } catch (err) {
-    return res.status(500).send(err.message);
+    req.flash('error', err.message);
+    return res.redirect('/department/account');
   }
 };

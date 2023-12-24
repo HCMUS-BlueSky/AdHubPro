@@ -6,12 +6,15 @@
   <h2 class="fw-semibold">QUẢN LÍ TÀI KHOẢN CÁN BỘ PHƯỜNG, QUẬN</h2>
   <div class="row justify-content-center">
     <div class="col-3">
-      <input
-        class="form-control mr-sm-2"
-        type="search"
-        placeholder="Tìm kiếm"
-        aria-label="Search"
-      />
+      <form role="search" method="GET" action="/department/account/search">
+        <input
+          class="form-control mr-sm-2"
+          type="search"
+          placeholder="Tìm kiếm"
+          aria-label="Search"
+          name="searchTerm"
+        />
+      </form>
     </div>
     <div class="col-3">
       <a href="/department/account/create">
@@ -59,43 +62,4 @@
   </table>
   <% if (accounts.length > 0) { %> <%- include('../../partials/pagination.ejs') %> <%
   } %>
-</div>
-<!-- Remove Account Modal -->
-<div
-  class="modal fade"
-  id="removeAccount"
-  aria-hidden="true"
-  aria-labelledby="removeAccount"
-  tabindex="-1"
->
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Xác nhận</h5>
-          <button
-            type="button"
-            class="btn-close"
-            data-bs-dismiss="modal"
-            aria-label="Close"
-          ></button>
-        </div>
-        <div class="modal-body">
-          <p>Bạn có chắc chắn muốn xóa người dùng này?</p>
-        </div>
-        <div class="modal-footer">
-          <button
-            type="button"
-            class="btn btn-secondary"
-            data-bs-dismiss="modal"
-          >
-            Đóng
-          </button>
-          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
-            Xóa
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
 </div>

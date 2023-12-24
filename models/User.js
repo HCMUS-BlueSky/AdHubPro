@@ -83,5 +83,13 @@ const userSchema = new mongoose.Schema(
   }
 );
 
+userSchema.index({
+  fullname: 'text',
+  email: 'text',
+  identity_code: 'text',
+  phone: 'text',
+  role: 'text'
+});
+
 //Export the model
 module.exports = mongoose.model('User', userSchema);

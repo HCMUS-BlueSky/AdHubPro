@@ -78,6 +78,7 @@ router.get('/account/assign/:id', accountController.renderAssign);
 router.post('/account/assign/:id', accountController.assign);
 router.get('/account/create', accountController.renderCreate);
 router.post('/account/create', accountController.create);
+router.get('/account/search', accountController.search);
 
 router.all('/account/*', (req, res) => {
   return res.redirect('/department/account');

@@ -5,7 +5,7 @@
   <div class="card bg-light mb-3">
     <div class="card-body p-4">
       <h4 class="card-title py-2 fw-semibold">Phân công khu vực quản lý</h4>
-      <div class="d-flex flex-column pb-4">
+      <form method="POST" id="form" class="d-flex flex-column pb-4">
         <div class="row py-3">
           <div class="col-2">
             <label for="" class="form-label"
@@ -15,12 +15,12 @@
               <input
                 class="form-check-input"
                 type="radio"
-                name="exampleRadios"
-                id="exampleRadios1"
-                value="option1"
+                name="role"
+                id="wardRoleSelect"
+                value="ward_officer"
                 checked
               />
-              <label class="form-check-label" for="exampleRadios1">
+              <label class="form-check-label" for="wardRoleSelect">
                 Cán bộ phường
               </label>
             </div>
@@ -28,11 +28,11 @@
               <input
                 class="form-check-input"
                 type="radio"
-                name="exampleRadios"
-                id="exampleRadios2"
-                value="option2"
+                name="role"
+                id="districtRoleSelect"
+                value="district_officer"
               />
-              <label class="form-check-label" for="exampleRadios2">
+              <label class="form-check-label" for="districtRoleSelect">
                 Cán bộ quận
               </label>
             </div>
@@ -41,7 +41,7 @@
             <label for="" class="form-label"
               >Quận<span class="text-danger"> *</span></label
             >
-            <select class="form-select district-select" aria-label="">
+            <select class="form-select district-select" aria-label="" name="managed_district">
               <% districts.forEach(district => { %>
               <option value="<%= district._id %>"><%= district.name %></option>
               <% }) %>
@@ -51,7 +51,7 @@
             <label for="" class="form-label"
               >Phường<span class="text-danger"> *</span></label
             >
-            <select class="form-select ward-select" aria-label=""></select>
+            <select class="form-select ward-select" aria-label="" name="managed_ward"></select>
           </div>
         </div>
 
@@ -77,7 +77,7 @@
             >Cập nhật</a
           >
         </div>
-      </div>
+      </form>
     </div>
   </div>
 </div>
@@ -112,8 +112,8 @@
           >
             Đóng
           </button>
-          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">
-            Lưu thay đổi
+          <button type="button" class="btn btn-primary" id="submit-btn">
+            Cập nhật
           </button>
         </div>
       </div>
@@ -122,10 +122,21 @@
 </div>
 
 <script>
+  document.getElementById("submit-btn").addEventListener("click", () => {
+    form.submit();
+  });
   document.addEventListener("DOMContentLoaded", function () {
+    var wardRoleSelect = document.querySelector("#wardRoleSelect");
+    var districtRoleSelect = document.querySelector("#districtRoleSelect");
     var districtSelect = document.querySelector(".district-select");
     var wardSelect = document.querySelector(".ward-select");
 
+    wardRoleSelect.addEventListener("click", async () => {
+      wardSelect.removeAttribute("disabled", "");
+    })
+    districtRoleSelect.addEventListener("click", async () => {
+      wardSelect.setAttribute("disabled", "");
+    })
     districtSelect.addEventListener("change", async () => {
       let selectedOption = districtSelect.options[districtSelect.selectedIndex];
       let district = selectedOption.value;
