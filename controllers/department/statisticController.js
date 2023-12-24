@@ -1,5 +1,7 @@
 const Report = require("../../models/Report");
-const moment = require("moment");
+const { Location } = require('../../models/Location');
+const { generateRegexQuery } = require('regex-vietnamese');
+const moment = require('moment');
 
 exports.view = async (req, res) => {
   try {
@@ -49,6 +51,78 @@ exports.overview = async (req, res) => {
     });
   } catch (err) {
     return res.redirect("/department/statistic");
+  }
+};
+
+exports.search = async (req, res) => {
+  const perPage = 10;
+  const page = req.query.page || 1;
+  try {
+    const searchTerm = req.query.searchTerm;
+    if (typeof searchTerm !== 'string')
+      throw new Error('Từ khóa không hợp lệ!');
+    if (!searchTerm) return res.redirect('/department/statistic/overview');
+    const user = req.session.user;
+    const locations = await Location.find({
+      $text: {
+        $search: `\"${searchTerm}\"`
+      }
+    })
+      .distinct('_id')
+      .exec();
+    const rgx = generateRegexQuery(searchTerm);
+    const reports = await Report.find({
+      $or: [
+        {
+          location: { $in: locations }
+        },
+        {
+          type: { $regex: rgx }
+        },
+        {
+          'reporter.name': { $regex: rgx }
+        }
+      ]
+    })
+      .sort({ created_at: -1 })
+      .skip(perPage * page - perPage)
+      .limit(perPage)
+      .populate({
+        path: 'location',
+        select: ['address', 'ward', 'district', 'method']
+      })
+      .exec();
+
+    const count = await Report.count({
+      $or: [
+        {
+          location: { $in: locations }
+        },
+        {
+          type: { $regex: rgx }
+        },
+        {
+          'reporter.name': { $regex: rgx }
+        }
+      ]
+    });
+    res.render('department/statistic/overview', {
+      reports,
+      moment,
+      user,
+      perPage,
+      current: page,
+      pages: Math.ceil(count / perPage),
+      pageName: 'statistic',
+      header: {
+        navRoot: 'Thống kê',
+        navCurrent: 'Thông tin chung'
+      },
+      layout: 'layouts/department'
+    });
+  } catch (err) {
+    req.flash('error', err.message);
+    return res.redirect('/department/statistic/overview');
   }
 };
 

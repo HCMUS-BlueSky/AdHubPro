@@ -2,20 +2,19 @@
 <div class="col p-3 border-start">
   <%- include('../../partials/header.ejs') %>
   <hr />
+  <%- include('../../partials/flash.ejs') %>
   <h2 class="fw-semibold">THỐNG KÊ BÁO CÁO VÀ CÁCH XỬ LÝ</h2>
   <div class="row justify-content-center">
     <div class="col-3">
-      <input
-        class="form-control mr-sm-2"
-        type="search"
-        placeholder="Tìm kiếm"
-        aria-label="Search"
-      />
-    </div>
-    <div class="col-3">
-      <select class="form-select" aria-label="Default select example">
-        <option selected>Sắp xếp</option>
-      </select>
+      <form role="search" method="GET" action="/department/report/search">
+        <input
+          class="form-control mr-sm-2"
+          type="search"
+          placeholder="Tìm kiếm"
+          aria-label="Search"
+          name="searchTerm"
+        />
+      </form>
     </div>
     <div class="col-2">
       <a class="btn btn-primary" href="/department/statistic" role="button"
@@ -63,6 +62,9 @@
       <% }) %>
     </tbody>
   </table>
+  <% if (reports.length > 0) { %>
+    <%- include('../../partials/pagination.ejs') %>
+  <% } %>
 </div>
 
 <!-- Modal Remove -->

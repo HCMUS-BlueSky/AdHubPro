@@ -6,7 +6,10 @@ exports.view = async (req, res) => {
   let page = req.query.page || 1;
   try {
     const user = req.session.user;
-    const accounts = await Account.find({});
+    const accounts = await Account.find({})
+      .sort({ created_at: -1 })
+      .skip(perPage * page - perPage)
+      .limit(perPage);
     const count = await Account.count();
     res.render("department/account/index", {
       user,

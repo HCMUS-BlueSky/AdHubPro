@@ -66,6 +66,7 @@ router.all('/request/*', (req, res) => {
 router.get('/statistic', statisticController.view);
 router.get('/statistic/overview', statisticController.overview);
 router.get('/report/view/:id', statisticController.getDetail);
+router.get('/report/search', statisticController.search);
 
 // Account
 router.get('/account', accountController.view);
