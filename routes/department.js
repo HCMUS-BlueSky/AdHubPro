@@ -51,7 +51,12 @@ router.all('/ads/*', (req, res) => {
 // Proposal
 router.get('/proposal', proposalController.view);
 router.get('/proposal/view/:id', proposalController.getDetail);
-
+router.post('/proposal/:id/approve', proposalController.approve);
+router.post('/proposal/:id/reject', proposalController.reject);
+router.get('/proposal/search', proposalController.search);
+router.all('/proposal/*', (req, res) => {
+  return res.redirect('/department/proposal');
+});
 // Request
 router.get('/request', requestDepartmentController.view);
 router.get('/request/view/:id', requestDepartmentController.getDetail);

@@ -31,12 +31,14 @@ const proposalSchema = new mongoose.Schema(
       required: true
     },
     updated_location: {
+      _id: false,
       type: locationSchema,
       required: function () {
         return this.type == 'Điểm đặt quảng cáo';
       }
     },
     updated_ads: {
+      _id: false,
       type: adsSchema,
       required: function () {
         return this.type == 'Bảng quảng cáo';

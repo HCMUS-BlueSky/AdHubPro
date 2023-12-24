@@ -129,6 +129,7 @@
           class="btn btn-success me-4"
           data-bs-toggle="modal"
           data-bs-target="#approveRequest"
+          <%= proposal.status !== 'pending' ? "disabled" : "" %>
         >
           Xét duyệt
         </button>
@@ -137,6 +138,7 @@
           class="btn btn-danger me-4"
           data-bs-toggle="modal"
           data-bs-target="#rejectRequest"
+          <%= proposal.status !== 'pending' ? "disabled" : "" %>
         >
           Từ chối duyệt
         </button>
