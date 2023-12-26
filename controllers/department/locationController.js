@@ -3,6 +3,7 @@ const { Location } = require("../../models/Location");
 const Proposal = require("../../models/Proposal");
 const Report = require("../../models/Report");
 const Request = require("../../models/Request");
+const District = require("../../models/District");
 const uploadFile = require("../../utils/fileUpload");
 
 exports.view = async (req, res) => {
@@ -172,7 +173,9 @@ exports.renderCreate = async (req, res) => {
     const user = req.session.user;
     const availableType = Location.getAvailableType();
     const availableMethod = Location.getAvailableMethod();
+    const districts = await District.find({});
     return res.render("department/location/create", {
+      districts,
       availableType,
       availableMethod,
       user,
@@ -191,8 +194,17 @@ exports.renderCreate = async (req, res) => {
 
 exports.create = async (req, res) => {
   try {
-    // const { longitude, latitude, images, ...filtered } = req.body;
-    // const new_images = [];
+    console.log(req.body);
+    const {
+      longitude,
+      latitude,
+      districts,
+      ward,
+      address,
+      images,
+      ...filtered
+    } = req.body;
+    const new_images = [];
     // if (req.files && req.files.length) {
     //   for (let file of req.files) {
     //     const url = await uploadFile(`assets/location/${location.id}`, file);
@@ -201,7 +213,7 @@ exports.create = async (req, res) => {
     //   filtered.images = new_images;
     // }
     // Object.assign(location, filtered);
-    // await location.save();
+    await location.save();
     req.flash("success", "Thêm điểm đặt quảng cáo thành công!");
     return res.redirect("/department/location");
   } catch (err) {

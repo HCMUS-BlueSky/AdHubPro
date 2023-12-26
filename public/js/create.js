@@ -237,7 +237,9 @@ async function initMap() {
 
   // Random locations
   geocoder.on("result", async (e) => {
-    console.log(e.result);
+    document.querySelector(".map-location").value = e.result.place_name;
+    document.querySelector(".longitude").value = e.result.center[0];
+    document.querySelector(".latitude").value = e.result.center[1];
   });
 
   // Add geolocate control to the map.
