@@ -10,7 +10,7 @@
       <div class="card bg-light mb-1">
         <div class="card-body p-3">
           <h4 class="card-title py-3 fw-semibold">Thêm điểm đặt quảng cáo</h4>
-          <form method="POST" id="createForm">
+          <form method="POST" id="createForm" enctype="multipart/form-data">
             <div class="row px-3 mb-3">
               <label for="" class="form-label"
                 >Vị trí trên bản đồ<span class="text-danger"> *</span></label
@@ -107,7 +107,7 @@
               >
               <select
                 class="form-select text-secondary w-auto"
-                name=""
+                name="type"
                 id="type_select"
               >
                 <% if(!availableType) {%>
@@ -123,13 +123,12 @@
               >
               <select
                 class="form-select text-secondary w-auto"
-                name=""
+                name="method"
                 id="method_select"
               >
                 <% if(!availableMethod) {%>
-                <option value="" selected>>Vui lòng chọn</option>
-                <% } else {%> <% availableMethod?.forEach((method, index) => {
-                %>
+                <option value="" selected>Vui lòng chọn</option>
+                <% } else {%> <% availableMethod?.forEach((method, index) => { %>
                 <option value="<%= method %>"><%= method %></option>
                 <% })%> <% }%>
               </select>
@@ -141,6 +140,7 @@
                   type="file"
                   class="form-control text-secondary"
                   id="file_inp"
+                  name="images"
                   placeholder="Chưa có file được chọn"
                   aria-describedby="fileHelpId"
                   multiple

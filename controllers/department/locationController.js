@@ -194,26 +194,53 @@ exports.renderCreate = async (req, res) => {
 
 exports.create = async (req, res) => {
   try {
-    console.log(req.body);
     const {
       longitude,
       latitude,
-      districts,
+      district,
       ward,
       address,
-      images,
-      ...filtered
+      type,
+      method
     } = req.body;
+    if (!longitude && typeof longitude !== 'string') 
+      throw new Error("Kinh độ không hợp lệ!")
+    if (!latitude && typeof latitude !== 'string')
+      throw new Error('Vĩ độ không hợp lệ!');
+    if (!district && typeof district !== 'string')
+      throw new Error('Quận không hợp lệ!');
+    if (!ward && typeof ward !== 'string')
+      throw new Error('Phường không hợp lệ!');
+    if (!address && typeof address !== 'string')
+      throw new Error('Địa chỉ không hợp lệ!');
+    if (!type && typeof type !== 'string')
+      throw new Error('Loại vị trí không hợp lệ!');
+    if (!method && typeof method !== 'string')
+      throw new Error('Hình thức quảng cáo không hợp lệ!');
+
+    const districtDoc = await District.findById(district).exec();
+    if (!districtDoc) 
+    throw new Error('Quận không hợp lệ!');
+    if (!districtDoc?.wards.includes(ward))
+      throw new Error('Phường không hợp lệ!');
+    const new_location = new Location({
+      longitude,
+      latitude,
+      district: districtDoc.name,
+      ward,
+      address,
+      type,
+      method
+    });
     const new_images = [];
-    // if (req.files && req.files.length) {
-    //   for (let file of req.files) {
-    //     const url = await uploadFile(`assets/location/${location.id}`, file);
-    //     new_images.push(url);
-    //   }
-    //   filtered.images = new_images;
-    // }
-    // Object.assign(location, filtered);
-    await location.save();
+    if (req.files && req.files.length) {
+      for (let file of req.files) {
+        const url = await uploadFile(`assets/location/${new_location.id}`, file);
+        new_images.push(url);
+      }
+      new_location.images = new_images;
+    }
+    await new_location.save();
     req.flash("success", "Thêm điểm đặt quảng cáo thành công!");
     return res.redirect("/department/location");
   } catch (err) {
