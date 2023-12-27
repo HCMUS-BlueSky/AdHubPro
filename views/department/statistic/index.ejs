@@ -2,23 +2,33 @@
 <div class="col p-3 border-start">
   <%- include('../../partials/header.ejs') %>
   <hr />
-  <div class="row justify-content-center">
-    <div class="col-3">
-      <input
-        class="form-control mr-sm-2"
-        type="search"
-        placeholder="Tìm kiếm"
-        aria-label="Search"
-      />
-    </div>
-    <div class="col-3">
-      <select class="form-select" aria-label="Default select example">
-        <option selected>Sắp xếp</option>
+  <div class="row justify-content-center align-items-end">
+    <div class="col-2">
+      <label for="" class="form-label">Quận</label>
+      <select
+        class="form-select district-select"
+        aria-label=""
+        name="managed_district"
+      >
+        <% districts.forEach(district => { %>
+        <option value="<%= district._id %>"><%= district.name %></option>
+        <% }) %>
       </select>
     </div>
     <div class="col-2">
+      <label for="" class="form-label">Phường</label>
+      <select
+        class="form-select ward-select"
+        name="managed_ward"
+        aria-label=""
+      ></select>
+    </div>
+    <div class="col-2">
+      <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+    </div>
+    <div class="col-2">
       <a
-        class="btn btn-primary"
+        class="btn btn-info"
         href="/department/statistic/overview"
         role="button"
         >Xem chi tiết</a
@@ -37,85 +47,130 @@
   src="https://www.gstatic.com/charts/loader.js"
 ></script>
 <script type="text/javascript">
-  // Load google charts
-  google.charts.load("current", { packages: ["corechart"] });
-  google.charts.setOnLoadCallback(drawChart);
+  async function createChart() {
+    const reportsCountResponse = await fetch("/utils/reports/count");
+    const reportsCount = await reportsCountResponse.json();
 
-  // Draw the chart and set the chart values
-  function drawChart() {
-    var data = google.visualization.arrayToDataTable([
-      ["Trạng thái xử lý", "Số lượng báo cáo"],
-      ["Đang xử lý", 18],
-      ["Đã xử lý", 22],
-      ["Chưa xử lý", 14],
-    ]);
+    // Load google charts
+    google.charts.load("current", { packages: ["corechart"] });
+    google.charts.setOnLoadCallback(drawChart);
 
-    // Optional; add a title and set the width and height of the chart
-    var options = {
-      title: "Thống kê báo cáo",
-      subtitle: "01/01/2023 - Hiện tại",
-      fontName: "Be Vietnam Pro",
-      titleTextStyle: {
-        color: "#313131",
-        fontSize: 18, // 12, 18 whatever you want (don't specify px)
-        bold: true, // true or false
-        italic: false, // true or false
-      },
-      backgroundColor: "rgb(248,249,250)",
-      width: 800,
-      height: 300,
-    };
+    // Draw the chart and set the chart values
+    function drawChart() {
+      var data = google.visualization.arrayToDataTable([
+        ["Trạng thái xử lý", "Số lượng báo cáo"],
+        ["Chờ xử lý", reportsCount[0]],
+        ["Đang xử lý", reportsCount[1]],
+        ["Đã xử lý", reportsCount[2]],
+      ]);
 
-    // Display the chart inside the <div> element with id="piechart"
-    var chart = new google.visualization.PieChart(
-      document.getElementById("piechart")
-    );
-    chart.draw(data, options);
+      // Optional; add a title and set the width and height of the chart
+      var options = {
+        title: "Thống kê báo cáo",
+        subtitle: "01/01/2023 - Hiện tại",
+        fontName: "Be Vietnam Pro",
+        titleTextStyle: {
+          color: "#313131",
+          fontSize: 18, // 12, 18 whatever you want (don't specify px)
+          bold: true, // true or false
+          italic: false, // true or false
+        },
+        backgroundColor: "rgb(248,249,250)",
+        width: 800,
+        height: 300,
+      };
+
+      // Display the chart inside the <div> element with id="piechart"
+      var chart = new google.visualization.PieChart(
+        document.getElementById("piechart")
+      );
+      chart.draw(data, options);
+    }
   }
+  createChart();
 </script>
 <script
   type="text/javascript"
   src="https://www.gstatic.com/charts/loader.js"
 ></script>
 <script type="text/javascript">
-  google.charts.load("current", { packages: ["bar"] });
-  google.charts.setOnLoadCallback(drawStuff);
+  async function createBarChart() {
+    const reportsCountMonthlyReponse = await fetch(
+      "/utils/reports/monthlyCount"
+    );
+    const reportsMonthlyCount = await reportsCountMonthlyReponse.json();
 
-  function drawStuff() {
-    var data = new google.visualization.arrayToDataTable([
-      ["Tháng", "Số lượng báo cáo"],
-      ["Tháng 1", 50],
-      ["Tháng 2", 12],
-      ["Tháng 3", 34],
-      ["Tháng 4", 56],
-      ["Tháng 5", 78],
-      ["Tháng 6", 91],
-      ["Tháng 7", 101],
-      ["Tháng 8", 150],
-      ["Tháng 9", 43],
-      ["Tháng 10", 60],
-      ["Tháng 11", 27],
-      ["Tháng 12", 15],
-    ]);
+    google.charts.load("current", { packages: ["bar"] });
+    google.charts.setOnLoadCallback(drawStuff);
 
-    var options = {
-      width: 800,
-      height: 500,
-      legend: { position: "none" },
-      chart: {
-        title: "Số lượng báo cáo theo từng tháng",
-        subtitle: "01/01/2023 - Hiện tại",
-      },
-      bars: "vertical", // Required for Material Bar Charts.
-      axes: {
-        x: {
-          0: { side: "bottom", label: "Số lượng báo cáo" }, // Top x-axis.
+    function getDatatable() {
+      let data = [["Tháng", "Số lượng báo cáo"]];
+      for (let i = 1; i <= 12; i++) {
+        let filteredData = reportsMonthlyCount.find(
+          (item) => item._id.month === i
+        );
+        let monthlyData = ["Tháng " + i, filteredData ? filteredData.count : 0];
+        data.push(monthlyData);
+      }
+      return data;
+    }
+
+    function drawStuff() {
+      let dataTable = getDatatable();
+
+      var data = new google.visualization.arrayToDataTable(dataTable);
+
+      var options = {
+        width: 800,
+        height: 500,
+        legend: { position: "none" },
+        chart: {
+          title: "Số lượng báo cáo theo từng tháng",
+          subtitle: "01/01/2023 - Hiện tại",
         },
-      },
-      bar: { groupWidth: "50%" },
-    };
+        bars: "vertical", // Required for Material Bar Charts.
+        axes: {
+          x: {
+            0: { side: "bottom", label: "Số lượng báo cáo" }, // Top x-axis.
+          },
+        },
+        bar: { groupWidth: "50%" },
+      };
 
-    var chart1 = new google.charts.Bar(document.getElementById("barchart"));
-    chart1.draw(data, options);
+      var chart1 = new google.charts.Bar(document.getElementById("barchart"));
+      chart1.draw(data, options);
+    }
   }
+  createBarChart();
+</script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    var districtSelect = document.querySelector(".district-select");
+    var wardSelect = document.querySelector(".ward-select");
+
+    districtSelect.addEventListener("change", async () => {
+      let selectedOption = districtSelect.options[districtSelect.selectedIndex];
+      let district = selectedOption.value;
+      const response = await fetch(`/utils/districts/${district}/wards`);
+      const data = await response.json();
+      populateWards(data.wards);
+    });
+
+    districtSelect.dispatchEvent(new Event("change"));
+
+    function populateWards(wards) {
+      wardSelect.innerHTML = "";
+      let option = document.createElement("option");
+      option.value = "Không";
+      option.innerHTML = "Không";
+      wardSelect.appendChild(option);
+
+      wards.forEach((ward) => {
+        let option = document.createElement("option");
+        option.value = ward;
+        option.innerHTML = ward;
+        wardSelect.appendChild(option);
+      });
+    }
+  });
 </script>

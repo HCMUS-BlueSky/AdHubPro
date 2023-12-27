@@ -3,7 +3,41 @@
   <hr />
   <%- include('../../partials/flash.ejs') %>
   <h2 class="fw-semibold">THÔNG TIN CÁC YÊU CẦU CẤP PHÉP ĐÃ ĐƯỢC GỬI</h2>
-  <div class="row justify-content-end">
+  <div class="row justify-content-center align-items-end">
+    <div class="col-6">
+      <form
+        role="search"
+        method="GET"
+        action="/department/request/filter"
+        class="form-group"
+      >
+        <div class="row align-items-end">
+          <div class="col-4">
+            <label for="" class="form-label">Quận</label>
+            <select
+              class="form-select district-select"
+              aria-label=""
+              name="district_select"
+            >
+              <% districts.forEach(district => { %>
+                <option value="<%= district._id %>" <%= district.name === selectedDistrict ? 'selected' : '' %>><%= district.name %></option>
+              <% }) %>
+            </select>
+          </div>
+          <div class="col-4">
+            <label for="" class="form-label">Phường</label>
+            <select
+              class="form-select ward-select"
+              name="ward_select"
+              aria-label=""
+            ></select>
+          </div>
+          <div class="col-4">
+            <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+          </div>
+        </div>
+      </form>
+    </div>
     <div class="col-4">
       <form role="search" method="GET" action="/department/request/search">
         <input
@@ -40,7 +74,8 @@
         <td class=""><%= request.company.name %></td>
         <td class="">
           <% if (request.status === 'pending') { %>
-          <span class="badge bg-warning w-100">Chờ duyệt</span> <% } else if (request.status === 'accepted') { %>
+          <span class="badge bg-warning w-100">Chờ duyệt</span> <% } else if
+          (request.status === 'accepted') { %>
           <span class="badge bg-success w-100">Đã duyệt</span> <% } else { %>
           <span class="badge bg-danger w-100">Không duyệt</span> <% } %>
         </td>
@@ -53,7 +88,40 @@
       <% }) %>
     </tbody>
   </table>
-  <% if (requests.length > 0) { %>
-    <%- include('../../partials/pagination.ejs') %>
-  <% } %>
+  <% if (requests.length > 0) { %> <%- include('../../partials/pagination.ejs')
+  %> <% } %>
 </div>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    var districtSelect = document.querySelector(".district-select");
+    var wardSelect = document.querySelector(".ward-select");
+
+    districtSelect.addEventListener("change", async () => {
+      let selectedOption = districtSelect.options[districtSelect.selectedIndex];
+      let district = selectedOption.value;
+      const response = await fetch(`/utils/districts/${district}/wards`);
+      const data = await response.json();
+      populateWards(data.wards);
+    });
+
+    districtSelect.dispatchEvent(new Event("change"));
+    function populateWards(wards) {
+      wardSelect.innerHTML = "";
+      let option = document.createElement("option");
+      option.value = "Không";
+      option.innerHTML = "Không";
+      wardSelect.appendChild(option);
+
+      wards.forEach((ward) => {
+        let option = document.createElement("option");
+        option.value = ward;
+        option.innerHTML = ward;
+        
+        if ("<%= selectedWard %>" == ward) {
+          option.selected = 'selected';
+        }
+        wardSelect.appendChild(option);
+      });
+    }
+  });
+</script>
