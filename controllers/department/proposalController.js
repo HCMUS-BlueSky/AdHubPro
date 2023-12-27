@@ -1,6 +1,7 @@
 const { Location } = require("../../models/Location");
 const { Ads } = require('../../models/Ads');
 const Proposal = require("../../models/Proposal");
+const Enum = require('../../models/Enum');
 const { generateRegexQuery } = require('regex-vietnamese');
 
 exports.view = async (req, res) => {
@@ -93,8 +94,27 @@ exports.approve = async (req, res) => {
         filtered.type &&
         typeof filtered.type === 'string' &&
         filtered.type.length > 0
-      )
+      ) {
+        const typeExisted = await Enum.exists({
+          name: 'LocationType',
+          values: filtered.type
+        }).exec();
+        if (!typeExisted) throw new Error('Loại địa điểm không hợp lệ!');
         location.type = filtered.type;
+      }
+      if (
+        filtered.method &&
+        typeof filtered.method === 'string' &&
+        filtered.method.length > 0
+      ) {
+        const methodExisted = await Enum.exists({
+          name: 'LocationMethod',
+          values: filtered.method
+        }).exec();
+        if (!methodExisted)
+          throw new Error('Hình thức quảng cáo không hợp lệ!');
+        location.method = filtered.method;
+      }
       if (
         filtered.images &&
         Array.isArray(filtered.images) &&
@@ -113,8 +133,14 @@ exports.approve = async (req, res) => {
         filtered.type &&
         typeof filtered.type === 'string' &&
         filtered.type.length > 0
-      )
+      ) {
+        const typeExisted = await Enum.exists({
+          name: 'AdsType',
+          values: filtered.type
+        }).exec();
+        if (!typeExisted) throw new Error('Loại bảng quảng cáo không hợp lệ!');
         ads.type = filtered.type;
+      }
       if (
         filtered.size &&
         typeof filtered.size === 'string' &&

@@ -2,6 +2,7 @@ const { Ads } = require('../../models/Ads');
 const { Location } = require('../../models/Location');
 const Proposal = require('../../models/Proposal');
 const Report = require('../../models/Report');
+const Enum = require('../../models/Enum');
 const uploadFile = require('../../utils/fileUpload');
 const moment = require('moment');
 
@@ -146,7 +147,8 @@ exports.renderUpdateInfo = async (req, res) => {
       })
       .lean();
     if (!ads) throw new Error('Bảng quảng cáo không tồn tại!');
-    ads.availableType = Ads.getAvailableType();
+    availableType = await Enum.findOne({"name": "AdsType"}).exec();
+    ads.availableType = availableType.values;
     return res.render('department/ads/update_info', {
       locations,
       ads,
@@ -173,6 +175,13 @@ exports.updateInfo = async (req, res) => {
     if (!ads) throw new Error('Bảng quảng cáo không tồn tại!');
     const { _id, location, images, effective, expiration, ...filtered } =
       req.body;
+    if (filtered.type && typeof filtered.type === 'string' && filtered.type.length > 0 ) {
+      const typeExisted = await Enum.exists({
+        name: 'AdsType',
+        values: filtered.type
+      }).exec(); 
+      if (!typeExisted) throw new Error('Loại bảng quảng cáo không hợp lệ!');
+    }
     const new_images = [];
     if (req.files && req.files.length) {
       for (let file of req.files) {
@@ -195,7 +204,8 @@ exports.renderCreate = async (req, res) => {
   try {
     const user = req.session.user;
     const locations = await Location.find();
-    const availableAdsType = await Ads.getAvailableType();
+    const availableType = await Enum.findOne({ name: 'AdsType' }).exec();
+    const availableAdsType = availableType.values;
     return res.render('department/ads/create', {
       availableAdsType,
       locations,

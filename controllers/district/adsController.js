@@ -3,6 +3,7 @@ const { Location } = require("../../models/Location");
 const { generateRegexQuery } = require("regex-vietnamese");
 const Proposal = require("../../models/Proposal");
 const District = require("../../models/District");
+const Enum = require('../../models/Enum');
 const uploadFile = require("../../utils/fileUpload");
 const moment = require("moment");
 
@@ -90,7 +91,7 @@ exports.filter = async (req, res) => {
     });
   } catch (err) {
     req.flash("error", err.message);
-    return res.redirect("/district/location");
+    return res.redirect("/district/ads");
   }
 };
 
@@ -219,7 +220,8 @@ exports.renderUpdateInfo = async (req, res) => {
       .populate("location")
       .exec();
     if (!ads) throw new Error("Bảng quảng cáo không tồn tại!");
-    ads.availableType = Ads.getAvailableType();
+    availableType = await Enum.findOne({"name": "AdsType"}).exec();
+    ads.availableType = availableType.values;
     return res.render("district/ads/update_info", {
       ads,
       user,

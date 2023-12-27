@@ -22,19 +22,10 @@ const locationSchema = new mongoose.Schema(
       type: String
     },
     type: {
-      type: String,
-      enum: [
-        'Đất công/Công viên/Hành lang an toàn giao thông',
-        'Đất tư nhân/Nhà ở riêng lẻ',
-        'Trung tâm thương mại',
-        'Chợ',
-        'Cây xăng',
-        'Nhà chờ xe buýt'
-      ]
+      type: String
     },
     method: {
-      type: String,
-      enum: ['Cổ động chính trị', 'Quảng cáo thương mại', 'Xã hội hóa']
+      type: String
     },
     ads_count: {
       type: Number,
@@ -58,14 +49,6 @@ const locationSchema = new mongoose.Schema(
         get() {
           return this._id;
         }
-      }
-    },
-    statics: {
-      getAvailableType() {
-        return this.schema.path('type').enumValues;
-      },
-      getAvailableMethod() {
-        return this.schema.path('method').enumValues;
       }
     },
     timestamps: {

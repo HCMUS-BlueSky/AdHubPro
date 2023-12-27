@@ -4,6 +4,7 @@ const { generateRegexQuery } = require('regex-vietnamese');
 const Request = require("../../models/Request");
 const uploadFile = require("../../utils/fileUpload");
 const moment = require("moment");
+const Enum = require('../../models/Enum');
 
 exports.view = async (req, res) => {
   const perPage = 10;
@@ -158,7 +159,8 @@ exports.renderCreateNew = async (req, res) => {
       district: user.managed_district.name,
       ward: user.managed_ward,
     }).exec();
-    const availableAdsType = await Ads.getAvailableType();
+    const availableType = await Enum.findOne({ name: 'AdsType' }).exec();
+    const availableAdsType = availableType.values;
     res.render("ward/request/create", {
       locations,
       user,

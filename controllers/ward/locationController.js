@@ -1,6 +1,7 @@
 const { Location } = require("../../models/Location");
 const Proposal = require("../../models/Proposal");
 const uploadFile = require("../../utils/fileUpload");
+const Enum = require('../../models/Enum');
 
 exports.view = async (req, res) => {
   let perPage = 10;
@@ -114,8 +115,11 @@ exports.renderUpdateInfo = async (req, res) => {
       ward: user.managed_ward
     });
     if (!location) throw new Error('Địa điểm không tồn tại!');
-    location.availableType = Location.getAvailableType();
-    location.availableMethod = Location.getAvailableMethod();
+    const availableType = await Enum.findOne({ name: 'LocationType' }).exec();
+    const availableMethod = await Enum.findOne({ name: 'LocationMethod' }).exec();
+
+    location.availableType = availableType.values;
+    location.availableMethod = availableMethod.values;
     return res.render('ward/location/update_info', {
       location,
       user,

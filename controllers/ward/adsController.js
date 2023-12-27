@@ -4,6 +4,7 @@ const { generateRegexQuery } = require('regex-vietnamese');
 const Proposal = require("../../models/Proposal");
 const uploadFile = require("../../utils/fileUpload");
 const moment = require("moment");
+const Enum = require('../../models/Enum');
 
 exports.view = async (req, res) => {
   let perPage = 10;
@@ -170,7 +171,8 @@ exports.renderUpdateInfo = async (req, res) => {
       .populate('location')
       .exec();
     if (!ads) throw new Error('Bảng quảng cáo không tồn tại!');
-    ads.availableType = Ads.getAvailableType();
+    availableType = await Enum.findOne({ name: 'AdsType' }).exec();
+    ads.availableType = availableType.values;
     return res.render('ward/ads/update_info', {
       ads,
       user,

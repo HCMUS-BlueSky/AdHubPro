@@ -3,6 +3,7 @@ const {Location} = require('../../models/Location');
 const {Ads} = require('../../models/Ads');
 const Proposal = require('../../models/Proposal');
 const District = require('../../models/District');
+const Enum = require('../../models/Enum');
 const upload = require('../../middleware/multer');
 const uploadFile = require('../../utils/fileUpload');
 const router = express.Router();
@@ -79,6 +80,24 @@ function generateRandomDate(from, to) {
 
 // router.get("/test2", async (req, res) => {
 //   try {
+//     const availableType = [
+//       'Trụ bảng hiflex',
+//       'Trụ màn hình điện tử LED',
+//       'Trụ hộp đèn',
+//       'Bảng hiflex ốp tường',
+//       'Màn hình điện tử ốp tường',
+//       'Trụ treo băng rôn dọc',
+//       'Trụ treo băng rôn ngang',
+//       'Trụ/Cụm pano',
+//       'Cổng chào',
+//       'Trung tâm thương mại'
+//     ];
+
+//     const new_enum = new Enum({
+//       name: 'AdsType',
+//       values: availableType
+//     });
+//     await new_enum.save();
 //     // for(let i = 1; i <= 14; ++i) {
 //     //   district.wards.push(i.toString());
 //     // }
@@ -93,7 +112,7 @@ function generateRandomDate(from, to) {
 //     //     location: pro.updated_ads.location
 //     //   });
 //     // }
-//     await Proposal.updateMany({}, {status: 'pending'})
+//     // await Proposal.updateMany({}, {status: 'pending'})
 //     // for(let location of locations) {
 //     //   // const type = types[Math.floor(Math.random() * types.length)];
 //     //   // const size = '2.5m x 10m';
@@ -101,7 +120,7 @@ function generateRandomDate(from, to) {
 //     //     { location: location.id }
 //     //   ).exec();
 //     // }
-//     return res.sendStatus(204);
+//     return res.status(200).send("DONE");
 //   } catch (err) {
 //     return res.status(500).send(err.message);
 //   }

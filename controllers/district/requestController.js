@@ -5,6 +5,7 @@ const Request = require("../../models/Request");
 const uploadFile = require("../../utils/fileUpload");
 const moment = require("moment");
 const District = require("../../models/District");
+const Enum = require('../../models/Enum');
 
 exports.view = async (req, res) => {
   const perPage = 10;
@@ -208,7 +209,8 @@ exports.renderCreateNew = async (req, res) => {
     const locations = await Location.find({
       district: user.managed_district.name,
     }).exec();
-    const availableAdsType = await Ads.getAvailableType();
+    const availableType = await Enum.findOne({ name: 'AdsType' }).exec();
+    const availableAdsType = availableType.values;
     res.render("district/request/create", {
       locations,
       user,

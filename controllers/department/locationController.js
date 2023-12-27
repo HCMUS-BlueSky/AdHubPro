@@ -4,6 +4,7 @@ const Proposal = require("../../models/Proposal");
 const Report = require("../../models/Report");
 const Request = require("../../models/Request");
 const District = require("../../models/District");
+const Enum = require('../../models/Enum');
 const uploadFile = require("../../utils/fileUpload");
 
 exports.view = async (req, res) => {
@@ -108,8 +109,11 @@ exports.renderUpdateInfo = async (req, res) => {
       _id: req.params.id,
     });
     if (!location) throw new Error("Địa điểm không tồn tại!");
-    location.availableType = Location.getAvailableType();
-    location.availableMethod = Location.getAvailableMethod();
+    const availableType = await Enum.findOne({ name: 'LocationType' }).exec();
+    const availableMethod = await Enum.findOne({ name: 'LocationMethod' }).exec();
+
+    location.availableType = availableType.values;
+    location.availableMethod = availableMethod.values;
     return res.render("department/location/update_info", {
       location,
       user,
@@ -134,6 +138,21 @@ exports.updateInfo = async (req, res) => {
     if (!location) throw new Error("Địa điểm không tồn tại!");
     const { _id, longitude, latitude, images, ...filtered } = req.body;
     const new_images = [];
+
+    if (filtered.type && typeof filtered.type === 'string' && filtered.type.length > 0 ) {
+      const typeExisted = await Enum.exists({
+        name: 'LocationType',
+        values: filtered.type
+      }).exec(); 
+      if (!typeExisted) throw new Error('Loại địa điểm không hợp lệ!');
+    }
+    if (filtered.method && typeof filtered.method === 'string' && filtered.method.length > 0 ) {
+      const methodExisted = await Enum.exists({
+        name: 'LocationMethod',
+        values: filtered.method
+      }).exec(); 
+      if (!methodExisted) throw new Error('Hình thức quảng cáo không hợp lệ!');
+    }
     if (req.files && req.files.length) {
       for (let file of req.files) {
         const url = await uploadFile(`assets/location/${location.id}`, file);
@@ -171,20 +190,20 @@ exports.remove = async (req, res) => {
 exports.renderCreate = async (req, res) => {
   try {
     const user = req.session.user;
-    const availableType = Location.getAvailableType();
-    const availableMethod = Location.getAvailableMethod();
+    const availableType = await Enum.findOne({ name: 'LocationType' }).exec();
+    const availableMethod = await Enum.findOne({ name: 'LocationMethod' }).exec();
     const districts = await District.find({});
-    return res.render("department/location/create", {
+    return res.render('department/location/create', {
       districts,
-      availableType,
-      availableMethod,
+      availableType: availableType.values,
+      availableMethod: availableMethod.values,
       user,
-      pageName: "location",
+      pageName: 'location',
       header: {
-        navRoot: "Điểm đặt quảng cáo",
-        navCurrent: "Tạo địa điểm",
+        navRoot: 'Điểm đặt quảng cáo',
+        navCurrent: 'Tạo địa điểm'
       },
-      layout: "layouts/create",
+      layout: 'layouts/create'
     });
   } catch (err) {
     req.flash("error", "Lỗi hệ thống!");
