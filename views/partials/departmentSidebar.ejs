@@ -6,6 +6,32 @@
     </a>
     <ul class="nav nav-pills flex-column gap-2 mb-sm-auto mb-0 w-100" id="menu">
       <li
+        class="nav-item w-100 p-2 rounded <%= pageName === 'administrative' && 'current-nav-item' %>"
+      >
+        <a
+          href="/department/administrative"
+          class="d-flex flex-row gap-1 align-items-center text-decoration-none text-light"
+        >
+          <i class="fs-4 bi bi-crosshair"></i>
+          <span class="ms-1 d-none d-sm-inline fw-semibold"
+            >Đơn vị hành chính</span
+          >
+        </a>
+      </li>
+      <li
+        class="nav-item w-100 p-2 rounded <%= pageName === 'method' && 'current-nav-item' %>"
+      >
+        <a
+          href="/department/method"
+          class="d-flex flex-row gap-1 align-items-center text-decoration-none text-light"
+        >
+          <i class="fs-4 bi bi-text-left"></i>
+          <span class="ms-1 d-none d-sm-inline fw-semibold"
+            >Quản lí hình thức</span
+          >
+        </a>
+      </li>
+      <li
         class="nav-item w-100 p-2 rounded <%= pageName === 'location' && 'current-nav-item' %>"
       >
         <a

@@ -1,7 +1,6 @@
 async function logLocations() {
-  const response = await fetch("/api/location/district");
+  const response = await fetch("/api/location");
   const locations = await response.json();
-  console.log(locations);
   return locations;
 }
 
@@ -150,11 +149,15 @@ const reportCardFactory = (report) => {
     elem.className = "report-card card text-white bg-success my-3";
   }
   elem.innerHTML = `
-            <div class="card-header text-center fw-bold fs-4 font-weight-bold py-3">${report.method}</div>
+            <div class="card-header text-center fw-bold fs-4 font-weight-bold py-3">${
+              report.method
+            }</div>
               <div class="card-body">
                 <h5 class="card-text">Báo cáo bởi: ${report.reporter.name}</h5>
                 <h5 class="card-text">Nội dung báo cáo: ${report.content}</h5>
-                <h5 class="card-text">Thời gian ghi nhận: ${report.created_at}</h5>
+                <h5 class="card-text">Thời gian ghi nhận: ${moment(
+                  report.created_at
+                ).format("DD/MM/YYYY")}</h5>
                 <h5 class="card-text">Trạng thái: ${statusLabel}</h5>
               </div>
             </div>

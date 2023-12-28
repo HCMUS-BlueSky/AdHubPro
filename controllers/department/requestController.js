@@ -98,6 +98,8 @@ exports.filter = async (req, res) => {
 exports.search = async (req, res) => {
   const perPage = 10;
   const page = req.query.page || 1;
+  const selectedDistrict = "5";
+  const selectedWard = "Không";
   try {
     const searchTerm = req.query.searchTerm;
     if (typeof searchTerm !== "string")
@@ -111,6 +113,7 @@ exports.search = async (req, res) => {
     })
       .distinct("_id")
       .exec();
+    const districts = await District.find({});
     const rgx = generateRegexQuery(searchTerm);
     const requests = await Request.find({
       $or: [
@@ -145,8 +148,11 @@ exports.search = async (req, res) => {
     });
     res.render("department/request/index", {
       requests,
+      selectedDistrict,
+      selectedWard,
       user,
       perPage,
+      districts,
       current: page,
       pages: Math.ceil(count / perPage),
       pageName: "request",

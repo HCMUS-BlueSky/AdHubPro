@@ -1,0 +1,36 @@
+<div class="col p-3 border-start">
+  <%- include('../../partials/header.ejs') %>
+  <hr />
+  <%- include('../../partials/flash.ejs') %>
+  <h2 class="fw-semibold">THÔNG TIN HÌNH THỨC</h2>
+  <table class="table border border-2 rounded py-3 mt-3">
+    <thead>
+      <tr>
+        <th scope="col">STT</th>
+        <th scope="col">Loại hình thức</th>
+        <th scope="col">Danh sách hình thức</th>
+        <th scope="col" class="text-center">Quản lý</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% methods.forEach((method, index) => { %>
+      <tr>
+        <th scope="row"><%= index + 1 %></th>
+        <td><%= method.name %></td>
+        <td>
+          <select class="form-select" name="wards" aria-label="">
+            <% method.values.forEach((value) => { %>
+            <option><%= value %></option>
+            <% }) %>
+          </select>
+        </td>
+        <td class="text-center">
+          <a href="/department/method/view/<%= method._id %>">
+            <i class="fs-4 bi bi-eye"></i>
+          </a>
+        </td>
+      </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</div>

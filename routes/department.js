@@ -1,5 +1,7 @@
 const express = require("express");
 const pathFor = require("../middleware/pathFor");
+const administrativeController = require("../controllers/department/administrativeController");
+const methodController = require("../controllers/department/methodController");
 const accountController = require("../controllers/department/accountController");
 const locationController = require("../controllers/department/locationController");
 const requestDepartmentController = require("../controllers/department/requestController");
@@ -13,6 +15,13 @@ const path = require("path");
 router.use(pathFor("department_officer"));
 
 router.get("/", (req, res) => res.redirect("/department/location"));
+
+// Administrative Units
+router.get("/administrative", administrativeController.view);
+
+// Method
+router.get("/method", methodController.view);
+router.get("/method/view/:id", methodController.getDetail);
 
 // Location
 router.get("/location", locationController.view);

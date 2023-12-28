@@ -1,0 +1,52 @@
+<div class="col p-3 border-start">
+  <%- include('../../partials/header.ejs') %>
+  <hr />
+  <%- include('../../partials/flash.ejs') %>
+  <h2 class="fw-semibold">THÔNG TIN CÁC QUẬN</h2>
+  <div class="row justify-content-center">
+    <div class="col-3">
+      <form role="search" method="GET" action="">
+        <input
+          class="form-control mr-sm-2"
+          type="search"
+          placeholder="Tìm kiếm"
+          aria-label="Search"
+          name="searchTerm"
+        />
+      </form>
+    </div>
+    <div class="col-3">
+      <a href="" class="btn btn-primary"> Thêm quận mới </a>
+    </div>
+  </div>
+  <table class="table border border-2 rounded py-3 mt-3">
+    <thead>
+      <tr>
+        <th scope="col">STT</th>
+        <th scope="col">Tên</th>
+        <th scope="col">Danh sách phường</th>
+        <th scope="col" class="text-center">Thêm phường</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% districts.forEach((district, index) => { %>
+      <tr>
+        <th scope="row"><%= index + 1 %></th>
+        <td>Quận <%= district.name %></td>
+        <td>
+          <select class="form-select wards" name="wards" aria-label="">
+            <% district.wards.forEach((ward) => { %>
+            <option value=""><%= ward %></option>
+            <% }) %>
+          </select>
+        </td>
+        <td class="text-center">
+          <a href="">
+            <i class="fs-4 bi bi-plus-square"></i>
+          </a>
+        </td>
+      </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</div>

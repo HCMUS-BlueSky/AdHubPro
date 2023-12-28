@@ -1,0 +1,71 @@
+<div class="col p-3 border-start">
+  <%- include('../../partials/header.ejs') %>
+  <hr />
+  <%- include('../../partials/flash.ejs') %>
+  <h2 class="fw-semibold">THÔNG TIN CHI TIẾT HÌNH THỨC</h2>
+  <div class="d-flex justify-content-center">
+    <a href="" class="btn btn-primary"> Thêm nội dung hình thức </a>
+  </div>
+  <table class="table border border-2 rounded py-3 mt-3">
+    <thead>
+      <tr>
+        <th scope="col">STT</th>
+        <th scope="col">Nội dung hình thức</th>
+        <th scope="col" class="text-center">Xóa</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% method.values.forEach((value, index) => { %>
+      <tr>
+        <th scope="row"><%= index + 1 %></th>
+        <td><%= value %></td>
+        <td class="text-center">
+          <a href="">
+            <i class="fs-4 bi bi-dash-circle"></i>
+          </a>
+        </td>
+      </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</div>
+
+<!-- Update Account Modal -->
+<div
+  class="modal fade"
+  id="updateAccount"
+  aria-hidden="true"
+  aria-labelledby="updateAccount"
+  tabindex="-1"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Xác nhận</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <p>Bạn có chắc chắn muốn cập nhật những thay đổi này?</p>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            Đóng
+          </button>
+          <button type="button" class="btn btn-primary" id="submit-btn">
+            Cập nhật
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

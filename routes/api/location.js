@@ -6,7 +6,20 @@ const router = express.Router();
 
 router.get("/", async (req, res) => {
   try {
-    const locations = await Location.find({}).exec();
+    const user = req.session.user;
+    console.log(user);
+    let filterByRole = {};
+    if (user.role == "ward_officer") {
+      filterByRole = {
+        district: user.managed_district.name,
+        ward: user.managed_ward,
+      };
+    } else {
+      filterByRole = {
+        district: user.managed_district.name,
+      };
+    }
+    const locations = await Location.find(filterByRole).exec();
     return res.json(locations);
   } catch (err) {
     return res.status(500).send(err.message);
@@ -26,17 +39,6 @@ router.get("/ward", hasRoles("ward_officer"), async (req, res) => {
   }
 });
 
-router.get("/district", async (req, res) => {
-  try {
-    const user = req.session.user;
-    const locations = await Location.find({
-      district: user.managed_district.name,
-    }).exec();
-    return res.json(locations);
-  } catch (err) {
-    return res.status(500).send(err.message);
-  }
-});
 // function makeid(length) {
 //   let result = '';
 //   const characters =
