@@ -81,20 +81,14 @@ function generateRandomDate(from, to) {
 // router.get("/test2", async (req, res) => {
 //   try {
 //     const availableType = [
-//       'Trụ bảng hiflex',
-//       'Trụ màn hình điện tử LED',
-//       'Trụ hộp đèn',
-//       'Bảng hiflex ốp tường',
-//       'Màn hình điện tử ốp tường',
-//       'Trụ treo băng rôn dọc',
-//       'Trụ treo băng rôn ngang',
-//       'Trụ/Cụm pano',
-//       'Cổng chào',
-//       'Trung tâm thương mại'
+//       'Tố giác sai phạm',
+//       'Đăng ký nội dung',
+//       'Đóng góp ý kiến',
+//       'Giải đáp thắc mắc'
 //     ];
 
 //     const new_enum = new Enum({
-//       name: 'AdsType',
+//       name: 'ReportMethod',
 //       values: availableType
 //     });
 //     await new_enum.save();
