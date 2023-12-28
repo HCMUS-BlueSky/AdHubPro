@@ -1,12 +1,15 @@
 const Report = require("../../models/Report");
-const { Location } = require('../../models/Location');
-const { generateRegexQuery } = require('regex-vietnamese');
-const moment = require('moment');
+const { Location } = require("../../models/Location");
+const { generateRegexQuery } = require("regex-vietnamese");
+const District = require("../../models/District");
+const moment = require("moment");
 
 exports.view = async (req, res) => {
   try {
     const user = req.session.user;
+    const districts = await District.find({});
     res.render("department/statistic/index", {
+      districts,
       user,
       pageName: "statistic",
       header: {
@@ -34,11 +37,13 @@ exports.overview = async (req, res) => {
         select: ["address", "ward", "district", "method"],
       })
       .exec();
+    const districts = await District.find({});
     const count = await Report.count();
     return res.render("department/statistic/overview", {
       reports,
       moment,
       perPage,
+      districts,
       user,
       current: page,
       pages: Math.ceil(count / perPage),
@@ -59,70 +64,70 @@ exports.search = async (req, res) => {
   const page = req.query.page || 1;
   try {
     const searchTerm = req.query.searchTerm;
-    if (typeof searchTerm !== 'string')
-      throw new Error('Từ khóa không hợp lệ!');
-    if (!searchTerm) return res.redirect('/department/statistic/overview');
+    if (typeof searchTerm !== "string")
+      throw new Error("Từ khóa không hợp lệ!");
+    if (!searchTerm) return res.redirect("/department/statistic/overview");
     const user = req.session.user;
     const locations = await Location.find({
       $text: {
-        $search: `\"${searchTerm}\"`
-      }
+        $search: `\"${searchTerm}\"`,
+      },
     })
-      .distinct('_id')
+      .distinct("_id")
       .exec();
     const rgx = generateRegexQuery(searchTerm);
     const reports = await Report.find({
       $or: [
         {
-          location: { $in: locations }
+          location: { $in: locations },
         },
         {
-          type: { $regex: rgx }
+          type: { $regex: rgx },
         },
         {
-          'reporter.name': { $regex: rgx }
-        }
-      ]
+          "reporter.name": { $regex: rgx },
+        },
+      ],
     })
       .sort({ created_at: -1 })
       .skip(perPage * page - perPage)
       .limit(perPage)
       .populate({
-        path: 'location',
-        select: ['address', 'ward', 'district', 'method']
+        path: "location",
+        select: ["address", "ward", "district", "method"],
       })
       .exec();
 
     const count = await Report.count({
       $or: [
         {
-          location: { $in: locations }
+          location: { $in: locations },
         },
         {
-          type: { $regex: rgx }
+          type: { $regex: rgx },
         },
         {
-          'reporter.name': { $regex: rgx }
-        }
-      ]
+          "reporter.name": { $regex: rgx },
+        },
+      ],
     });
-    res.render('department/statistic/overview', {
+    res.render("department/statistic/overview", {
       reports,
       moment,
       user,
       perPage,
       current: page,
       pages: Math.ceil(count / perPage),
-      pageName: 'statistic',
+      pageName: "statistic",
       header: {
-        navRoot: 'Thống kê',
-        navCurrent: 'Thông tin chung'
+        navRoot: "Thống kê",
+        navCurrent: "Thông tin chung",
       },
-      layout: 'layouts/department'
+      layout: "layouts/department",
     });
   } catch (err) {
-    req.flash('error', err.message);
-    return res.redirect('/department/statistic/overview');
+    req.flash("error", err.message);
+    return res.redirect("/department/statistic/overview");
   }
 };
 
