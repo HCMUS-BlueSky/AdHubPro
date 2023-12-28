@@ -235,9 +235,9 @@ const clearReportModal = () => {
   document.querySelector("#name").value = "";
   document.querySelector("#email").value = "";
   document.querySelector("#phone").value = "";
-  document.querySelector('input[name="method"]:checked').value = "";
-  // tinymce.get("report-content").getContent() = "";
-  document.getElementById("file").value = "";
+  document.querySelector('input[name="method"]:checked').checked = false;
+  tinymce.get("report-content").setContent("");
+  document.querySelector("#file").value = "";
 };
 
 const handleReportModal = (typeReport, location_id, adsInfo) => {
