@@ -1,10 +1,10 @@
-const express = require('express');
-const Report = require('../../models/Report');
-const upload = require('../../middleware/multer');
-const uploadFile = require('../../utils/fileUpload');
+const express = require("express");
+const Report = require("../../models/Report");
+const upload = require("../../middleware/multer");
+const uploadFile = require("../../utils/fileUpload");
 const router = express.Router();
 
-router.get('/', async (req, res) => {
+router.get("/", async (req, res) => {
   try {
     const reports = await Report.find({}).exec();
     return res.json(reports);
@@ -13,25 +13,25 @@ router.get('/', async (req, res) => {
   }
 });
 
-router.get('/ads', async (req, res) => {
+router.get("/ads", async (req, res) => {
   try {
-    const reports = await Report.find({type: "ads"}).exec();
+    const reports = await Report.find({ type: "ads" }).exec();
     return res.json(reports);
   } catch (err) {
     return res.status(500).send(err.message);
   }
 });
 
-router.get('/locations', async (req, res) => {
+router.get("/locations", async (req, res) => {
   try {
-    const reports = await Report.find({ type: 'location'}).exec();
+    const reports = await Report.find({ type: "location" }).exec();
     return res.json(reports);
   } catch (err) {
     return res.status(500).send(err.message);
   }
 });
 
-router.post('/', upload.array("images", 5), async (req, res) => {
+router.post("/", upload.array("images", 5), async (req, res) => {
   try {
     const { type } = req.body;
     if (!type) throw new Error("Missing report type!");
@@ -42,21 +42,28 @@ router.post('/', upload.array("images", 5), async (req, res) => {
       !email ||
       !phone ||
       !method ||
-      typeof name !== 'string' ||
-      typeof email !== 'string' ||
-      typeof content !== 'string' ||
-      typeof phone !== 'string' ||
-      typeof method !== 'string'
+      typeof name !== "string" ||
+      typeof email !== "string" ||
+      typeof content !== "string" ||
+      typeof phone !== "string" ||
+      typeof method !== "string"
     )
-      throw new Error('Invalid fields');
-    if (type !== 'Điểm đặt quảng cáo' && type !== 'Bảng quảng cáo') throw new Error('Invalid type');
-    const report = new Report({type, content, method, reporter: {name, email, phone}});
+      throw new Error("Invalid fields");
+    if (type !== "Điểm đặt quảng cáo" && type !== "Bảng quảng cáo")
+      throw new Error("Invalid type");
+    const report = new Report({
+      type,
+      content,
+      method,
+      reporter: { name, email, phone },
+    });
     const location = req.body.location;
-    if (!location || typeof location !== 'string') throw new Error('Invalid location');
+    if (!location || typeof location !== "string")
+      throw new Error("Invalid location");
     report.location = location;
-    if (type === 'Bảng quảng cáo') {
+    if (type === "Bảng quảng cáo") {
       const ads = req.body.ads;
-      if (!ads || typeof ads !== 'string') throw new Error('Invalid ads');
+      if (!ads || typeof ads !== "string") throw new Error("Invalid ads");
       report.ads = ads;
     }
     if (req.files && req.files.length) {
@@ -70,6 +77,6 @@ router.post('/', upload.array("images", 5), async (req, res) => {
   } catch (err) {
     return res.status(400).send(err.message);
   }
-})
+});
 
 module.exports = router;
