@@ -286,7 +286,7 @@ const handleReportModal = (typeReport, location_id, adsInfo) => {
 
     try {
       const response = await fetch(
-        "https://cms-adhubpro.onrender.com/api/report",
+        "https://cms-adhubpro.onrender.com/api/map/report",
         {
           method: "POST",
           body: data,
