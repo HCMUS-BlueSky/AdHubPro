@@ -284,6 +284,14 @@ const handleReportModal = (typeReport, location_id, adsInfo) => {
       data.append("images", file);
     }
 
+    let captchaResponse = grecaptcha.getResponse();
+    if (captchaResponse.length === 0) {
+      console.error("Please verify the reCAPTCHA.");
+      return;
+    }
+
+    data.append("g-recaptcha-response", captchaResponse);
+
     try {
       const response = await fetch(
         "https://cms-adhubpro.onrender.com/api/map/report",
