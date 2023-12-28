@@ -65,6 +65,29 @@ router.post('/report', upload.array('images', 5), async (req, res) => {
       typeof method !== 'string'
     )
       throw new Error('Dữ liệu truyền vào không hợp lệ');
+    
+    if (
+      !req.body['g-recaptcha-response'] ||
+      typeof req.body['g-recaptcha-response'] !== 'string'
+    )
+      throw new Error('Captcha không đúng!');
+
+    const params = new URLSearchParams({
+      secret: process.env.RECAPTCHA_SECRET,
+      response: req.body['g-recaptcha-response'],
+      remoteip: req.ip
+    });
+
+    const ggRes = await fetch(
+      'https://www.google.com/recaptcha/api/siteverify',
+      {
+        method: 'POST',
+        body: params
+      }
+    );
+    const recaptcha = await ggRes.json();
+    if (!recaptcha.success) throw new Error('Captcha không đúng!');
+    
     if (type !== 'Điểm đặt quảng cáo' && type !== 'Bảng quảng cáo')
       throw new Error('Loại báo cáo không hợp lệ!');
     const methodExisted = await Enum.exists({
