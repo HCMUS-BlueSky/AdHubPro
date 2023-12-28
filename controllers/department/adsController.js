@@ -5,6 +5,7 @@ const Report = require('../../models/Report');
 const Enum = require('../../models/Enum');
 const uploadFile = require('../../utils/fileUpload');
 const moment = require('moment');
+const { generateRegexQuery } = require('regex-vietnamese');
 
 exports.view = async (req, res) => {
   let perPage = 10;
