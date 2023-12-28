@@ -1,12 +1,14 @@
 async function logLocations() {
-  const response = await fetch("http://localhost:4000/api/map/locations");
+  const response = await fetch(
+    "https://cms-adhubpro.onrender.com/api/map/locations"
+  );
   const locations = await response.json();
   return locations;
 }
 
 async function logAdsByLocation(locationID) {
   const response = await fetch(
-    `http://localhost:4000/api/map/ads/${locationID}`
+    `https://cms-adhubpro.onrender.com/api/map/ads/${locationID}`
   );
   const ads = await response.json();
   return ads;
@@ -14,7 +16,7 @@ async function logAdsByLocation(locationID) {
 
 async function logReports(adsID) {
   const response = await fetch(
-    `http://localhost:4000/api/map/report/ads/${adsID}`
+    `https://cms-adhubpro.onrender.com/api/map/report/ads/${adsID}`
   );
   const reports = await response.json();
   return reports;
@@ -22,7 +24,7 @@ async function logReports(adsID) {
 
 async function logReportsByLocation(locationID) {
   const response = await fetch(
-    `http://localhost:4000/api/map/report/location/${locationID}`
+    `https://cms-adhubpro.onrender.com/api/map/report/location/${locationID}`
   );
   const reports = await response.json();
   return reports;
@@ -283,10 +285,13 @@ const handleReportModal = (typeReport, location_id, adsInfo) => {
     }
 
     try {
-      const response = await fetch("http://localhost:4000/api/report", {
-        method: "POST",
-        body: data,
-      });
+      const response = await fetch(
+        "https://cms-adhubpro.onrender.com/api/report",
+        {
+          method: "POST",
+          body: data,
+        }
+      );
 
       if (response.ok) {
         console.log("Report submitted successfully!");
