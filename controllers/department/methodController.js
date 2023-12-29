@@ -37,3 +37,33 @@ exports.getDetail = async (req, res) => {
     return res.status(500).send(err.message);
   }
 };
+
+exports.add = async (req, res) => {
+  try {
+    const { value } = req.body;
+    if (!value || typeof value !== 'string') throw new Error("Dữ liệu không hợp lệ!")
+    await Enum.findByIdAndUpdate(req.params.id, {
+      $push: { values: value }
+    });
+    req.flash("success", "Thêm hình thức thành công!");
+    return res.redirect('/department/method');
+  } catch (err) {
+    req.flash("error", err.message);
+    return res.redirect('/department/method');
+  }
+};
+
+exports.remove = async (req, res) => {
+  try {
+    const { value } = req.body;
+    if (!value || typeof value !== 'string') throw new Error("Dữ liệu không hợp lệ!")
+    await Enum.findByIdAndUpdate(req.params.id, {
+      $pull: { values: value }
+    });
+    req.flash("success", "Xóa hình thức thành công!");
+    return res.redirect('/department/method');
+  } catch (err) {
+    req.flash("error", err.message);
+    return res.redirect('/department/method');
+  }
+};
