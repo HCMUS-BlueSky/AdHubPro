@@ -58,6 +58,8 @@ const locationSchema = new mongoose.Schema(
   }
 );
 
+locationSchema.index({ latitude: 1, longitude: 1 }, { unique: true });
+
 locationSchema.index({
   ward: 'text',
   district: 'text',
