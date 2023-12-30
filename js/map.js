@@ -362,7 +362,7 @@ function addReportLayer(map) {
     id: "report-point",
     type: "circle",
     source: "AdsLocations",
-    filter: ["==", ["get", "hasReport"], "true"],
+    filter: ["==", ["get", "hasReport"], true],
     paint: {
       "circle-radius": 15,
       "circle-opacity": 0,
