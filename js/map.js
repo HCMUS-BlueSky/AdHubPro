@@ -411,6 +411,7 @@ async function initMap() {
     type: "FeatureCollection",
     features: [],
   };
+  console.log(locations);
   locations.map((location) => {
     const feature = {
       type: "Feature",
