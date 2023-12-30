@@ -362,7 +362,7 @@ function addReportLayer(map) {
     id: "report-point",
     type: "circle",
     source: "AdsLocations",
-    filter: ["==", ["get", "status"], "Đã quy hoạch"],
+    filter: ["==", ["get", "hasReport"], "true"],
     paint: {
       "circle-radius": 15,
       "circle-opacity": 0,
@@ -424,6 +424,7 @@ async function initMap() {
         type: location.type,
         address: location.address,
         status: location.accepted ? "Đã quy hoạch" : "Chưa quy hoạch",
+        hasReport: location.hasReport,
       },
     };
     geojson.features.push(feature);
