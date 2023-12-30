@@ -51,7 +51,7 @@ exports.add = async (req, res) => {
     req.flash("error", err.message);
     return res.redirect('/department/method');
   }
-};
+};D
 
 exports.remove = async (req, res) => {
   try {
