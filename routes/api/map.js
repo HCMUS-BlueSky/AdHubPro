@@ -9,46 +9,6 @@ const upload = require("../../middleware/multer");
 router.get("/locations", async (req, res) => {
   try {
     const locations = await Location.find({}).exec();
-    let locationsObject = locations.map((location) => location.toObject());
-    const handleLocations = async () => {
-      for (let location of locationsObject) {
-        const locationReports = await Report.find({
-          location: location._id,
-        }).exec();
-        const ads = await Ads.find({ location: location._id })
-          .populate("location")
-          .exec();
-        const adsReports = await Promise.all(
-          ads.map(async (ad) => {
-            return await Report.find({ ads: ad._id }).exec();
-          })
-        );
-        location.hasReport =
-          locationReports.length > 0 || adsReports.length > 0;
-      }
-    };
-    await handleLocations();
-    return res.json(locationsObject);
-  } catch (err) {
-    return res.status(500).send(err.message);
-  }
-});
-
-router.get("/locations/officer", async (req, res) => {
-  try {
-    const user = req.session.user;
-    let filterByRole = {};
-    if (user.role == "ward_officer") {
-      filterByRole = {
-        district: user.managed_district.name,
-        ward: user.managed_ward,
-      };
-    } else {
-      filterByRole = {
-        district: user.managed_district.name,
-      };
-    }
-    const locations = await Location.find(filterByRole).exec();
     return res.json(locations);
   } catch (err) {
     return res.status(500).send(err.message);

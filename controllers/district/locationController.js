@@ -2,7 +2,7 @@ const { Location } = require("../../models/Location");
 const Proposal = require("../../models/Proposal");
 const uploadFile = require("../../utils/fileUpload");
 const District = require("../../models/District");
-const Enum = require("../../models/Enum");
+const Enum = require('../../models/Enum');
 
 exports.view = async (req, res) => {
   let perPage = 10;
@@ -44,7 +44,7 @@ exports.filter = async (req, res) => {
   let perPage = 10;
   let page = req.query.page || 1;
   try {
-    const selectedWards = req.query.select;
+    const selectedWards = req.body.select;
     const user = req.session.user;
     const district = await District.findOne({
       name: user.managed_district.name,
@@ -159,10 +159,8 @@ exports.renderUpdateInfo = async (req, res) => {
       district: user.managed_district.name,
     });
     if (!location) throw new Error("Địa điểm không tồn tại!");
-    const availableType = await Enum.findOne({ name: "LocationType" }).exec();
-    const availableMethod = await Enum.findOne({
-      name: "LocationMethod",
-    }).exec();
+    const availableType = await Enum.findOne({ name: 'LocationType' }).exec();
+    const availableMethod = await Enum.findOne({ name: 'LocationMethod' }).exec();
 
     location.availableType = availableType.values;
     location.availableMethod = availableMethod.values;

@@ -31,9 +31,11 @@ router.get("/ads/view/:id", adsController.getDetail);
 
 router.get("/ads/update-info/:id", adsController.renderUpdateInfo);
 
+router.post("/ads/search", adsController.search);
+
 router.get("/ads/search", adsController.search);
 
-router.get("/ads/filter", adsController.filter);
+router.post("/ads/filter", adsController.filter);
 
 router.post(
   "/ads/update-info/:id",
@@ -52,9 +54,10 @@ router.get("/location/view/:id", locationController.getDetail);
 
 router.get("/location/update-info/:id", locationController.renderUpdateInfo);
 
-router.get("/location/search", locationController.search);
+router.post("/location/search", locationController.search);
 
-router.get("/location/filter", locationController.filter);
+router.get("/location/search", locationController.search);
+router.post("/location/filter", locationController.filter);
 
 router.post(
   "/location/update-info/:id",
@@ -73,7 +76,7 @@ router.get("/report/view/:id", reportController.getDetail);
 
 router.get("/report/search", reportController.search);
 
-router.get("/report/filter", reportController.filter);
+router.post("/report/filter", reportController.filter);
 
 router.get("/report/process/:id", reportController.renderProcessReport);
 
@@ -90,7 +93,7 @@ router.get("/request/view/:id", requestController.getDetail);
 
 router.get("/request/search", requestController.search);
 
-router.get("/request/filter", requestController.filter);
+router.post("/request/filter", requestController.filter);
 
 router.get("/request/create", requestController.renderCreateNew);
 

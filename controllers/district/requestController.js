@@ -5,7 +5,7 @@ const Request = require("../../models/Request");
 const uploadFile = require("../../utils/fileUpload");
 const moment = require("moment");
 const District = require("../../models/District");
-const Enum = require("../../models/Enum");
+const Enum = require('../../models/Enum');
 
 exports.view = async (req, res) => {
   const perPage = 10;
@@ -53,19 +53,19 @@ exports.filter = async (req, res) => {
   let perPage = 10;
   let page = req.query.page || 1;
   try {
-    const selectedWards = req.query.select;
+    const selectedWards = req.body.select;
     const user = req.session.user;
     const district = await District.findOne({
       name: user.managed_district.name,
     });
-    const filtered_locations = await Location.find({
+    const managed_locations = await Location.find({
       ward: { $in: selectedWards },
       district: user.managed_district.name,
     })
       .distinct("_id")
       .exec();
     const request = await Request.find({
-      "ads.location": { $in: filtered_locations },
+      "ads.location": { $in: managed_locations },
     })
       .sort({ created_at: -1 })
       .skip(perPage * page - perPage)
@@ -73,7 +73,7 @@ exports.filter = async (req, res) => {
       .populate("ads.location", "address")
       .exec();
     const count = await Request.count({
-      "ads.location": { $in: filtered_locations },
+      "ads.location": { $in: managed_locations },
     });
     res.render("district/request/index", {
       district,
@@ -209,7 +209,7 @@ exports.renderCreateNew = async (req, res) => {
     const locations = await Location.find({
       district: user.managed_district.name,
     }).exec();
-    const availableType = await Enum.findOne({ name: "AdsType" }).exec();
+    const availableType = await Enum.findOne({ name: 'AdsType' }).exec();
     const availableAdsType = availableType.values;
     res.render("district/request/create", {
       locations,
