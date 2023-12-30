@@ -4,26 +4,23 @@
   <%- include('../../partials/flash.ejs') %>
   <h2 class="fw-semibold">THÔNG TIN CÁC YÊU CẦU CẤP PHÉP ĐÃ ĐƯỢC GỬI</h2>
   <div class="row justify-content-center">
-    <div class="col-5">
-      <form action="/district/request/filter" method="GET" class="filter-wards">
-        <div class="row">
-          <div class="col-8">
-            <select
-              class="form-select"
-              name="select"
-              multiple
-              multiselect-search="true"
-              multiselect-select-all="true"
-            >
-              <% district.wards.forEach((ward, index) => { %>
-              <option value="<%= ward %>">Phường <%= ward %></option>
-              <% }) %>
-            </select>
-          </div>
-          <div class="col">
-            <button type="submit" class="btn btn-primary">Tìm kiếm</button>
-          </div>
-        </div>
+    <div class="col-3">
+      <form
+        action="/district/request/filter"
+        method="POST"
+        class="filter-wards"
+      >
+        <select
+          class="form-select"
+          name="select"
+          multiple
+          multiselect-search="true"
+          multiselect-select-all="true"
+        >
+          <% district.wards.forEach((ward, index) => { %>
+          <option value="<%= ward %>">Phường <%= ward %></option>
+          <% }) %>
+        </select>
       </form>
     </div>
     <div class="col-3">

@@ -1,5 +1,5 @@
 async function logLocations() {
-  const response = await fetch("/api/map/locations/officer");
+  const response = await fetch("/api/location");
   const locations = await response.json();
   return locations;
 }

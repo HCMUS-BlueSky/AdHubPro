@@ -15,27 +15,6 @@ router.get("/locations", async (req, res) => {
   }
 });
 
-router.get("/locations/officer", async (req, res) => {
-  try {
-    const user = req.session.user;
-    let filterByRole = {};
-    if (user.role == "ward_officer") {
-      filterByRole = {
-        district: user.managed_district.name,
-        ward: user.managed_ward,
-      };
-    } else {
-      filterByRole = {
-        district: user.managed_district.name,
-      };
-    }
-    const locations = await Location.find(filterByRole).exec();
-    return res.json(locations);
-  } catch (err) {
-    return res.status(500).send(err.message);
-  }
-});
-
 router.get("/ads/:location_id", async (req, res) => {
   const locationID = req.params.location_id;
   try {

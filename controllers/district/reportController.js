@@ -142,18 +142,18 @@ exports.filter = async (req, res) => {
   let perPage = 10;
   let page = req.query.page || 1;
   try {
-    const selectedWards = req.query.select;
+    const selectedWards = req.body.select;
     const user = req.session.user;
     const district = await District.findOne({
       name: user.managed_district.name,
     });
-    const filtered_locations = await Location.find({
+    const managed_locations = await Location.find({
       ward: { $in: selectedWards },
       district: user.managed_district.name,
     })
       .distinct("_id")
       .exec();
-    const reports = await Report.find({ location: { $in: filtered_locations } })
+    const reports = await Report.find({ location: { $in: managed_locations } })
       .sort({ created_at: -1 })
       .skip(perPage * page - perPage)
       .limit(perPage)
@@ -162,7 +162,7 @@ exports.filter = async (req, res) => {
         select: ["address", "ward", "district", "method"],
       })
       .exec();
-    const count = await Report.count({ location: { $in: filtered_locations } });
+    const count = await Report.count({ location: { $in: managed_locations } });
     res.render("district/report/index", {
       district,
       reports,
