@@ -219,7 +219,7 @@ function MultiselectDropdown(options) {
               text: sels.length + " " + config.txtSelected,
             })
           );
-          document.querySelector(".filter-wards").submit();
+          // document.querySelector(".filter-wards").submit();
         } else {
           var selectedWards = [];
           sels.map((x, index) => {
@@ -245,7 +245,7 @@ function MultiselectDropdown(options) {
             div.appendChild(c);
           });
           if (selectedWards.length > 0) {
-            document.querySelector(".filter-wards").submit();
+            // document.querySelector(".filter-wards").submit();
           }
         }
         if (0 == el.selectedOptions.length)

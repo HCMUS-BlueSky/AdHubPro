@@ -1,14 +1,35 @@
 const express = require("express");
 const { Location } = require("../../models/Location");
 const { Ads } = require("../../models/Ads");
-const Enum = require('../../models/Enum');
+const Enum = require("../../models/Enum");
 const Report = require("../../models/Report");
 const router = express.Router();
-const upload = require('../../middleware/multer');
+const upload = require("../../middleware/multer");
 
 router.get("/locations", async (req, res) => {
   try {
     const locations = await Location.find({}).exec();
+    return res.json(locations);
+  } catch (err) {
+    return res.status(500).send(err.message);
+  }
+});
+
+router.get("/locations/officer", async (req, res) => {
+  try {
+    const user = req.session.user;
+    let filterByRole = {};
+    if (user.role == "ward_officer") {
+      filterByRole = {
+        district: user.managed_district.name,
+        ward: user.managed_ward,
+      };
+    } else {
+      filterByRole = {
+        district: user.managed_district.name,
+      };
+    }
+    const locations = await Location.find(filterByRole).exec();
     return res.json(locations);
   } catch (err) {
     return res.status(500).send(err.message);
@@ -47,10 +68,11 @@ router.get("/report/location/:location_id", async (req, res) => {
   }
 });
 
-router.post('/report', upload.array('images', 5), async (req, res) => {
+router.post("/report", upload.array("images", 5), async (req, res) => {
   try {
     const { type } = req.body;
-    if (!type || typeof type !== 'string') throw new Error('Loại báo cáo không hợp lệ!');
+    if (!type || typeof type !== "string")
+      throw new Error("Loại báo cáo không hợp lệ!");
     const { name, email, phone, content, method } = req.body;
     if (
       !name ||
@@ -58,66 +80,67 @@ router.post('/report', upload.array('images', 5), async (req, res) => {
       !email ||
       !phone ||
       !method ||
-      typeof name !== 'string' ||
-      typeof email !== 'string' ||
-      typeof content !== 'string' ||
-      typeof phone !== 'string' ||
-      typeof method !== 'string'
+      typeof name !== "string" ||
+      typeof email !== "string" ||
+      typeof content !== "string" ||
+      typeof phone !== "string" ||
+      typeof method !== "string"
     )
-      throw new Error('Dữ liệu truyền vào không hợp lệ');
-    
+      throw new Error("Dữ liệu truyền vào không hợp lệ");
+
     if (
-      !req.body['g-recaptcha-response'] ||
-      typeof req.body['g-recaptcha-response'] !== 'string'
+      !req.body["g-recaptcha-response"] ||
+      typeof req.body["g-recaptcha-response"] !== "string"
     )
-      throw new Error('Captcha không đúng!');
+      throw new Error("Captcha không đúng!");
 
     const params = new URLSearchParams({
       secret: process.env.RECAPTCHA_SECRET,
-      response: req.body['g-recaptcha-response'],
-      remoteip: req.ip
+      response: req.body["g-recaptcha-response"],
+      remoteip: req.ip,
     });
 
     const ggRes = await fetch(
-      'https://www.google.com/recaptcha/api/siteverify',
+      "https://www.google.com/recaptcha/api/siteverify",
       {
-        method: 'POST',
-        body: params
+        method: "POST",
+        body: params,
       }
     );
     const recaptcha = await ggRes.json();
-    if (!recaptcha.success) throw new Error('Captcha không đúng!');
-    
-    if (type !== 'Điểm đặt quảng cáo' && type !== 'Bảng quảng cáo')
-      throw new Error('Loại báo cáo không hợp lệ!');
+    if (!recaptcha.success) throw new Error("Captcha không đúng!");
+
+    if (type !== "Điểm đặt quảng cáo" && type !== "Bảng quảng cáo")
+      throw new Error("Loại báo cáo không hợp lệ!");
     const methodExisted = await Enum.exists({
-      name: 'ReportMethod',
-      values: method
+      name: "ReportMethod",
+      values: method,
     }).exec();
-    if (!methodExisted) throw new Error('Hình thức báo cáo không hợp lệ!');
+    if (!methodExisted) throw new Error("Hình thức báo cáo không hợp lệ!");
 
     const report = new Report({
       type,
       content,
       method,
-      reporter: { name, email, phone }
+      reporter: { name, email, phone },
     });
 
     const location = req.body.location;
-    if (!location || typeof location !== 'string')
-      throw new Error('Địa điểm không hợp lệ');
+    if (!location || typeof location !== "string")
+      throw new Error("Địa điểm không hợp lệ");
     const locationExisted = await Location.exists({
-      _id: location
+      _id: location,
     }).exec();
-    if (!locationExisted) throw new Error('Địa điểm không hợp lệ!');
+    if (!locationExisted) throw new Error("Địa điểm không hợp lệ!");
     report.location = location;
-    if (type === 'Bảng quảng cáo') {
+    if (type === "Bảng quảng cáo") {
       const ads = req.body.ads;
-      if (!ads || typeof ads !== 'string') throw new Error('Bảng quảng cáo không hợp lệ!');
+      if (!ads || typeof ads !== "string")
+        throw new Error("Bảng quảng cáo không hợp lệ!");
       const adsExisted = await Ads.exists({
-        _id: ads
+        _id: ads,
       }).exec();
-      if (!adsExisted) throw new Error('Bảng quảng cáo không hợp lệ!');
+      if (!adsExisted) throw new Error("Bảng quảng cáo không hợp lệ!");
       report.ads = ads;
     }
     if (req.files && req.files.length) {

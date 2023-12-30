@@ -22,6 +22,8 @@ router.get("/administrative", administrativeController.view);
 // Method
 router.get("/method", methodController.view);
 router.get("/method/view/:id", methodController.getDetail);
+router.post('/method/:id/add', methodController.add);
+router.post('/method/:id/remove', methodController.remove);
 
 // Location
 router.get("/location", locationController.view);

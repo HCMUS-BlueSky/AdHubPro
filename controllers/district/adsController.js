@@ -3,7 +3,7 @@ const { Location } = require("../../models/Location");
 const { generateRegexQuery } = require("regex-vietnamese");
 const Proposal = require("../../models/Proposal");
 const District = require("../../models/District");
-const Enum = require('../../models/Enum');
+const Enum = require("../../models/Enum");
 const uploadFile = require("../../utils/fileUpload");
 const moment = require("moment");
 
@@ -53,19 +53,18 @@ exports.filter = async (req, res) => {
   let perPage = 10;
   let page = req.query.page || 1;
   try {
-    const selectedWards = req.body.select;
+    const selectedWards = req.query.select;
     const user = req.session.user;
     const district = await District.findOne({
       name: user.managed_district.name,
     });
-    const managed_locations = await Location.find({
+    const filtered_locations = await Location.find({
       district: user.managed_district.name,
       ward: { $in: selectedWards },
     })
       .distinct("_id")
       .exec();
-
-    const ads = await Ads.find({ location: { $in: managed_locations } })
+    const ads = await Ads.find({ location: { $in: filtered_locations } })
       .sort({ created_at: -1 })
       .skip(perPage * page - perPage)
       .limit(perPage)
@@ -74,7 +73,7 @@ exports.filter = async (req, res) => {
         select: ["address", "ward", "district", "method"],
       })
       .exec();
-    const count = ads.length;
+    const count = await Ads.count({ location: { $in: filtered_locations } });
     res.render("district/ads/index", {
       district,
       ads,
@@ -220,7 +219,7 @@ exports.renderUpdateInfo = async (req, res) => {
       .populate("location")
       .exec();
     if (!ads) throw new Error("Bảng quảng cáo không tồn tại!");
-    availableType = await Enum.findOne({"name": "AdsType"}).exec();
+    availableType = await Enum.findOne({ name: "AdsType" }).exec();
     ads.availableType = availableType.values;
     return res.render("district/ads/update_info", {
       ads,
