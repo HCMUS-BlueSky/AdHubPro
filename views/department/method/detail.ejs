@@ -22,7 +22,9 @@
         <td class="text-center">
           <a role="button" 
             data-bs-toggle="modal"
-            data-bs-target="#deleteMethod">
+            data-bs-target="#deleteMethod"
+            onclick="updateData('<%= value %>')"
+          >
             <i class="fs-4 bi bi-dash-circle"></i>
           </a>
         </td>
@@ -31,7 +33,10 @@
     </tbody>
   </table>
 </div>
-<form method="POST" action="../method/remove" id="removeForm" style="display: none;"></form>
+<form method="POST" action="../<%= method._id %>/remove" id="removeForm" style="display: none">
+  <label for="value-inp">asdasd</label>
+  <input type="text" name="value" id="value-inp">
+</form>
 
 <!-- Delete Method Modal -->
 <div
@@ -63,6 +68,9 @@
   </div>
 </div>
 <script>
+  function updateData(value) {
+    document.getElementById("value-inp").value = value;
+  }
   document.getElementById("delete-btn").addEventListener("click", () => {
     removeForm.submit();
   });
