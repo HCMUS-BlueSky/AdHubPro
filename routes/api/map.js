@@ -8,6 +8,7 @@ const upload = require("../../middleware/multer");
 
 router.get("/locations", async (req, res) => {
   try {
+    const locations = await Location.find({}).exec();
     let locationsObject = locations.map((location) => location.toObject());
     const handleLocations = async () => {
       for (let location of locationsObject) {
