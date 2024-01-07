@@ -3,6 +3,7 @@ async function logLocations() {
     "https://cms-adhubpro.onrender.com/api/map/locations"
   );
   const locations = await response.json();
+  console.log(locations);
   return locations;
 }
 
@@ -407,6 +408,7 @@ function addTextLayer(map, content) {
 
 async function initMap() {
   const locations = await logLocations();
+  console.log(locations);
   const geojson = {
     type: "FeatureCollection",
     features: [],
