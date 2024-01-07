@@ -3,7 +3,6 @@ async function logLocations() {
     "https://cms-adhubpro.onrender.com/api/map/locations"
   );
   const locations = await response.json();
-  console.log(locations);
   return locations;
 }
 
@@ -15,7 +14,15 @@ async function logAdsByLocation(locationID) {
   return ads;
 }
 
-async function logReports(adsID) {
+async function logReports() {
+  const response = await fetch(
+    "https://cms-adhubpro.onrender.com/api/map/reports"
+  );
+  const reports = await response.json();
+  return reports;
+}
+
+async function logReportsByAds(adsID) {
   const response = await fetch(
     `https://cms-adhubpro.onrender.com/api/map/report/ads/${adsID}`
   );
@@ -408,7 +415,20 @@ function addTextLayer(map, content) {
 
 async function initMap() {
   const locations = await logLocations();
+  const reports = await logReports();
+  reports.forEach((report) => {
+    const locationId = report.location;
+    const locationToUpdate = location.find(
+      (location) => location._id === locationId
+    );
+
+    if (locationToUpdate && locationToUpdate.hasReport === undefined) {
+      locationToUpdate.hasReport = true;
+    }
+  });
+
   console.log(locations);
+
   const geojson = {
     type: "FeatureCollection",
     features: [],
@@ -666,7 +686,7 @@ async function initMap() {
         removeOutSideBar(".ads-card");
         const reportInfoArray = await Promise.all(
           adsInfo.map(async (ads) => {
-            return await logReports(ads._id);
+            return await logReportsByAds(ads._id);
           })
         );
         const reportInfoArrayFlat = reportInfoArray.flat();
