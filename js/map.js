@@ -418,7 +418,7 @@ async function initMap() {
   const reports = await logReports();
   reports.forEach((report) => {
     const locationId = report.location;
-    const locationToUpdate = location.find(
+    const locationToUpdate = locations.find(
       (location) => location._id === locationId
     );
 
