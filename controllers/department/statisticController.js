@@ -29,7 +29,7 @@ exports.overview = async (req, res) => {
   try {
     const user = req.session.user;
     const reports = await Report.find({})
-      .sort({ updatedAt: -1 })
+      .sort({ created_at: -1 })
       .skip(perPage * page - perPage)
       .limit(perPage)
       .populate({
