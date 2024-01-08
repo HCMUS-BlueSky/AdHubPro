@@ -232,6 +232,14 @@ const reportCardFactory = (report) => {
                   report.created_at
                 ).format("MMMM Do YYYY")}</h5>
                 <h5 class="card-text">Trạng thái: ${statusLabel}</h5>
+                <div class="d-flex justify-content-end">
+                <button type="button"
+                  class="btn btn-primary report-detail-btn"
+                  data-bs-toggle="modal"
+                  data-bs-target="#report-detail">
+                  Xem chi tiết
+                </button>
+              </div>
               </div>
             </div>
           `;
@@ -277,6 +285,58 @@ const detailCardFactory = (ads) => {
               <p class="text-center">Ngày hết hạn hợp đồng: ${moment(
                 ads.expiration
               ).format("MMMM Do YYYY")}</p>
+            </div>
+          `;
+  return elem;
+};
+
+const reportDetailCardFactory = (ads) => {
+  const elem = document.createElement("div");
+  elem.innerHTML = `
+            <!-- Carousel -->
+            <div id="demo" class="carousel slide" data-bs-ride="carousel">
+  
+            <!-- Indicators/dots -->
+            <div class="carousel-indicators">
+              ${
+                ads.images[0]
+                  ? '<button type="button" data-bs-target="#demo" data-bs-slide-to="0" class="active"></button>'
+                  : ""
+              }
+              ${
+                ads.images[1]
+                  ? '<button type="button" data-bs-target="#demo" data-bs-slide-to="1"></button>'
+                  : ""
+              }
+            </div>
+            
+            <!-- The slideshow/carousel -->
+            <div class="carousel-inner">
+              ${
+                ads.images[0]
+                  ? `
+                <div class="carousel-item active">
+                  <img src="${ads.images[0]}" alt="ads-1" class="d-block" style="width:100%;">
+                </div>`
+                  : ""
+              }
+              ${
+                ads.images[1]
+                  ? `
+                <div class="carousel-item">
+                  <img src="${ads.images[1]}" alt="ads-2" class="d-block" style="width:100%">
+                </div>`
+                  : ""
+              }
+            </div>
+              
+              <!-- Left and right controls/icons -->
+              <button class="carousel-control-prev" type="button" data-bs-target="#demo" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon"></span>
+              </button>
+              <button class="carousel-control-next" type="button" data-bs-target="#demo" data-bs-slide="next">
+                <span class="carousel-control-next-icon"></span>
+              </button>
             </div>
           `;
   return elem;
@@ -803,6 +863,22 @@ async function initMap() {
             const reportCard = reportCardFactory(report);
             addToSideBar(reportCard);
           });
+
+          // Report Detail
+          const reportDetailBtn =
+            document.querySelectorAll(".report-detail-btn");
+          reportDetailBtn.forEach((detail, index) => {
+            detail.addEventListener("click", () => {
+              const reportDetailModal = document.querySelector(
+                ".modal-report-detail"
+              );
+              reportDetailModal.innerHTML = "";
+              const reportDetailCard = reportDetailCardFactory(
+                reportInfoArrayFlat[index]
+              );
+              reportDetailModal.appendChild(reportDetailCard);
+            });
+          });
         });
 
         const detailIcons = document.querySelectorAll(".bi-info-circle");
@@ -855,6 +931,22 @@ async function initMap() {
           reportInfo.map((report) => {
             const reportCard = reportCardFactory(report);
             addToSideBar(reportCard);
+          });
+
+          // Report Detail
+          const reportDetailBtn =
+            document.querySelectorAll(".report-detail-btn");
+          reportDetailBtn.forEach((detail, index) => {
+            detail.addEventListener("click", () => {
+              const reportDetailModal = document.querySelector(
+                ".modal-report-detail"
+              );
+              reportDetailModal.innerHTML = "";
+              const reportDetailCard = reportDetailCardFactory(
+                reportInfo[index]
+              );
+              reportDetailModal.appendChild(reportDetailCard);
+            });
           });
         });
 
