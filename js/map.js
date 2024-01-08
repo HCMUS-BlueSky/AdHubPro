@@ -396,7 +396,7 @@ function addAdsLayer(map) {
 function addTextLayer(map, content) {
   let filterType = [];
   if (content == "BC") {
-    filterType = ["==", ["get", "status"], "Đã quy hoạch"];
+    filterType = ["==", ["get", "hasReport"], true];
   } else {
     filterType = ["!", ["has", "point_count"]];
   }
