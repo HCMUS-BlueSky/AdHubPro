@@ -56,7 +56,7 @@
         <th scope="col">STT</th>
         <th scope="col" class="col-5">Điểm đặt</th>
         <th scope="col">Bảng quảng cáo</th>
-        <th scope="col" class="col-3">Công ty</th>
+        <th scope="col" class="col-2">Công ty</th>
         <th scope="col" class="col-1" >Tình trạng</th>
         <th scope="col"></th>
       </tr>
@@ -72,8 +72,8 @@
         </td>
         <td class=""><%= request.ads.type %></td>
         <td class="">
-          <%= (request.company.name.length > 30 ?
-          request.company.name.substring(0, 30) + '...' :
+          <%= (request.company.name.length > 18 ?
+          request.company.name.substring(0, 18) + '...' :
           request.company.name) %>
         </td>
         <td class="">
