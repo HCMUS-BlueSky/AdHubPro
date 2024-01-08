@@ -208,6 +208,7 @@ exports.renderCreateNew = async (req, res) => {
     const user = req.session.user;
     const locations = await Location.find({
       district: user.managed_district.name,
+      accepted: true
     }).exec();
     const availableType = await Enum.findOne({ name: 'AdsType' }).exec();
     const availableAdsType = availableType.values;
@@ -265,6 +266,7 @@ exports.createNew = async (req, res) => {
     const exists = await Location.exists({
       _id: location,
       district: user.managed_district.name,
+      accepted: true
     }).exec();
     if (!exists) throw new Error("Địa điểm không hợp lệ");
     const request = new Request({

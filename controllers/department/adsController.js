@@ -256,8 +256,7 @@ exports.create = async (req, res) => {
     }
     await ads.save();
     await Location.findByIdAndUpdate(ads.location, {
-      $inc: { ads_count: 1 },
-      accepted: true
+      $inc: { ads_count: 1 }
     });
     req.flash('success', 'Thêm bảng quảng cáo thành công!');
     return res.redirect('/department/ads');
@@ -278,9 +277,6 @@ exports.remove = async (req, res) => {
     const loc = await Location.findById(ads.location).exec();
     if (loc) {
       loc.ads_count -= 1;
-      if (loc.ads_count < 1) {
-        loc.accepted = false;
-      }
       await loc.save();
     }
     req.flash('success', 'Xóa bảng quảng cáo thành công!');
