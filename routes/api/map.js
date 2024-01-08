@@ -24,6 +24,15 @@ router.get("/reports", async (req, res) => {
   }
 });
 
+router.get('/report_method', async (req, res) => {
+  try {
+    const methods = await Enum.find({ name: 'ReportMethod' }).select('values').exec();
+    return res.json(methods);
+  } catch (err) {
+    return res.status(500).send(err.message);
+  }
+});
+
 router.get("/ads", async (req, res) => {
   try {
     const ads = await Ads.find({}).exec();
