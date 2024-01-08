@@ -80,40 +80,44 @@ function generateRandomDate(from, to) {
 
 // router.get("/test2", async (req, res) => {
 //   try {
-//     const availableType = [
-//       'Tố giác sai phạm',
-//       'Đăng ký nội dung',
-//       'Đóng góp ý kiến',
-//       'Giải đáp thắc mắc'
-//     ];
+    // const availableType = [
+    //   'Tố giác sai phạm',
+    //   'Đăng ký nội dung',
+    //   'Đóng góp ý kiến',
+    //   'Giải đáp thắc mắc'
+    // ];
 
-//     const new_enum = new Enum({
-//       name: 'ReportMethod',
-//       values: availableType
-//     });
-//     await new_enum.save();
-//     // for(let i = 1; i <= 14; ++i) {
-//     //   district.wards.push(i.toString());
-//     // }
-//     // const locations = await Location.find({}).exec();
-//     // for (let loc of locations) {
-//     //   const adscount = await Ads.count({ location: loc._id })
-//     //   await Location.findByIdAndUpdate(loc._id, { ads_count: adscount });
-//     // }
-//     // const proposals = await Proposal.find({}).exec();
-//     // for (let pro of proposals) {
-//     //   await Proposal.findByIdAndUpdate(pro._id, {
-//     //     location: pro.updated_ads.location
-//     //   });
-//     // }
-//     // await Proposal.updateMany({}, {status: 'pending'})
-//     // for(let location of locations) {
-//     //   // const type = types[Math.floor(Math.random() * types.length)];
-//     //   // const size = '2.5m x 10m';
-//     //   await Ads.findOneAndDelete(
-//     //     { location: location.id }
-//     //   ).exec();
-//     // }
+    // const new_enum = new Enum({
+    //   name: 'ReportMethod',
+    //   values: availableType
+    // });
+    // await new_enum.save();
+    // for(let i = 1; i <= 14; ++i) {
+    //   district.wards.push(i.toString());
+    // }
+    // const locations = await Location.find({}).exec();
+    // for (let loc of locations) {
+    //   let rand = Math.random();
+    //   if (rand > 0.5 && !loc.accepted) {
+    //     await Location.findByIdAndUpdate(loc._id, { accepted: true });
+    //   }
+    //   // const adscount = await Ads.count({ location: loc._id })
+    //   // 
+    // }
+    // const proposals = await Proposal.find({}).exec();
+    // for (let pro of proposals) {
+    //   await Proposal.findByIdAndUpdate(pro._id, {
+    //     location: pro.updated_ads.location
+    //   });
+    // }
+    // await Proposal.updateMany({}, {status: 'pending'})
+    // for(let location of locations) {
+    //   // const type = types[Math.floor(Math.random() * types.length)];
+    //   // const size = '2.5m x 10m';
+    //   await Ads.findOneAndDelete(
+    //     { location: location.id }
+    //   ).exec();
+    // }
 //     return res.status(200).send("DONE");
 //   } catch (err) {
 //     return res.status(500).send(err.message);

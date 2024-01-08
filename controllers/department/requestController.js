@@ -200,8 +200,7 @@ exports.approveRequest = async (req, res) => {
     const newAds = new Ads(request.ads);
     await newAds.save();
     await Location.findByIdAndUpdate(request.ads.location, {
-      $inc: { ads_count: 1 },
-      accepted: true,
+      $inc: { ads_count: 1 }
     });
     req.flash("success", "Duyệt yêu cầu cấp phép thành công!");
     return res.redirect("/department/request");
