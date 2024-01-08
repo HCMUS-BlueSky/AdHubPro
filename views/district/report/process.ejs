@@ -50,7 +50,7 @@
       </div>
 
       <label for="text-area" class="form-label pt-3">Cách thức xử lí<span class="text-danger"> *</span></label>
-      <textarea name="response" class="form-control" id="text-area" name="response" rows="5" placeholder="Cách thức xử lí ..." value=""></textarea>
+      <textarea name="response" class="form-control" id="text-area" name="response" rows="5" placeholder="Cách thức xử lí ..." value=""><%= report?.response?.length ? report.response : "" %></textarea>
 
       <div class="d-flex justify-content-center pt-3">
         <a href="../view/<%= report._id %>" class="">
