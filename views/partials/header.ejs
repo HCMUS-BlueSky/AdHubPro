@@ -38,7 +38,7 @@
           <h3><%= user.fullname %></h3>
           <div class="pb-2"><%= user.email %></div>
       </div>
-      <a href="<%= user.workDir %>/change-password" style="color: #fff">Đổi mật khẩu</a>
+      <a href="<%= user.workDir %>/change-password" class="change-pass">Đổi mật khẩu</a>
       <form action="/auth/logout" method="POST" id='logout' class="logout">
         <a onclick="logout.submit()">Đăng xuất</a>
       </form>

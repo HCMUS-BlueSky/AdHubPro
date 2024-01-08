@@ -54,14 +54,15 @@ ul {
   font-size: 16px;
 }
 
-.logout {
+.logout, .change-pass {
   width: 100%;
   padding: 12px;
   text-align: center;
   cursor: pointer;
+  color: white;
 }
 
-.logout:hover {
+.logout:hover, .change-pass:hover {
   color: #337ab7;
 }
 
