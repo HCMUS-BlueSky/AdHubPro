@@ -24,6 +24,15 @@ router.get("/reports", async (req, res) => {
   }
 });
 
+router.get("/ads", async (req, res) => {
+  try {
+    const ads = await Ads.find({}).exec();
+    return res.json(ads);
+  } catch (err) {
+    return res.status(500).send(err.message);
+  }
+});
+
 router.get("/ads/:location_id", async (req, res) => {
   const locationID = req.params.location_id;
   try {
