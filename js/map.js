@@ -6,6 +6,12 @@ async function logLocations() {
   return locations;
 }
 
+async function logAds() {
+  const response = await fetch("https://cms-adhubpro.onrender.com/api/map/ads");
+  const ads = await response.json();
+  return ads;
+}
+
 async function logAdsByLocation(locationID) {
   const response = await fetch(
     `https://cms-adhubpro.onrender.com/api/map/ads/${locationID}`
@@ -365,43 +371,68 @@ function toggleSidebar() {
   });
 }
 
-function addReportLayer(map) {
-  map.addLayer({
-    id: "report-point",
-    type: "circle",
-    source: "AdsLocations",
-    filter: ["==", ["get", "hasReport"], true],
-    paint: {
-      "circle-radius": 15,
-      "circle-opacity": 0,
-      "circle-stroke-width": 2,
-      "circle-stroke-color": "red",
-    },
-  });
-}
-
-function addAdsLayer(map) {
-  map.addLayer({
-    id: "unclustered-point",
-    type: "circle",
-    source: "AdsLocations",
-    filter: ["!", ["has", "point_count"]],
-    paint: {
-      "circle-color": "#11b4da",
-      "circle-radius": 15,
-    },
-  });
+function addCustomLayer(map, type) {
+  if (type == "ads") {
+    map.addLayer({
+      id: "ads-point",
+      type: "circle",
+      source: "AdsLocations",
+      filter: [
+        "all",
+        ["!", ["has", "point_count"]],
+        ["==", ["get", "hasAds"], true],
+      ],
+      paint: {
+        "circle-color": "#11b4da",
+        "circle-radius": 15,
+      },
+    });
+  } else if (type == "location") {
+    map.addLayer({
+      id: "location-point",
+      type: "circle",
+      source: "AdsLocations",
+      filter: [
+        "all",
+        ["!", ["has", "point_count"]],
+        ["==", ["get", "hasAds"], false],
+      ],
+      paint: {
+        "circle-color": "#FAEF5D",
+        "circle-radius": 15,
+      },
+    });
+  } else if (type == "report") {
+    map.addLayer({
+      id: "report-point",
+      type: "circle",
+      source: "AdsLocations",
+      filter: ["==", ["get", "hasReport"], true],
+      paint: {
+        "circle-radius": 15,
+        "circle-opacity": 0,
+        "circle-stroke-width": 2,
+        "circle-stroke-color": "red",
+      },
+    });
+  }
 }
 
 function addTextLayer(map, content) {
   let filterType = [];
-  if (content == "BC") {
+  let idType = "";
+  if (content == "QC") {
+    filterType = ["==", ["get", "hasAds"], true];
+    idType = "text-ads-point";
+  } else if (content == "BC") {
     filterType = ["==", ["get", "hasReport"], true];
-  } else {
-    filterType = ["!", ["has", "point_count"]];
+    idType = "text-report-point";
+  } else if (content == "ĐĐ") {
+    filterType = ["==", ["get", "hasAds"], false];
+    idType = "text-location-point";
   }
   map.addLayer({
-    id: "text-point",
+    id: idType,
     type: "symbol",
     source: "AdsLocations",
     filter: filterType,
@@ -415,25 +446,26 @@ function addTextLayer(map, content) {
 
 async function initMap() {
   const locations = await logLocations();
+  const ads = await logAds();
   const reports = await logReports();
-  reports.forEach((report) => {
-    const locationId = report.location;
-    const locationToUpdate = locations.find(
-      (location) => location._id === locationId
+
+  locations.forEach((location) => {
+    const adsInLocation = ads.find((el) => el.location === location._id);
+    const reportInLocation = reports.find(
+      (report) => report.location === location._id
     );
 
-    if (locationToUpdate && locationToUpdate.hasReport === undefined) {
-      locationToUpdate.hasReport = true;
-    }
+    location.hasAds = adsInLocation && adsInLocation.hasAds === undefined;
+    location.hasReport =
+      reportInLocation && reportInLocation.hasReport === undefined;
   });
-
-  console.log(locations);
 
   const geojson = {
     type: "FeatureCollection",
     features: [],
   };
   locations.map((location) => {
+    const hasAds = location.hasAds || false;
     const hasReport = location.hasReport || false;
     const feature = {
       type: "Feature",
@@ -447,6 +479,7 @@ async function initMap() {
         type: location.type,
         address: location.address,
         status: location.accepted ? "Đã quy hoạch" : "Chưa quy hoạch",
+        hasAds: hasAds,
         hasReport: hasReport,
       },
     };
@@ -498,13 +531,14 @@ async function initMap() {
       },
     });
 
-    addAdsLayer(map);
+    addCustomLayer(map, "ads");
+    addCustomLayer(map, "location");
 
     const adsSwitch = document.querySelector("#adsSwitch");
     adsSwitch.addEventListener("change", () => {
       if (adsSwitch.checked) {
         map.removeLayer("text-point");
-        addAdsLayer(map);
+        addCustomLayer(map, "ads");
         addTextLayer(map, "QC");
       } else {
         map.removeLayer("unclustered-point");
@@ -513,7 +547,7 @@ async function initMap() {
       }
     });
 
-    addReportLayer(map);
+    addCustomLayer(map, "report");
 
     const reportSwitch = document.querySelector("#reportSwitch");
     reportSwitch.addEventListener("change", () => {
@@ -524,6 +558,7 @@ async function initMap() {
       }
     });
 
+    addTextLayer(map, "ĐĐ");
     addTextLayer(map, "QC");
 
     map.on("click", "clusters", (e) => {
@@ -546,11 +581,11 @@ async function initMap() {
         });
     });
 
-    map.on("click", ["unclustered-point"], (e) => {
+    map.on("click", ["ads-point", "location-point"], (e) => {
       e.clickOnLayer = true;
     });
 
-    map.on("mouseenter", ["unclustered-point"], (e) => {
+    map.on("mouseenter", ["ads-point", "location-point"], (e) => {
       map.getCanvas().style.cursor = "pointer";
       const coordinates = e.features[0].geometry.coordinates.slice();
 
@@ -569,10 +604,14 @@ async function initMap() {
         .addTo(map);
     });
 
-    map.on("mouseleave", ["unclustered-point", "report-point"], () => {
-      map.getCanvas().style.cursor = "";
-      popup.remove();
-    });
+    map.on(
+      "mouseleave",
+      ["ads-point", "location-point", "report-point"],
+      () => {
+        map.getCanvas().style.cursor = "";
+        popup.remove();
+      }
+    );
 
     map.on("mouseenter", "clusters", () => {
       map.getCanvas().style.cursor = "pointer";
@@ -639,120 +678,133 @@ async function initMap() {
     }
   });
 
-  // Click on location
-  map.on("click", ["unclustered-point", "report-point"], async (e) => {
-    const features = e.features[0];
-    clearSidebar();
-    const adsInfo = await logAdsByLocation(features.properties._id);
-    const reportButton = document.querySelector(".report-btn");
-    const infoButton = document.querySelector(".info-btn");
+  // Click on location or ads
+  map.on(
+    "click",
+    ["location-point", "ads-point", "report-point"],
+    async (e) => {
+      const features = e.features[0];
+      clearSidebar();
+      const adsInfo = await logAdsByLocation(features.properties._id);
+      const reportButton = document.querySelector(".report-btn");
+      const infoButton = document.querySelector(".info-btn");
 
-    if (adsInfo.length !== 0) {
-      reportButton.classList.remove("active");
-      infoButton.classList.add("active");
-      removeOutSideBar(".report-card");
-      removeOutSideBar(".ads-card");
-      adsInfo.forEach((el) => {
-        let adsCard = AdsCardFactory(el);
-        addToSideBar(adsCard);
-      });
-
-      const newInfoButton = infoButton.cloneNode(true);
-      infoButton.parentNode.replaceChild(newInfoButton, infoButton);
-      newInfoButton.addEventListener("click", async () => {
-        newReportButton.classList.remove("active");
-        newInfoButton.classList.add("active");
+      if (adsInfo.length !== 0) {
+        reportButton.classList.remove("active");
+        infoButton.classList.add("active");
         removeOutSideBar(".report-card");
         removeOutSideBar(".ads-card");
         adsInfo.forEach((el) => {
           let adsCard = AdsCardFactory(el);
           addToSideBar(adsCard);
         });
-      });
 
-      const reportButtons = document.querySelectorAll(".ads-card .btn-danger");
-
-      reportButtons.forEach((button, index) => {
-        button.addEventListener("click", () => {
-          handleReportModal("ads", adsInfo[index].location._id, adsInfo[index]);
+        const newInfoButton = infoButton.cloneNode(true);
+        infoButton.parentNode.replaceChild(newInfoButton, infoButton);
+        newInfoButton.addEventListener("click", async () => {
+          newReportButton.classList.remove("active");
+          newInfoButton.classList.add("active");
+          removeOutSideBar(".report-card");
+          removeOutSideBar(".ads-card");
+          adsInfo.forEach((el) => {
+            let adsCard = AdsCardFactory(el);
+            addToSideBar(adsCard);
+          });
         });
-      });
 
-      const newReportButton = reportButton.cloneNode(true);
-      reportButton.parentNode.replaceChild(newReportButton, reportButton);
-
-      newReportButton.addEventListener("click", async () => {
-        newInfoButton.classList.remove("active");
-        newReportButton.classList.add("active");
-        removeOutSideBar(".report-card");
-        removeOutSideBar(".ads-card");
-        const reportInfoArray = await Promise.all(
-          adsInfo.map(async (ads) => {
-            return await logReportsByAds(ads._id);
-          })
+        const reportButtons = document.querySelectorAll(
+          ".ads-card .btn-danger"
         );
-        const reportInfoArrayFlat = reportInfoArray.flat();
-        reportInfoArrayFlat.forEach((report) => {
-          const reportCard = reportCardFactory(report);
-          addToSideBar(reportCard);
-        });
-      });
 
-      const detailIcons = document.querySelectorAll(".bi-info-circle");
-      detailIcons.forEach((detail, index) => {
-        detail.addEventListener("click", () => {
-          const infoDetailModal = document.querySelector(".modal-info-detail");
-          infoDetailModal.innerHTML = "";
-          const infoDetailCard = detailCardFactory(adsInfo[index]);
-          infoDetailModal.appendChild(infoDetailCard);
+        reportButtons.forEach((button, index) => {
+          button.addEventListener("click", () => {
+            handleReportModal(
+              "ads",
+              adsInfo[index].location._id,
+              adsInfo[index]
+            );
+          });
         });
-      });
-    } else {
-      const locationAdsCard = locationAdsCardFactory(features.properties);
-      addToSideBar(locationAdsCard);
-      const nonAdsCard = NonAdsCardFactory();
-      addToSideBar(nonAdsCard);
-      reportButton.classList.remove("active");
-      infoButton.classList.add("active");
 
-      const newInfoButton = infoButton.cloneNode(true);
-      infoButton.parentNode.replaceChild(newInfoButton, infoButton);
-      newInfoButton.addEventListener("click", async () => {
-        newReportButton.classList.remove("active");
-        newInfoButton.classList.add("active");
-        removeOutSideBar(".report-card");
-        removeOutSideBar(".non-ads-card");
-        removeOutSideBar(".location-ads-card");
+        const newReportButton = reportButton.cloneNode(true);
+        reportButton.parentNode.replaceChild(newReportButton, reportButton);
+
+        newReportButton.addEventListener("click", async () => {
+          newInfoButton.classList.remove("active");
+          newReportButton.classList.add("active");
+          removeOutSideBar(".report-card");
+          removeOutSideBar(".ads-card");
+          const reportInfoArray = await Promise.all(
+            adsInfo.map(async (ads) => {
+              return await logReportsByAds(ads._id);
+            })
+          );
+          const reportInfoArrayFlat = reportInfoArray.flat();
+          reportInfoArrayFlat.forEach((report) => {
+            const reportCard = reportCardFactory(report);
+            addToSideBar(reportCard);
+          });
+        });
+
+        const detailIcons = document.querySelectorAll(".bi-info-circle");
+        detailIcons.forEach((detail, index) => {
+          detail.addEventListener("click", () => {
+            const infoDetailModal =
+              document.querySelector(".modal-info-detail");
+            infoDetailModal.innerHTML = "";
+            const infoDetailCard = detailCardFactory(adsInfo[index]);
+            infoDetailModal.appendChild(infoDetailCard);
+          });
+        });
+      } else {
         const locationAdsCard = locationAdsCardFactory(features.properties);
         addToSideBar(locationAdsCard);
         const nonAdsCard = NonAdsCardFactory();
         addToSideBar(nonAdsCard);
-      });
+        reportButton.classList.remove("active");
+        infoButton.classList.add("active");
 
-      const newReportButton = reportButton.cloneNode(true);
-      reportButton.parentNode.replaceChild(newReportButton, reportButton);
-
-      newReportButton.addEventListener("click", async () => {
-        newInfoButton.classList.remove("active");
-        newReportButton.classList.add("active");
-        removeOutSideBar(".report-card");
-        removeOutSideBar(".non-ads-card");
-        removeOutSideBar(".location-ads-card");
-        const reportInfo = await logReportsByLocation(features.properties._id);
-        reportInfo.map((report) => {
-          const reportCard = reportCardFactory(report);
-          addToSideBar(reportCard);
+        const newInfoButton = infoButton.cloneNode(true);
+        infoButton.parentNode.replaceChild(newInfoButton, infoButton);
+        newInfoButton.addEventListener("click", async () => {
+          newReportButton.classList.remove("active");
+          newInfoButton.classList.add("active");
+          removeOutSideBar(".report-card");
+          removeOutSideBar(".non-ads-card");
+          removeOutSideBar(".location-ads-card");
+          const locationAdsCard = locationAdsCardFactory(features.properties);
+          addToSideBar(locationAdsCard);
+          const nonAdsCard = NonAdsCardFactory();
+          addToSideBar(nonAdsCard);
         });
-      });
 
-      handleReportModal("location", features.properties._id, null);
-    }
+        const newReportButton = reportButton.cloneNode(true);
+        reportButton.parentNode.replaceChild(newReportButton, reportButton);
 
-    const sidebar = document.getElementById("sidebar");
-    if (sidebar.classList.contains("collapsed")) {
-      toggleSidebar();
+        newReportButton.addEventListener("click", async () => {
+          newInfoButton.classList.remove("active");
+          newReportButton.classList.add("active");
+          removeOutSideBar(".report-card");
+          removeOutSideBar(".non-ads-card");
+          removeOutSideBar(".location-ads-card");
+          const reportInfo = await logReportsByLocation(
+            features.properties._id
+          );
+          reportInfo.map((report) => {
+            const reportCard = reportCardFactory(report);
+            addToSideBar(reportCard);
+          });
+        });
+
+        handleReportModal("location", features.properties._id, null);
+      }
+
+      const sidebar = document.getElementById("sidebar");
+      if (sidebar.classList.contains("collapsed")) {
+        toggleSidebar();
+      }
     }
-  });
+  );
 
   // Add geolocate control to the map.
   map.addControl(
