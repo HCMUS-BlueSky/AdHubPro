@@ -109,6 +109,19 @@ router.all("/request/*", (req, res) => {
   return res.redirect("/district/request");
 });
 
+
+router.get('/change-password', (req, res) => {
+  const user = req.session.user;
+  res.render('district/change-password', {
+    user,
+    pageName: '',
+    header: {
+      navRoot: 'Thông tin cá nhân',
+      navCurrent: 'Đổi mật khẩu'
+    }
+  });
+});
+
 router.all("*", (req, res) => {
   return res.redirect("/district");
 });

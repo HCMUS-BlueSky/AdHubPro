@@ -118,14 +118,13 @@ exports.changePassword = async (req, res) => {
     await account.save();
     req.flash('success', 'Thay đổi mật khẩu thành công!');
     if (req?.session?.user?.workDir) {
-      return res.redirect(req?.session?.user?.workDir);
+      return res.redirect(req?.session?.user?.workDir + '/change-password');
     }
     return res.redirect('/');
   } catch (error) {
-    console.log(error.message);
     req.flash('error', error.message);
     if (req?.session?.user?.workDir) {
-      return res.redirect(req?.session?.user?.workDir);
+      return res.redirect(req?.session?.user?.workDir + '/change-password');
     }
     return res.redirect('/');
   }
