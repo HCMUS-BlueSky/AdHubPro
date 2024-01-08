@@ -5,6 +5,7 @@ const Enum = require("../../models/Enum");
 const Report = require("../../models/Report");
 const router = express.Router();
 const upload = require("../../middleware/multer");
+const uploadFile = require('../../utils/fileUpload');
 
 router.get("/locations", async (req, res) => {
   try {
