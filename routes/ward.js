@@ -93,6 +93,18 @@ router.post(
 
 router.post("/request/:id/cancel", requestController.cancelRequest);
 
+router.get("/change-password", (req, res) => {
+  const user = req.session.user;
+  res.render("ward/change-password", {
+    user,
+    pageName: "",
+    header: {
+      navRoot: "Thông tin cá nhân",
+      navCurrent: "Đổi mật khẩu",
+    },
+  });
+});
+
 router.all("/request/*", (req, res) => {
   return res.redirect("/ward/request");
 });

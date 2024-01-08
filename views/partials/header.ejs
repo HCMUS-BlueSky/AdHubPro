@@ -26,24 +26,25 @@
   </ol>
 </nav>
 <script>
-const handleUserMenu = () => {
-  const menu = document.querySelector(".menu");
+  const handleUserMenu = () => {
+    const menu = document.querySelector(".menu");
 
-  if (menu) {
-    menu.remove();
-  } else {
-    const elm = document.createElement("div");
-    elm.innerHTML = `
+    if (menu) {
+      menu.remove();
+    } else {
+      const elm = document.createElement("div");
+      elm.innerHTML = `
       <div class="info">
           <h3><%= user.fullname %></h3>
           <div class="pb-2"><%= user.email %></div>
       </div>
+      <a href="/ward/change-password" style="color: #fff">Đổi mật khẩu</a>
       <form action="/auth/logout" method="POST" id='logout' class="logout">
-        <a onclick="logout.submit()">Log out</a>
+        <a onclick="logout.submit()">Đăng xuất</a>
       </form>
     `;
-    elm.className = "menu";
-    document.querySelector(".menu-user").appendChild(elm);
-  }
-};
+      elm.className = "menu";
+      document.querySelector(".menu-user").appendChild(elm);
+    }
+  };
 </script>
