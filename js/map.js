@@ -52,6 +52,33 @@ async function logReportMethod() {
   return methods;
 }
 
+async function createMethodsReport() {
+  const methods = await logReportMethod();
+  const reportRadio = document.querySelector(".report-radio");
+
+  methods[0].values.forEach((method, index) => {
+    const div = document.createElement("div");
+    div.className = "mb-3";
+
+    const input = document.createElement("input");
+    input.type = "radio";
+    input.id = `option-${index + 1}`;
+    input.name = "method";
+    input.value = method;
+
+    const label = document.createElement("label");
+    label.htmlFor = `option-${index + 1}`;
+    label.textContent = method;
+
+    div.appendChild(input);
+    div.appendChild(label);
+
+    reportRadio.appendChild(div);
+  });
+}
+
+createMethodsReport();
+
 mapboxgl.accessToken =
   "pk.eyJ1Ijoibm1raG9pMjEiLCJhIjoiY2xvMno5ZzhyMGQzdTJ2bGVkbTc4bGZ5dSJ9.9ljGVzjte5iqJXpbOiAN1Q";
 const map = new mapboxgl.Map({
@@ -308,7 +335,7 @@ const handleReportModal = (typeReport, location_id, adsInfo) => {
 
     let captchaResponse = grecaptcha.getResponse();
     if (captchaResponse.length === 0) {
-      console.error("Please verify the reCAPTCHA.");
+      alert("Hãy xác nhận CAPTCHA.");
       return;
     }
 
@@ -324,12 +351,12 @@ const handleReportModal = (typeReport, location_id, adsInfo) => {
       );
 
       if (response.ok) {
-        console.log("Report submitted successfully!");
+        alert("Gửi báo cáo thành công!");
         document.querySelector("#feedback");
         clearReportModal();
       } else {
         const errorMessage = await response.text();
-        console.error("Error:", errorMessage);
+        alert("Lỗi: " + errorMessage);
       }
     } catch (error) {
       console.error("Error:", error);
@@ -380,22 +407,7 @@ function toggleSidebar() {
 }
 
 function addCustomLayer(map, type) {
-  if (type == "ads") {
-    map.addLayer({
-      id: "ads-point",
-      type: "circle",
-      source: "AdsLocations",
-      filter: [
-        "all",
-        ["!", ["has", "point_count"]],
-        ["==", ["get", "hasAds"], true],
-      ],
-      paint: {
-        "circle-color": "#11b4da",
-        "circle-radius": 15,
-      },
-    });
-  } else if (type == "location") {
+  if (type == "location") {
     map.addLayer({
       id: "location-point",
       type: "circle",
@@ -403,10 +415,25 @@ function addCustomLayer(map, type) {
       filter: [
         "all",
         ["!", ["has", "point_count"]],
-        ["==", ["get", "hasAds"], false],
+        ["==", ["get", "status"], "Chưa quy hoạch"],
       ],
       paint: {
-        "circle-color": "#FAEF5D",
+        "circle-color": "#11b4da",
+        "circle-radius": 15,
+      },
+    });
+  } else if (type == "planning") {
+    map.addLayer({
+      id: "planning-point",
+      type: "circle",
+      source: "AdsLocations",
+      filter: [
+        "all",
+        ["!", ["has", "point_count"]],
+        ["==", ["get", "status"], "Đã quy hoạch"],
+      ],
+      paint: {
+        "circle-color": "#E26EE5",
         "circle-radius": 15,
       },
     });
@@ -539,7 +566,7 @@ async function initMap() {
       },
     });
 
-    addCustomLayer(map, "ads");
+    addCustomLayer(map, "planning");
     addCustomLayer(map, "location");
 
     const adsSwitch = document.querySelector("#adsSwitch");
@@ -589,11 +616,11 @@ async function initMap() {
         });
     });
 
-    map.on("click", ["ads-point", "location-point"], (e) => {
+    map.on("click", ["location-point", "planning-point"], (e) => {
       e.clickOnLayer = true;
     });
 
-    map.on("mouseenter", ["ads-point", "location-point"], (e) => {
+    map.on("mouseenter", ["location-point", "planning-point"], (e) => {
       map.getCanvas().style.cursor = "pointer";
       const coordinates = e.features[0].geometry.coordinates.slice();
 
@@ -614,7 +641,7 @@ async function initMap() {
 
     map.on(
       "mouseleave",
-      ["ads-point", "location-point", "report-point"],
+      ["location-point", "planning-point", "report-point"],
       () => {
         map.getCanvas().style.cursor = "";
         popup.remove();
@@ -689,7 +716,7 @@ async function initMap() {
   // Click on location or ads
   map.on(
     "click",
-    ["location-point", "ads-point", "report-point"],
+    ["location-point", "planning-point", "report-point"],
     async (e) => {
       const features = e.features[0];
       clearSidebar();
