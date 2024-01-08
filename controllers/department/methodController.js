@@ -7,9 +7,9 @@ exports.view = async (req, res) => {
     function translateMethod(name) {
       switch (name) {
         case "LocationType":
-          return "Phân loại";
+          return "Phân loại địa điểm";
         case "LocationMethod":
-          return "Hình thức";
+          return "Hình thức địa điểm";
         case "AdsType":
           return "Loại bảng quảng cáo";
         case "ReportMethod":
