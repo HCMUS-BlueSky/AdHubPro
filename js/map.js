@@ -44,6 +44,14 @@ async function logReportsByLocation(locationID) {
   return reports;
 }
 
+async function logReportMethod() {
+  const response = await fetch(
+    "https://cms-adhubpro.onrender.com/api/map/report_method"
+  );
+  const methods = await response.json();
+  return methods;
+}
+
 mapboxgl.accessToken =
   "pk.eyJ1Ijoibm1raG9pMjEiLCJhIjoiY2xvMno5ZzhyMGQzdTJ2bGVkbTc4bGZ5dSJ9.9ljGVzjte5iqJXpbOiAN1Q";
 const map = new mapboxgl.Map({
