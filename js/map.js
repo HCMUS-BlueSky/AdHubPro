@@ -444,10 +444,11 @@ function addCustomLayer(map, type) {
       source: "AdsLocations",
       filter: ["==", ["get", "hasReport"], true],
       paint: {
-        "circle-radius": 15,
-        "circle-opacity": 0,
-        "circle-stroke-width": 2,
-        "circle-stroke-color": "red",
+        "circle-radius": 17,
+        // "circle-opacity": 0,
+        // "circle-stroke-width": 2,
+        // "circle-stroke-color": "red",
+        "circle-color": "red",
       },
     });
   }
@@ -566,33 +567,49 @@ async function initMap() {
       },
     });
 
+    addCustomLayer(map, "report");
     addCustomLayer(map, "planning");
     addCustomLayer(map, "location");
 
     const adsSwitch = document.querySelector("#adsSwitch");
     adsSwitch.addEventListener("change", () => {
       if (adsSwitch.checked) {
-        map.removeLayer("text-point");
-        addCustomLayer(map, "ads");
+        document.querySelector(".info-btn").disabled = false;
+        addCustomLayer(map, "planning");
+        addCustomLayer(map, "location");
+        addTextLayer(map, "ĐĐ");
         addTextLayer(map, "QC");
       } else {
-        map.removeLayer("unclustered-point");
-        map.removeLayer("text-point");
-        addTextLayer(map, "BC");
+        document.querySelector(".info-btn").disabled = true;
+        map.removeLayer("planning-point");
+        map.removeLayer("location-point");
+        map.removeLayer("text-ads-point");
+        map.removeLayer("text-location-point");
       }
     });
-
-    addCustomLayer(map, "report");
 
     const reportSwitch = document.querySelector("#reportSwitch");
     reportSwitch.addEventListener("change", () => {
       if (reportSwitch.checked) {
-        addReportLayer(map);
+        document.querySelector(".report-btn").disabled = false;
+        map.removeLayer("planning-point");
+        map.removeLayer("location-point");
+        map.removeLayer("text-ads-point");
+        map.removeLayer("text-location-point");
+        addCustomLayer(map, "report");
+        addCustomLayer(map, "planning");
+        addCustomLayer(map, "location");
+        addTextLayer(map, "BC");
+        addTextLayer(map, "ĐĐ");
+        addTextLayer(map, "QC");
       } else {
+        document.querySelector(".report-btn").disabled = true;
         map.removeLayer("report-point");
+        map.removeLayer("text-report-point");
       }
     });
 
+    addTextLayer(map, "BC");
     addTextLayer(map, "ĐĐ");
     addTextLayer(map, "QC");
 
@@ -616,9 +633,13 @@ async function initMap() {
         });
     });
 
-    map.on("click", ["location-point", "planning-point"], (e) => {
-      e.clickOnLayer = true;
-    });
+    map.on(
+      "click",
+      ["location-point", "planning-point", "report-point"],
+      (e) => {
+        e.clickOnLayer = true;
+      }
+    );
 
     map.on("mouseenter", ["location-point", "planning-point"], (e) => {
       map.getCanvas().style.cursor = "pointer";
@@ -639,14 +660,14 @@ async function initMap() {
         .addTo(map);
     });
 
-    map.on(
-      "mouseleave",
-      ["location-point", "planning-point", "report-point"],
-      () => {
-        map.getCanvas().style.cursor = "";
-        popup.remove();
-      }
-    );
+    map.on("mouseenter", ["report-point"], () => {
+      map.getCanvas().style.cursor = "pointer";
+    });
+
+    map.on("mouseleave", ["location-point", "planning-point"], () => {
+      map.getCanvas().style.cursor = "";
+      popup.remove();
+    });
 
     map.on("mouseenter", "clusters", () => {
       map.getCanvas().style.cursor = "pointer";
@@ -725,14 +746,17 @@ async function initMap() {
       const infoButton = document.querySelector(".info-btn");
 
       if (adsInfo.length !== 0) {
+        const adsSwitch = document.querySelector("#adsSwitch");
         reportButton.classList.remove("active");
         infoButton.classList.add("active");
         removeOutSideBar(".report-card");
         removeOutSideBar(".ads-card");
-        adsInfo.forEach((el) => {
-          let adsCard = AdsCardFactory(el);
-          addToSideBar(adsCard);
-        });
+        if (adsSwitch.checked) {
+          adsInfo.forEach((el) => {
+            let adsCard = AdsCardFactory(el);
+            addToSideBar(adsCard);
+          });
+        }
 
         const newInfoButton = infoButton.cloneNode(true);
         infoButton.parentNode.replaceChild(newInfoButton, infoButton);
@@ -792,10 +816,13 @@ async function initMap() {
           });
         });
       } else {
-        const locationAdsCard = locationAdsCardFactory(features.properties);
-        addToSideBar(locationAdsCard);
-        const nonAdsCard = NonAdsCardFactory();
-        addToSideBar(nonAdsCard);
+        const adsSwitch = document.querySelector("#adsSwitch");
+        if (adsSwitch.checked) {
+          const locationAdsCard = locationAdsCardFactory(features.properties);
+          addToSideBar(locationAdsCard);
+          const nonAdsCard = NonAdsCardFactory();
+          addToSideBar(nonAdsCard);
+        }
         reportButton.classList.remove("active");
         infoButton.classList.add("active");
 
