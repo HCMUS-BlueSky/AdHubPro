@@ -75,7 +75,7 @@ router.get("/report/location/:location_id", async (req, res) => {
   }
 });
 
-router.post("/report", upload.array("images", 5), async (req, res) => {
+router.post("/report", upload.array("images", 2), async (req, res) => {
   try {
     const { type } = req.body;
     if (!type || typeof type !== "string")
