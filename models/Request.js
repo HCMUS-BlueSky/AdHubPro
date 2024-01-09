@@ -31,7 +31,7 @@ const requestSchema = new mongoose.Schema(
           {
             validator: (s) =>
               /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(s),
-            msg: 'Invalid email'
+            msg: 'Email không hợp lệ!'
           }
         ]
       },
@@ -45,7 +45,7 @@ const requestSchema = new mongoose.Schema(
               /(\+?( |-|\.)?\d{1,2}( |-|\.)?)?(\(?\d{3}\)?|\d{3})( |-|\.)?(\d{3}( |-|\.)?\d{4})/.test(
                 p
               ),
-            msg: 'Invalid phone number'
+            msg: 'Số điện thoại không hợp lệ!'
           }
         ]
       },
