@@ -6,9 +6,11 @@
 
 function queryPage(event) {
   event.preventDefault();
-  let params = (new URL(document.location)).searchParams
-  params.set('page', event.target.getAttribute("href"));
-  document.location.assign(window.location.origin + window.location.pathname + "?" + params.toString());
+  let params = new URL(document.location).searchParams;
+  params.set("page", event.target.getAttribute("href"));
+  document.location.assign(
+    window.location.origin + window.location.pathname + "?" + params.toString()
+  );
 }
 
 window.addEventListener("load", function () {
@@ -31,3 +33,8 @@ window.addEventListener("load", function () {
     }, 1000);
   }
 });
+
+const showAddWardModal = (btn) => {
+  document.querySelector("#selected-district").value =
+    btn.dataset.selectedDistrict;
+};

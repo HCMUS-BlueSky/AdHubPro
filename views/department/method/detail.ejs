@@ -4,7 +4,14 @@
   <%- include('../../partials/flash.ejs') %>
   <h2 class="fw-semibold">THÔNG TIN CHI TIẾT HÌNH THỨC</h2>
   <div class="d-flex justify-content-center">
-    <a href="" class="btn btn-primary"> Thêm nội dung hình thức </a>
+    <a
+      href=""
+      class="btn btn-primary"
+      data-bs-toggle="modal"
+      data-bs-target="#addMethodModal"
+    >
+      Thêm nội dung hình thức
+    </a>
   </div>
   <table class="table border border-2 rounded py-3 mt-3">
     <thead>
@@ -20,7 +27,8 @@
         <th scope="row"><%= index + 1 %></th>
         <td><%= value %></td>
         <td class="text-center">
-          <a role="button" 
+          <a
+            role="button"
             data-bs-toggle="modal"
             data-bs-target="#deleteMethod"
             onclick="updateData('<%= value %>')"
@@ -33,9 +41,14 @@
     </tbody>
   </table>
 </div>
-<form method="POST" action="../<%= method._id %>/remove" id="removeForm" style="display: none">
+<form
+  method="POST"
+  action="../<%= method._id %>/remove"
+  id="removeForm"
+  style="display: none"
+>
   <label for="value-inp">asdasd</label>
-  <input type="text" name="value" id="value-inp">
+  <input type="text" name="value" id="value-inp" />
 </form>
 
 <!-- Delete Method Modal -->
@@ -67,6 +80,57 @@
     </div>
   </div>
 </div>
+
+<!-- Add new method Modal -->
+<div
+  class="modal fade"
+  id="addMethodModal"
+  tabindex="-1"
+  aria-labelledby="addMethodLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <form id="addMethodForm" method="POST">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title fs-5" id="methodModalTitle">
+            Thêm hình thức mới
+          </h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <label for="new-method" class="form-label">Nội dung hình thức</label>
+          <input
+            type="text"
+            id="new-method"
+            name="new-method"
+            class="form-control w-100"
+            placeholder="Nhập vào nội dung hình thức"
+            required
+            data-autofocus
+          />
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-outline-secondary"
+            data-bs-dismiss="modal"
+            id="closeBtn"
+          >
+            Close
+          </button>
+          <button type="submit" class="btn btn-primary">Xác nhận</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
 <script>
   function updateData(value) {
     document.getElementById("value-inp").value = value;
