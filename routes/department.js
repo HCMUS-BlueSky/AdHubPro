@@ -18,6 +18,11 @@ router.get("/", (req, res) => res.redirect("/department/location"));
 
 // Administrative Units
 router.get("/administrative", administrativeController.view);
+router.post(
+  "/administrative/add-district",
+  administrativeController.addDistrict
+);
+router.post("/administrative/add-ward", administrativeController.addWard);
 
 // Method
 router.get("/method", methodController.view);

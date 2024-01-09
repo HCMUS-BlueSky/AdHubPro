@@ -5,17 +5,6 @@
   <h2 class="fw-semibold">THÔNG TIN CÁC QUẬN</h2>
   <div class="row justify-content-center">
     <div class="col-3">
-      <form role="search" method="GET" action="">
-        <input
-          class="form-control mr-sm-2"
-          type="search"
-          placeholder="Tìm kiếm"
-          aria-label="Search"
-          name="searchTerm"
-        />
-      </form>
-    </div>
-    <div class="col-3">
       <a
         href=""
         class="btn btn-primary"
@@ -52,6 +41,7 @@
             role="button"
             class="fs-4 bi bi-plus-square"
             data-selected-district="<%= district.name %>"
+            data-selected-district-id="<%= district._id %>"
             data-bs-toggle="modal"
             data-bs-target="#addWardModal"
             onclick="showAddWardModal(this)"
@@ -71,7 +61,7 @@
   aria-hidden="true"
 >
   <div class="modal-dialog">
-    <form id="addDistrictForm" method="POST">
+    <form id="addDistrictForm" method="POST" action="/department/administrative/add-district">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title fs-5" id="districtModalTitle">
@@ -89,7 +79,7 @@
           <input
             type="text"
             id="new-district"
-            name="new-district"
+            name="value"
             class="form-control w-100"
             placeholder="Nhập vào tên quận"
             required
@@ -120,7 +110,7 @@
   aria-hidden="true"
 >
   <div class="modal-dialog">
-    <form id="addWardForm" method="POST">
+    <form id="addWardForm" method="POST" action="/department/administrative/add-ward" novalidate>
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title fs-5" id="wardModalTitle">Thêm phường mới</h5>
@@ -135,11 +125,16 @@
           <div class="col mb-3">
             <label for="selected-district" class="form-label">Quận</label>
             <input
-              type="email"
+              type="text"
               id="selected-district"
-              name="selected-district"
               class="form-control"
               disabled
+            />
+            <input
+              type="email"
+              id="selected-district-id"
+              name="districtId"
+              style="display: none;"
             />
           </div>
           <div class="col mb-3">
@@ -147,7 +142,7 @@
             <input
               type="text"
               id="new-ward"
-              name="new-ward"
+              name="ward"
               class="form-control w-100"
               placeholder="Nhập vào tên phường"
               required
