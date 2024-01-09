@@ -105,6 +105,18 @@ router.all("/account/*", (req, res) => {
   return res.redirect("/department/account");
 });
 
+router.get('/change-password', (req, res) => {
+  const user = req.session.user;
+  res.render('department/change-password', {
+    user,
+    pageName: '',
+    header: {
+      navRoot: 'Thông tin cá nhân',
+      navCurrent: 'Đổi mật khẩu'
+    }
+  });
+});
+
 router.all("*", (req, res) => {
   return res.redirect("/department");
 });

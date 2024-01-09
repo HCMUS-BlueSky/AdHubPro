@@ -8,41 +8,68 @@
     class="card bg-light mb-3"
     enctype="multipart/form-data"
   >
-    <div class="card-body p-4">
-      <h4 class="card-title py-2 fw-semibold">Yêu cầu cập nhật thông tin</h4>
-      <div class="d-flex flex-column pb-4 px-3">
-        <label for="" class="form-label">Địa điểm</label>
-        <div
-          class="d-flex flex-row gap-3 align-items-start text-secondary w-100"
+  <div class="card-body p-4">
+    <h4 class="card-title py-2 fw-semibold">Yêu cầu cập nhật thông tin</h4>
+    <div class="d-flex flex-column pb-4 px-3">
+      <div class="d-flex flex-row gap-3 align-items-start text-secondary w-100">
+        <div class="w-100">
+        <label for="" class="form-label"
+          >Địa điểm</label
         >
-          <input
-            type="text"
-            class="form-control w-auto flex-grow-1"
-            disabled
-            id=""
-            aria-describedby="helpId"
-            placeholder="Địa chỉ"
-            value="<%= ads.location.address %>"
-          />
-          <input
-            type="text"
-            class="form-control w-auto"
-            disabled
-            id=""
-            aria-describedby="helpId"
-            placeholder="Phường"
-            value="<%= ads.location.ward %>"
-          />
-          <input
-            type="text"
-            class="form-control w-auto"
-            disabled
-            id=""
-            aria-describedby="helpId"
-            placeholder="Quận"
-            value="<%= ads.location.district %>"
-          />
+          <div
+            class="align-items-start text-secondary"
+          >
+            <input
+              type="text"
+              class="form-control flex-grow-1 w-100"
+              disabled
+              id=""
+              aria-describedby="helpId"
+              placeholder="Địa chỉ"
+              name="address"
+              value="<%= ads.location.address %>"
+            />
+          </div>
         </div>
+        <div class = "">
+          <label for="" class="form-label"
+            >Phường</label
+          >
+            <div
+              class="text-secondary"
+            >
+            <input
+              type="text"
+              class="form-control w-auto"
+              disabled
+              id=""
+              aria-describedby="helpId"
+              placeholder="Phường"
+              name="ward"
+              value="<%= ads.location.ward %>"
+              />
+            </div>
+          </div>
+          <div class = "">
+            <label for="" class="form-label"
+              >Quận</label
+            >
+              <div
+                class="text-secondary"
+              >
+              <input
+              type="text"
+              class="form-control w-auto"
+              disabled
+              id=""
+              aria-describedby="helpId"
+              placeholder="Quận"
+              name="district"
+              value="<%= ads.location.district %>"
+                />
+              </div>
+            </div>
+      </div>
         <label for="method_select" class="form-label pt-3"
           >Loại bảng quảng cáo</label
         >

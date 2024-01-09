@@ -37,7 +37,7 @@
       <tr>
         <th scope="col">STT</th>
         <th scope="col">THỜI GIAN</th>
-        <th scope="col" class="col-5">ĐỊA CHỈ</th>
+        <th scope="col" class="col-4">ĐỊA CHỈ</th>
         <th scope="col">LOẠI</th>
         <th scope="col">NGƯỜI GỬI</th>
         <th scope="col">TRẠNG THÁI</th>
@@ -50,12 +50,14 @@
         <th scope="row"><%= perPage * (current - 1) + index + 1 %></th>
         <td class=""><%= moment(element.created_at).format("DD-MM-YYYY") %></td>
         <td class="">
-          <%= (element.location.address.length > 55 ?
-          element.location.address.substring(0, 55) + '...' :
+          <%= (element.location.address.length > 42 ?
+          element.location.address.substring(0, 42) + '...' :
           element.location.address) %>
         </td>
         <td class=""><%= element.type %></td>
-        <td class=""><%= element.reporter.name %></td>
+        <td class=""><%= (element.reporter.name.length > 22 ?
+          element.reporter.name.substring(0, 22) + '...' :
+          element.reporter.name) %></td>
         <td class="">
           <% if (element.status === 'done') { %>
           <span class="badge bg-success w-100">Đã xử lí</span>

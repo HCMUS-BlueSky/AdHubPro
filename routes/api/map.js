@@ -5,6 +5,7 @@ const Enum = require("../../models/Enum");
 const Report = require("../../models/Report");
 const router = express.Router();
 const upload = require("../../middleware/multer");
+const uploadFile = require('../../utils/fileUpload');
 
 router.get("/locations", async (req, res) => {
   try {
@@ -74,7 +75,7 @@ router.get("/report/location/:location_id", async (req, res) => {
   }
 });
 
-router.post("/report", upload.array("images", 5), async (req, res) => {
+router.post("/report", upload.array("images", 2), async (req, res) => {
   try {
     const { type } = req.body;
     if (!type || typeof type !== "string")
