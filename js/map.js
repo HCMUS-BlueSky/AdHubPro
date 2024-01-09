@@ -349,6 +349,7 @@ const clearReportModal = () => {
   document.querySelector('input[name="method"]:checked').checked = false;
   tinymce.get("report-content").setContent("");
   document.querySelector("#file").value = "";
+  grecaptcha.reset();
 };
 
 const handleReportModal = (typeReport, location_id, adsInfo) => {
@@ -417,6 +418,7 @@ const handleReportModal = (typeReport, location_id, adsInfo) => {
       } else {
         const errorMessage = await response.text();
         alert("Lỗi: " + errorMessage);
+        grecaptcha.reset();
       }
     } catch (error) {
       console.error("Error:", error);
