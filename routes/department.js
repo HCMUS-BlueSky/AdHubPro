@@ -22,8 +22,8 @@ router.get("/administrative", administrativeController.view);
 // Method
 router.get("/method", methodController.view);
 router.get("/method/view/:id", methodController.getDetail);
-router.post('/method/:id/add', methodController.add);
-router.post('/method/:id/remove', methodController.remove);
+router.post("/method/:id/add", methodController.add);
+router.post("/method/:id/remove", methodController.remove);
 
 // Location
 router.get("/location", locationController.view);
@@ -86,6 +86,7 @@ router.all("/request/*", (req, res) => {
 // Statistic
 router.get("/statistic", statisticController.view);
 router.get("/statistic/overview", statisticController.overview);
+router.get("/statistic/filter", statisticController.filter);
 router.get("/report/view/:id", statisticController.getDetail);
 router.get("/report/search", statisticController.search);
 
@@ -105,15 +106,15 @@ router.all("/account/*", (req, res) => {
   return res.redirect("/department/account");
 });
 
-router.get('/change-password', (req, res) => {
+router.get("/change-password", (req, res) => {
   const user = req.session.user;
-  res.render('department/change-password', {
+  res.render("department/change-password", {
     user,
-    pageName: '',
+    pageName: "",
     header: {
-      navRoot: 'Thông tin cá nhân',
-      navCurrent: 'Đổi mật khẩu'
-    }
+      navRoot: "Thông tin cá nhân",
+      navCurrent: "Đổi mật khẩu",
+    },
   });
 });
 

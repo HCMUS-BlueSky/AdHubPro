@@ -24,36 +24,18 @@ exports.getWards = async (req, res) => {
 
 exports.getReports = async (req, res) => {
   try {
-    //filter by district and ward if provided
-    const selectedDistrict = req.query.district;
-    const selectedWard = req.query.ward;
-    let filterReport = {};
-    if (selectedWard == "Không") {
-      filterReport = {
-        district: selectedDistrict,
-      };
-    } else {
-      filterReport = {
-        ward: selectedWard,
-        district: selectedDistrict,
-      };
-    }
-    const locations = await Report.find(filterReport);
-    const pendingReportsCount = await Report.count({
+    const pendingReportsCount = await Report.find({
       status: "pending",
-      ...filterReport,
-    });
-    const processingReportsCount = await Report.count({
+    }).count();
+    const processinggReportsCount = await Report.find({
       status: "processing",
-      ...filterReport,
-    });
-    const doneReportsCount = await Report.count({
+    }).count();
+    const doneReportsCount = await Report.find({
       status: "done",
-      ...filterReport,
-    });
+    }).count();
     const data = [
       pendingReportsCount,
-      processingReportsCount,
+      processinggReportsCount,
       doneReportsCount,
     ];
     return res.json(data);

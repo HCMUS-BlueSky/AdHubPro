@@ -2,25 +2,40 @@
 <div class="col p-3 border-start">
   <%- include('../../partials/header.ejs') %>
   <hr />
-  <div class="row justify-content-center align-items-end">
-    <div class="col-2">
-      <label for="" class="form-label">Quận</label>
-      <select class="form-select district-select" aria-label="" name="district">
-        <% districts.forEach(district => { %>
-        <option value="<%= district._id %>"><%= district.name %></option>
-        <% }) %>
-      </select>
-    </div>
-    <div class="col-2">
-      <label for="" class="form-label">Phường</label>
-      <select
-        class="form-select ward-select"
-        name="ward"
-        aria-label=""
-      ></select>
-    </div>
-    <div class="col-2">
-      <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+  <div class="row d-flex justify-content-around align-items-end">
+    <div class="col-6">
+      <form
+        role="search"
+        method="GET"
+        action="/department/statistic/filter"
+        class="form-group"
+      >
+        <div class="row align-items-end">
+          <div class="col">
+            <label for="" class="form-label">Quận</label>
+            <select
+              class="form-select district-select"
+              aria-label=""
+              name="district_select"
+            >
+              <% districts.forEach(district => { %>
+              <option value="<%= district._id %>" <%= district.name === selectedDistrict ? 'selected' : '' %>><%= district.name %></option>
+              <% }) %>
+            </select>
+          </div>
+          <div class="col">
+            <label for="" class="form-label">Phường</label>
+            <select
+              class="form-select ward-select"
+              name="ward_select"
+              aria-label=""
+            ></select>
+          </div>
+          <div class="col">
+            <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+          </div>
+        </div>
+      </form>
     </div>
     <div class="col-2">
       <a
@@ -44,8 +59,10 @@
 ></script>
 <script type="text/javascript">
   async function createChart() {
-    const reportsCountResponse = await fetch("/utils/reports/count");
-    const reportsCount = await reportsCountResponse.json();
+    // const reportsCountResponse = await fetch("/utils/reports/count");
+    // const reportsCount = await reportsCountResponse.json();
+    let reportsCount = "<%= reportsCount %>".split(",");
+    reportsCount = reportsCount.map((el) => parseInt(el));
 
     // Load google charts
     google.charts.load("current", { packages: ["corechart"] });
@@ -91,10 +108,8 @@
 ></script>
 <script type="text/javascript">
   async function createBarChart() {
-    const reportsCountMonthlyReponse = await fetch(
-      "/utils/reports/monthlyCount"
-    );
-    const reportsMonthlyCount = await reportsCountMonthlyReponse.json();
+    let reportsMonthlyCount = "<%= monthlyCountsArray %>".split(",");
+    reportsMonthlyCount = reportsMonthlyCount.map(el => parseInt(el));
 
     google.charts.load("current", { packages: ["bar"] });
     google.charts.setOnLoadCallback(drawStuff);
@@ -102,10 +117,7 @@
     function getDatatable() {
       let data = [["Tháng", "Số lượng báo cáo"]];
       for (let i = 1; i <= 12; i++) {
-        let filteredData = reportsMonthlyCount.find(
-          (item) => item._id.month === i
-        );
-        let monthlyData = ["Tháng " + i, filteredData ? filteredData.count : 0];
+        let monthlyData = ["Tháng " + i, reportsMonthlyCount[i - 1]];
         data.push(monthlyData);
       }
       return data;
@@ -165,6 +177,10 @@
         let option = document.createElement("option");
         option.value = ward;
         option.innerHTML = ward;
+
+        if ("<%= selectedWard %>" == ward) {
+          option.selected = 'selected';
+        }
         wardSelect.appendChild(option);
       });
     }
