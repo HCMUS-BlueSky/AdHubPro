@@ -37,4 +37,6 @@ window.addEventListener("load", function () {
 const showAddWardModal = (btn) => {
   document.querySelector("#selected-district").value =
     btn.dataset.selectedDistrict;
+  document.querySelector('#selected-district-id').value =
+    btn.dataset.selectedDistrictId;
 };

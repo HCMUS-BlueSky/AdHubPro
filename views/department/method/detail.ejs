@@ -90,7 +90,7 @@
   aria-hidden="true"
 >
   <div class="modal-dialog">
-    <form id="addMethodForm" method="POST">
+    <form id="addMethodForm" method="POST" action="../<%= method._id %>/add">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title fs-5" id="methodModalTitle">
@@ -108,7 +108,7 @@
           <input
             type="text"
             id="new-method"
-            name="new-method"
+            name="value"
             class="form-control w-100"
             placeholder="Nhập vào nội dung hình thức"
             required
