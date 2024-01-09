@@ -5,11 +5,7 @@
   <div class="row justify-content-center align-items-end">
     <div class="col-2">
       <label for="" class="form-label">Quận</label>
-      <select
-        class="form-select district-select"
-        aria-label=""
-        name="managed_district"
-      >
+      <select class="form-select district-select" aria-label="" name="district">
         <% districts.forEach(district => { %>
         <option value="<%= district._id %>"><%= district.name %></option>
         <% }) %>
@@ -19,7 +15,7 @@
       <label for="" class="form-label">Phường</label>
       <select
         class="form-select ward-select"
-        name="managed_ward"
+        name="ward"
         aria-label=""
       ></select>
     </div>
