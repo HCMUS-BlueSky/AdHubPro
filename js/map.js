@@ -234,7 +234,11 @@ const reportCardFactory = (report) => {
                 ).format("l")}</h5>
                 <h5 class="card-text mb-3">Trạng thái: ${statusLabel}</h5>
                 <div class="d-flex justify-content-between">
-                  <i data-bs-toggle="modal" data-bs-target="#ads-report" class="ads-report-btn bi bi-question-circle"></i>
+                ${
+                  report.ads
+                    ? '<i data-bs-toggle="modal" data-bs-target="#ads-report" class="ads-report-btn bi bi-question-circle"></i>'
+                    : ""
+                }                
                   <button type="button"
                     class="btn btn-primary report-detail-btn"
                     data-bs-toggle="modal"
