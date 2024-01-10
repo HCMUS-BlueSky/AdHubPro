@@ -8,7 +8,6 @@ const requestController = require("../controllers/district/requestController");
 
 const upload = require("../middleware/multer");
 const router = express.Router();
-const path = require("path");
 
 router.use(pathFor("district_officer"), getManagedWards);
 // Home
@@ -37,12 +36,18 @@ router.get("/ads/search", adsController.search);
 
 router.post("/ads/filter", adsController.filter);
 
+router.get("/ads/create-request/:id", adsController.renderCreateRequest);
+
 router.post(
   "/ads/update-info/:id",
   upload.array("images", 5),
   adsController.updateInfo
 );
-
+router.post(
+  '/ads/create-request/:id',
+  upload.array('images', 5),
+  adsController.createRequest
+);
 router.all("/ads/*", (req, res) => {
   return res.redirect("/district/ads");
 });

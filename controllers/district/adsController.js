@@ -1,7 +1,8 @@
-const { Ads, adsSchema } = require("../../models/Ads");
+const { Ads } = require("../../models/Ads");
 const { Location } = require("../../models/Location");
 const { generateRegexQuery } = require("regex-vietnamese");
 const Proposal = require("../../models/Proposal");
+const Request = require('../../models/Request');
 const District = require("../../models/District");
 const Enum = require('../../models/Enum');
 const uploadFile = require("../../utils/fileUpload");
@@ -280,5 +281,105 @@ exports.updateInfo = async (req, res) => {
   } catch (err) {
     req.flash("error", err.message);
     return res.redirect("/district/ads");
+  }
+};
+
+exports.renderCreateRequest = async (req, res) => {
+  try {
+    const user = req.session.user;
+    const managed_locations = await Location.find({
+      district: user.managed_district.name
+    })
+      .distinct('_id')
+      .exec();
+    const ads = await Ads.findOne({
+      _id: req.params.id,
+      location: { $in: managed_locations },
+    })
+      .populate('location')
+      .exec();
+    return res.render('district/ads/create-request', {
+      ads,
+      user,
+      pageName: 'ads',
+      moment,
+      header: {
+        navRoot: 'Bảng quảng cáo',
+        navCurrent: 'Cấp phép quảng cáo'
+      }
+    });
+  } catch (err) {
+    req.flash('error', 'Bảng quảng cáo không tồn tại!');
+    return res.redirect('/district/ads');
+  }
+};
+
+exports.createRequest = async (req, res) => {
+  try {
+    const {
+      location,
+      description,
+      company_name,
+      company_email,
+      company_address,
+      company_phone,
+      effective,
+      expiration
+    } = req.body;
+    if (!location || typeof location !== 'string')
+      throw new Error('Địa điểm không hợp lệ');
+    if (!description || typeof description !== 'string')
+      throw new Error('Nội dung quảng cáo không hợp lệ');
+    if (!company_name || typeof company_name !== 'string')
+      throw new Error('Tên công ty không hợp lệ');
+    if (!company_email || typeof company_email !== 'string')
+      throw new Error('Email công ty không hợp lệ');
+    if (!company_address || typeof company_address !== 'string')
+      throw new Error('Địa chỉ công ty không hợp lệ');
+    if (!company_phone || typeof company_phone !== 'string')
+      throw new Error('Số điện thoại công ty không hợp lệ');
+    if (!effective || typeof effective !== 'string')
+      throw new Error('Ngày bắt đầu hợp đồng không hợp lệ');
+    if (!expiration || typeof expiration !== 'string')
+      throw new Error('Ngày kết thúc hợp đồng không hợp lệ');
+    const user = req.session.user;
+    const existLocation = await Location.exists({
+      district: user.managed_district.name,
+      _id: location
+    }).exec();
+    if (!existLocation) throw new Error('Địa điểm không hợp lệ');
+    const ads = req.params.id;
+    const exists = await Ads.exists({
+      _id: ads,
+      location: location
+    }).exec();
+    if (!exists) throw new Error('Bảng quảng cáo không hợp lệ');
+
+    const request = new Request({
+      location,
+      ads,
+      description,
+      effective,
+      expiration,
+      company: {
+        name: company_name,
+        email: company_email,
+        phone: company_phone,
+        address: company_address
+      }
+    });
+
+    if (req.files && req.files.length) {
+      for (let file of req.files) {
+        const url = await uploadFile(`assets/request/${request._id}`, file);
+        request.images.push(url);
+      }
+    }
+    await request.save();
+    req.flash('success', 'Gửi yêu cầu cấp phép thành công!');
+    return res.redirect('/district/ads');
+  } catch (err) {
+    req.flash('error', err.message);
+    return res.redirect('/district/ads');
   }
 };

@@ -72,8 +72,8 @@
         </td>
         <td class=""><%= request.ads.type %></td>
         <td class="">
-          <%= (request.company.name.length > 18 ?
-          request.company.name.substring(0, 18) + '...' :
+          <%= (request.company.name.length > 30 ?
+          request.company.name.substring(0, 30) + '...' :
           request.company.name) %>
         </td>
         <td class="">
