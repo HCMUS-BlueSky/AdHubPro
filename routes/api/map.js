@@ -5,7 +5,7 @@ const Enum = require("../../models/Enum");
 const Report = require("../../models/Report");
 const router = express.Router();
 const upload = require("../../middleware/multer");
-const uploadFile = require('../../utils/fileUpload');
+const uploadFile = require("../../utils/fileUpload");
 
 router.get("/locations", async (req, res) => {
   try {
@@ -25,9 +25,11 @@ router.get("/reports", async (req, res) => {
   }
 });
 
-router.get('/report_method', async (req, res) => {
+router.get("/report_method", async (req, res) => {
   try {
-    const methods = await Enum.find({ name: 'ReportMethod' }).select('values').exec();
+    const methods = await Enum.find({ name: "ReportMethod" })
+      .select("values")
+      .exec();
     return res.json(methods);
   } catch (err) {
     return res.status(500).send(err.message);
@@ -58,7 +60,9 @@ router.get("/ads/:location_id", async (req, res) => {
 router.get("/report/ads/:ads_id", async (req, res) => {
   const adsID = req.params.ads_id;
   try {
-    const reports = await Report.find({ ads: adsID }).exec();
+    const reports = await Report.find({ ads: adsID })
+      .populate({ path: "ads" })
+      .exec();
     return res.json(reports);
   } catch (err) {
     return res.status(500).send(err.message);
