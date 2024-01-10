@@ -1,4 +1,6 @@
+const { Ads } = require("../models/Ads");
 const District = require("../models/District");
+const { Location } = require("../models/Location");
 const Report = require("../models/Report");
 
 exports.getDistricts = async (req, res) => {
@@ -69,5 +71,17 @@ exports.getReportsByMonth = async (req, res) => {
     return res.json(reportsCount);
   } catch (err) {
     res.status(500).send(err.message);
+  }
+};
+
+exports.getAdsByLocation = async (req, res) => {
+  try {
+    const location = await Location.findOne({
+      _id: req.params.id,
+    });
+    const ads = await Ads.find({ location: location }).exec();
+    return res.json(ads);
+  } catch (err) {
+    return res.status(500).send(err.message);
   }
 };
