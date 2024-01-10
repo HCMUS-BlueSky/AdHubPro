@@ -1,11 +1,10 @@
 const mongoose = require('mongoose');
-const { adsSchema } = require('./Ads')
 
 const requestSchema = new mongoose.Schema(
   {
     ads: {
-      _id: false,
-      type: adsSchema,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Ads',
       required: true
     },
     status: {
@@ -15,6 +14,17 @@ const requestSchema = new mongoose.Schema(
     },
     description: {
       type: String
+    },
+    images: [
+      {
+        type: String
+      }
+    ],
+    effective: {
+      type: Date
+    },
+    expiration: {
+      type: Date
     },
     company: {
       name: {

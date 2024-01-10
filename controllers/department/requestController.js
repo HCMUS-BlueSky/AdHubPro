@@ -167,6 +167,7 @@ exports.search = async (req, res) => {
     return res.redirect("/department/request");
   }
 };
+
 exports.getDetail = async (req, res) => {
   try {
     const user = req.session.user;
@@ -192,16 +193,17 @@ exports.getDetail = async (req, res) => {
 
 exports.approveRequest = async (req, res) => {
   try {
-    const request = await Request.findById(req.params.id).lean();
+    const request = await Request.findById(req.params.id).exec();
     if (!request) throw new Error("Không tìm thấy yêu cầu cấp phép!");
     if (request.status != "pending")
       throw new Error("Không thể duyệt yêu cầu đã được xử lí!");
+    await Ads.findByIdAndUpdate(request.ads, {
+      content: request.description,
+      images: request.images,
+      effective: request.effective,
+      expiration: request.expiration
+    });    
     await Request.findByIdAndUpdate(req.params.id, { status: "accepted" });
-    const newAds = new Ads(request.ads);
-    await newAds.save();
-    await Location.findByIdAndUpdate(request.ads.location, {
-      $inc: { ads_count: 1 }
-    });
     req.flash("success", "Duyệt yêu cầu cấp phép thành công!");
     return res.redirect("/department/request");
   } catch (error) {

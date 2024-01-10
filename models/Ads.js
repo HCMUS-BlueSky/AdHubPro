@@ -18,6 +18,9 @@ const adsSchema = new mongoose.Schema(
         type: String
       }
     ],
+    content: {
+      type: String
+    },
     effective: {
       type: Date
     },

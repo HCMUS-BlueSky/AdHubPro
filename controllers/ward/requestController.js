@@ -181,9 +181,7 @@ exports.renderCreateNew = async (req, res) => {
 exports.createNew = async (req, res) => {
   try {
     const {
-      location,
-      type,
-      size,
+      ads,
       description,
       company_name,
       company_email,
@@ -192,12 +190,8 @@ exports.createNew = async (req, res) => {
       effective,
       expiration,
     } = req.body;
-    if (!location || typeof location !== "string")
-      throw new Error("Địa điểm không hợp lệ");
-    if (!type || typeof type !== "string")
-      throw new Error("Loại quảng cáo không hợp lệ");
-    if (!size || typeof size !== "string")
-      throw new Error("Kích thước không hợp lệ");
+    if (!ads || typeof ads !== 'string')
+      throw new Error('Bảng không hợp lệ');
     if (!description || typeof description !== "string")
       throw new Error("Nội dung quảng cáo không hợp lệ");
     if (!company_name || typeof company_name !== "string")
@@ -213,22 +207,24 @@ exports.createNew = async (req, res) => {
     if (!expiration || typeof expiration !== "string")
       throw new Error("Ngày kết thúc hợp đồng không hợp lệ");
     const user = req.session.user;
-    const exists = await Location.exists({
-      _id: location,
+    const managed_locations = await Location.find({
       district: user.managed_district.name,
-      ward: user.managed_ward,
-      accepted: true
+      ward: user.managed_ward
+    })
+      .distinct('_id')
+      .exec();
+    const exists = await Ads.exists({
+      _id: ads,
+      location: {
+        $in: managed_locations
+      }
     }).exec();
-    if (!exists) throw new Error("Địa điểm không hợp lệ");
+    if (!exists) throw new Error("Bảng quảng cáo không hợp lệ");
     const request = new Request({
-      ads: {
-        location,
-        type,
-        size,
-        effective,
-        expiration,
-      },
+      ads,
       description,
+      effective,
+      expiration,
       company: {
         name: company_name,
         email: company_email,
@@ -239,7 +235,7 @@ exports.createNew = async (req, res) => {
     if (req.files && req.files.length) {
       for (let file of req.files) {
         const url = await uploadFile(`assets/request/${request._id}`, file);
-        request.ads.images.push(url);
+        request.images.push(url);
       }
     }
     await request.save();
