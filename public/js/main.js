@@ -40,14 +40,3 @@ const showAddWardModal = (btn) => {
   document.querySelector("#selected-district-id").value =
     btn.dataset.selectedDistrictId;
 };
-
-const showDeleteWardModal = (btn) => {
-  const wardSelect = document.querySelector(".wardsDelete");
-  wardSelect.innerHTML = "";
-  btn.dataset.selectedWardList.split(",").forEach((ward) => {
-    let option = document.createElement("option");
-    option.value = ward;
-    option.innerHTML = ward;
-    wardSelect.appendChild(option);
-  });
-};

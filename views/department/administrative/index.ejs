@@ -54,6 +54,7 @@
             class="fs-4 bi bi-dash-square"
             style="cursor: pointer"
             data-selected-ward-list="<%= district.wards %>"
+            data-district-id="<%= district._id %>"
             data-bs-toggle="modal"
             data-bs-target="#deleteWard"
             onclick="showDeleteWardModal(this)"
@@ -66,6 +67,8 @@
             style="color: red; cursor: pointer"
             data-bs-toggle="modal"
             data-bs-target="#deleteDistrict"
+            data-district-id="<%= district._id %>"
+            onclick="deleteDistrict(this)"
           ></i>
         </td>
       </tr>
@@ -161,7 +164,7 @@
               disabled
             />
             <input
-              type="email"
+              type="text"
               id="selected-district-id"
               name="districtId"
               style="display: none"
@@ -205,7 +208,7 @@
   aria-hidden="true"
 >
   <div class="modal-dialog">
-    <form id="deleteWardForm" method="POST" novalidate>
+    <form id="deleteWardForm" method="POST" action="/department/administrative/delete-ward" novalidate>
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title fs-5" id="wardModalTitle">Xóa phường</h5>
@@ -218,12 +221,18 @@
         </div>
         <div class="modal-body">
           <div class="col mb-3">
+            <input
+              type="text"
+              id="delete-ward-district-id"
+              name="districtId"
+              style="display: none"
+            />
             <label for="wardsDelete" class="form-label"
               >Chọn phường muốn xóa</label
             >
             <select
               class="form-select wardsDelete"
-              name="wardsDelete"
+              name="ward"
               aria-label=""
             ></select>
           </div>
@@ -244,7 +253,7 @@
   </div>
 </div>
 
-<!-- Delete Method Modal -->
+<!-- Delete district Modal -->
 <div
   class="modal fade"
   id="deleteDistrict"
@@ -253,7 +262,7 @@
   aria-hidden="true"
 >
   <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
+    <form class="modal-content" method="POST" action="/department/administrative/delete-district" novalidate >
       <div class="modal-header">
         <h1 class="modal-title fs-5" id="deleteDistrictLabel">Xác nhận</h1>
         <button
@@ -263,13 +272,39 @@
           aria-label="Close"
         ></button>
       </div>
+      <input
+        type="email"
+        id="delete-district-id"
+        name="districtId"
+        style="display: none"
+      />
       <div class="modal-body">Bạn có chắc chắn muốn xóa quận này?</div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
           Đóng
         </button>
-        <button type="button" class="btn btn-danger" id="delete-btn">Có</button>
+        <button type="submit" class="btn btn-danger" id="delete-btn">Có</button>
       </div>
-    </div>
+    </form>
   </div>
 </div>
+
+<script>
+const deleteDistrict = (btn) => {
+  document.querySelector("#delete-district-id").value =
+    btn.dataset.districtId;
+}
+const showDeleteWardModal = (btn) => {
+  document.querySelector("#delete-ward-district-id").value =
+    btn.dataset.districtId;
+  const wardSelect = document.querySelector(".wardsDelete");
+  wardSelect.innerHTML = "";
+  btn.dataset.selectedWardList.split(",").forEach((ward) => {
+    let option = document.createElement("option");
+    option.value = ward;
+    option.innerHTML = ward;
+    wardSelect.appendChild(option);
+  });
+};
+
+</script>

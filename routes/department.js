@@ -23,7 +23,14 @@ router.post(
   administrativeController.addDistrict
 );
 router.post("/administrative/add-ward", administrativeController.addWard);
-
+router.post(
+  '/administrative/delete-district',
+  administrativeController.deleteDistrict
+);
+router.post(
+  '/administrative/delete-ward',
+  administrativeController.deleteWard
+);
 // Method
 router.get("/method", methodController.view);
 router.get("/method/view/:id", methodController.getDetail);
