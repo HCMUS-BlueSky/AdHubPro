@@ -51,7 +51,7 @@
         </div>
         <div class="col-9">
           <p class="pt-3">
-            <%= moment(ads.effective).format('DD-MM-YYYY'); %>
+            <%= ads.effective ? moment(ads.effective).format('DD-MM-YYYY') : "Chưa có hợp đồng" %>
           </p>
         </div>
       </div>
@@ -61,7 +61,7 @@
         </div>
         <div class="col-9">
           <p class="pt-3">
-            <%= moment(ads.expiration).format('DD-MM-YYYY') %>
+            <%= ads.expiration ? moment(ads.expiration).format('DD-MM-YYYY') : "Chưa có hợp đồng" %>
           </p>
         </div>
       </div>
