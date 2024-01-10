@@ -19,10 +19,18 @@ router.get("/locations", async (req, res) => {
 router.get("/locations/officer", async (req, res) => {
   const user = req.session.user;
   try {
-    const locations = await Location.find({
-      district: user.managed_district.name,
-      ward: user.managed_ward,
-    });
+    let filter;
+    if (user.role == "district_officer") {
+      filter = {
+        district: user.managed_district.name,
+      };
+    } else if (user.role == "ward_officer") {
+      filter = {
+        district: user.managed_district.name,
+        ward: user.managed_ward.name,
+      };
+    }
+    const locations = await Location.find(filter);
     return res.json(locations);
   } catch (err) {
     return res.status(500).send(err.message);
