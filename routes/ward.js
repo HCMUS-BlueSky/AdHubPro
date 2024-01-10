@@ -32,6 +32,8 @@ router.get("/ads/update-info/:id", adsController.renderUpdateInfo);
 
 router.get("/ads/search", adsController.search);
 
+router.get("/ads/create-request/:id", adsController.renderCreateRequest);
+
 router.post(
   "/ads/update-info/:id",
   upload.array("images", 5),
