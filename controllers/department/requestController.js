@@ -14,7 +14,8 @@ exports.view = async (req, res) => {
     const user = req.session.user;
     const districts = await District.find({});
     const requests = await Request.find({})
-      .populate("ads.location", "address")
+      .populate("location", "address")
+      .populate("ads")
       .sort({ created_at: -1 })
       .skip(perPage * page - perPage)
       .limit(perPage)
@@ -65,9 +66,10 @@ exports.filter = async (req, res) => {
     const districts = await District.find({});
 
     const requests = await Request.find({
-      "ads.location": { $in: locations },
+      location: { $in: locations }
     })
-      .populate("ads.location", "address")
+      .populate('location', 'address')
+      .populate('ads')
       .sort({ created_at: -1 })
       .skip(perPage * page - perPage)
       .limit(perPage)
@@ -118,33 +120,28 @@ exports.search = async (req, res) => {
     const requests = await Request.find({
       $or: [
         {
-          "ads.location": { $in: locations },
+          location: { $in: locations }
         },
         {
-          "company.name": { $regex: rgx },
-        },
-        {
-          "ads.type": { $regex: rgx },
-        },
-      ],
+          'company.name': { $regex: rgx }
+        }
+      ]
     })
       .sort({ created_at: -1 })
       .skip(perPage * page - perPage)
       .limit(perPage)
-      .populate("ads.location", "address")
+      .populate('location', 'address')
+      .populate('ads', 'type')
       .exec();
     const count = await Request.count({
       $or: [
         {
-          "ads.location": { $in: locations },
+          location: { $in: locations }
         },
         {
-          "company.name": { $regex: rgx },
-        },
-        {
-          "ads.type": { $regex: rgx },
-        },
-      ],
+          'company.name': { $regex: rgx }
+        }
+      ]
     });
     res.render("department/request/index", {
       requests,
@@ -172,8 +169,10 @@ exports.getDetail = async (req, res) => {
   try {
     const user = req.session.user;
     const request = await Request.findOne({
-      _id: req.params.id,
-    }).populate("ads.location", "ward district address");
+      _id: req.params.id
+    })
+      .populate('location', 'ward district address')
+      .populate('ads', 'type size');
     res.render("department/request/detail", {
       request,
       user,
@@ -207,7 +206,6 @@ exports.approveRequest = async (req, res) => {
     req.flash("success", "Duyệt yêu cầu cấp phép thành công!");
     return res.redirect("/department/request");
   } catch (error) {
-    console.log(error.message);
     req.flash("error", "Duyệt yêu cầu cấp phép không thành công!");
     return res.redirect("/department/request");
   }

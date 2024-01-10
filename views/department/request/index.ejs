@@ -56,8 +56,8 @@
         <th scope="col">STT</th>
         <th scope="col" class="col-5">Điểm đặt</th>
         <th scope="col">Bảng quảng cáo</th>
-        <th scope="col" class="col-2">Công ty</th>
-        <th scope="col" class="col-1" >Tình trạng</th>
+        <th scope="col">Công ty</th>
+        <th scope="col">Tình trạng</th>
         <th scope="col"></th>
       </tr>
     </thead>
@@ -66,9 +66,9 @@
       <tr>
         <th scope="row"><%= perPage * (current - 1) + index + 1 %></th>
         <td class="">
-          <%= (request.ads.location.address.length > 55 ?
-          request.ads.location.address.substring(0, 55) + '...' :
-          request.ads.location.address) %>
+          <%= (request.location.address.length > 55 ?
+          request.location.address.substring(0, 55) + '...' :
+          request.location.address) %>
         </td>
         <td class=""><%= request.ads.type %></td>
         <td class="">

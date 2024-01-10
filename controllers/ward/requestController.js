@@ -189,9 +189,9 @@ exports.createNew = async (req, res) => {
       expiration,
     } = req.body;
     if (!location || typeof location !== 'string')
-      throw new Error('Bảng không hợp lệ');
+      throw new Error('Địa điểm không hợp lệ');
     if (!ads || typeof ads !== 'string')
-      throw new Error('Bảng không hợp lệ');
+      throw new Error('Bảng quảng cáo không hợp lệ');
     if (!description || typeof description !== "string")
       throw new Error("Nội dung quảng cáo không hợp lệ");
     if (!company_name || typeof company_name !== "string")

@@ -56,9 +56,9 @@
       <tr>
         <th scope="row"><%= perPage * (current - 1) + index + 1 %></th>
         <td class="">
-          <%= (element.ads.location.address.length > 55 ?
-          element.ads.location.address.substring(0, 55) + '...' :
-          element.ads.location.address) %>
+          <%= (element.location.address.length > 55 ?
+          element.location.address.substring(0, 55) + '...' :
+          element.location.address) %>
         </td>
         <td class=""><%= element.ads.type %></td>
         <td class=""><%= element.company.name %></td>

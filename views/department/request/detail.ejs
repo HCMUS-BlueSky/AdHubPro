@@ -7,7 +7,7 @@
     <div class="card-body p-4">
       <h4 class="card-title py-2"><%= request.ads.type %></h4>
       <p class="text-muted">
-        Khu vực: Phường <%= request.ads.location.ward %>, Quận <%= request.ads.location.district %>
+        Khu vực: Phường <%= request.location.ward %>, Quận <%= request.location.district %>
       </p>
       <div class="row border border-2 rounded">
         <div class="col-2">
@@ -15,8 +15,8 @@
         </div>
         <div class="col-10">
           <p class="pt-3">
-            <%= (request.ads.location.address.length > 100 ? request.ads.location.address.substring(0, 100) +
-            '...' : request.ads.location.address) %>
+            <%= (request.location.address.length > 100 ? request.location.address.substring(0, 100) +
+            '...' : request.location.address) %>
           </p>
         </div>
       </div>
@@ -46,7 +46,7 @@
         </div>
         <div class="col-10">
           <p class="pt-3">
-            <%= moment(request.ads.effective).format('DD-MM-YYYY') %> đến <%= moment(request.ads.expiration).format('DD-MM-YYYY') %>
+            <%= moment(request.effective).format('DD-MM-YYYY') %> đến <%= moment(request.expiration).format('DD-MM-YYYY') %>
           </p>
         </div>
       </div>
@@ -94,7 +94,7 @@
           class="btn btn-primary me-4"
           data-bs-toggle="modal"
           data-bs-target="#imageSlideShow"
-          <%= request.ads.images.length ? "" : "disabled" %>
+          <%= request.images.length ? "" : "disabled" %>
         >
           Xem tất cả hình
         </button>
@@ -136,7 +136,7 @@
         <div id="slide" class="carousel slide" data-bs-ride="carousel">
           <!-- Indicators/dots -->
           <div class="carousel-indicators">
-            <% request.ads.images.forEach((img, index) => { %>
+            <% request.images.forEach((img, index) => { %>
               <button
                 type="button"
                 data-bs-target="#slide"
@@ -148,7 +148,7 @@
 
           <!-- The slideshow/carousel -->
           <div class="carousel-inner">
-            <% request.ads.images.forEach((img, index) => { %>
+            <% request.images.forEach((img, index) => { %>
               <div class="carousel-item <%= index == 0 ? 'active' : '' %>">
                 <img
                   src="<%= img %>"
@@ -182,7 +182,7 @@
         <div class="container-fluid mt-3">
           <p class="text-center">Địa điểm</p>
           <p class="text-center">
-            Khu vực: Phường <%= request.ads.location.ward %>, Quận <%= request.ads.location.district %>
+            Khu vực: Phường <%= request.location.ward %>, Quận <%= request.location.district %>
           </p>
         </div>
       </div>
