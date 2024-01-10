@@ -2,6 +2,7 @@ const Report = require("../../models/Report");
 const { Location } = require("../../models/Location");
 const { generateRegexQuery } = require("regex-vietnamese");
 const District = require("../../models/District");
+const DOMPurify = require('isomorphic-dompurify');
 const moment = require("moment");
 
 exports.view = async (req, res) => {
@@ -279,6 +280,7 @@ exports.getDetail = async (req, res) => {
         select: ["address", "ward", "district", "method"],
       })
       .exec();
+    report.content = DOMPurify.sanitize(report.content);
     res.render("department/statistic/detail", {
       report,
       user,

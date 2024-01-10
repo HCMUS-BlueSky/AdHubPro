@@ -27,6 +27,7 @@
       <tr>
         <th scope="col">STT</th>
         <th scope="col">Địa chỉ</th>
+        <th scope="col">Loại</th>
         <th scope="col">Người báo cáo</th>
         <th scope="col">Thời gian</th>
         <th scope="col">Tình trạng</th>
@@ -42,6 +43,7 @@
           report.location.address.substring(0, 55) + '...' :
           report.location.address) %>
         </td>
+        <td class=""><%= report.type %></td>
         <td class=""><%= report.reporter.name %></td>
         <td class=""><%= moment(report.created_at).format('DD-MM-YYYY') %></td>
         <td class="">
