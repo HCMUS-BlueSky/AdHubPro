@@ -2,6 +2,11 @@ const mongoose = require('mongoose');
 
 const requestSchema = new mongoose.Schema(
   {
+    location: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Location',
+      required: true
+    },
     ads: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Ads',

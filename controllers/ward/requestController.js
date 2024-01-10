@@ -18,15 +18,17 @@ exports.view = async (req, res) => {
       .distinct("_id")
       .exec();
     const request = await Request.find({
-      "ads.location": { $in: managed_locations },
+      location: { $in: managed_locations }
     })
-      .populate("ads.location", "address")
+      .populate('location', 'address')
+      .populate('ads', 'type')
       .sort({ created_at: -1 })
       .skip(perPage * page - perPage)
       .limit(perPage)
       .exec();
+
     const count = await Request.count({
-      "ads.location": { $in: managed_locations },
+      location: { $in: managed_locations }
     });
     res.render("ward/request/index", {
       request,
@@ -73,37 +75,30 @@ exports.search = async (req, res) => {
     const request = await Request.find({
       $or: [
         {
-          "ads.location": { $in: locations },
+          location: { $in: locations }
         },
         {
-          "ads.location": { $in: managed_locations },
-          "company.name": { $regex: rgx },
-        },
-        {
-          "ads.location": { $in: managed_locations },
-          "ads.type": { $regex: rgx },
-        },
-      ],
+          location: { $in: managed_locations },
+          'company.name': { $regex: rgx }
+        }
+      ]
     })
       .sort({ created_at: -1 })
       .skip(perPage * page - perPage)
       .limit(perPage)
-      .populate("ads.location", "address")
+      .populate('location', 'address')
+      .populate('ads', 'type')
       .exec();
     const count = await Request.count({
       $or: [
         {
-          "ads.location": { $in: locations },
+          location: { $in: locations }
         },
         {
-          "ads.location": { $in: managed_locations },
-          "company.name": { $regex: rgx },
-        },
-        {
-          "ads.location": { $in: managed_locations },
-          "ads.type": { $regex: rgx },
-        },
-      ],
+          location: { $in: managed_locations },
+          'company.name': { $regex: rgx }
+        }
+      ]
     });
     res.render("ward/request/index", {
       request,
@@ -134,8 +129,10 @@ exports.getDetail = async (req, res) => {
       .exec();
     const request = await Request.findOne({
       _id: req.params.id,
-      "ads.location": { $in: managed_locations },
-    }).populate("ads.location", "ward district address");
+      location: { $in: managed_locations }
+    })
+      .populate('location', 'ward district address')
+      .populate('ads', 'type size');
     res.render("ward/request/detail", {
       request,
       user,
@@ -181,6 +178,7 @@ exports.renderCreateNew = async (req, res) => {
 exports.createNew = async (req, res) => {
   try {
     const {
+      location,
       ads,
       description,
       company_name,
@@ -190,6 +188,8 @@ exports.createNew = async (req, res) => {
       effective,
       expiration,
     } = req.body;
+    if (!location || typeof location !== 'string')
+      throw new Error('Bảng không hợp lệ');
     if (!ads || typeof ads !== 'string')
       throw new Error('Bảng không hợp lệ');
     if (!description || typeof description !== "string")
@@ -207,20 +207,20 @@ exports.createNew = async (req, res) => {
     if (!expiration || typeof expiration !== "string")
       throw new Error("Ngày kết thúc hợp đồng không hợp lệ");
     const user = req.session.user;
-    const managed_locations = await Location.find({
+    const existLocation = await Location.exists({
       district: user.managed_district.name,
-      ward: user.managed_ward
-    })
-      .distinct('_id')
-      .exec();
+      ward: user.managed_ward,
+      _id: location
+    }).exec();
+    if (!existLocation) throw new Error('Địa điểm không hợp lệ');
     const exists = await Ads.exists({
       _id: ads,
-      location: {
-        $in: managed_locations
-      }
+      location: location
     }).exec();
     if (!exists) throw new Error("Bảng quảng cáo không hợp lệ");
+    
     const request = new Request({
+      location,
       ads,
       description,
       effective,
@@ -258,7 +258,7 @@ exports.cancelRequest = async (req, res) => {
       .exec();
     const request = await Request.findOne({
       _id: req.params.id,
-      "ads.location": { $in: managed_locations },
+      location: { $in: managed_locations },
     });
     if (!request) throw new Error("Không tìm thấy yêu cầu cấp phép!");
     if (request.status != "pending")
