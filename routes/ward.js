@@ -39,6 +39,11 @@ router.post(
   upload.array("images", 5),
   adsController.updateInfo
 );
+router.post(
+  '/ads/create-request/:id',
+  upload.array('images', 5),
+  adsController.createRequest
+);
 
 router.all("/ads/*", (req, res) => {
   return res.redirect("/ward/ads");
