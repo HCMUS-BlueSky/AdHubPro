@@ -1,10 +1,10 @@
 const { Location } = require("../../models/Location");
-const { Ads } = require('../../models/Ads');
-const { generateRegexQuery } = require('regex-vietnamese');
+const { Ads } = require("../../models/Ads");
+const { generateRegexQuery } = require("regex-vietnamese");
 const Request = require("../../models/Request");
 const uploadFile = require("../../utils/fileUpload");
 const moment = require("moment");
-const Enum = require('../../models/Enum');
+const Enum = require("../../models/Enum");
 
 exports.view = async (req, res) => {
   const perPage = 10;
@@ -18,15 +18,15 @@ exports.view = async (req, res) => {
       .distinct("_id")
       .exec();
     const request = await Request.find({
-      'ads.location': { $in: managed_locations }
+      "ads.location": { $in: managed_locations },
     })
-      .populate('ads.location', 'address')
+      .populate("ads.location", "address")
       .sort({ created_at: -1 })
       .skip(perPage * page - perPage)
       .limit(perPage)
       .exec();
     const count = await Request.count({
-      'ads.location': { $in: managed_locations }
+      "ads.location": { $in: managed_locations },
     });
     res.render("ward/request/index", {
       request,
@@ -50,77 +50,77 @@ exports.search = async (req, res) => {
   const page = req.query.page || 1;
   try {
     const searchTerm = req.query.searchTerm;
-    if (typeof searchTerm !== 'string')
-      throw new Error('Từ khóa không hợp lệ!');
-    if (!searchTerm) return res.redirect('/ward/request');
+    if (typeof searchTerm !== "string")
+      throw new Error("Từ khóa không hợp lệ!");
+    if (!searchTerm) return res.redirect("/ward/request");
     const user = req.session.user;
     const locations = await Location.find({
       district: user.managed_district.name,
       ward: user.managed_ward,
       $text: {
-        $search: `\"${searchTerm}\"`
-      }
+        $search: `\"${searchTerm}\"`,
+      },
     })
-      .distinct('_id')
+      .distinct("_id")
       .exec();
     const managed_locations = await Location.find({
       district: user.managed_district.name,
-      ward: user.managed_ward
+      ward: user.managed_ward,
     })
-      .distinct('_id')
+      .distinct("_id")
       .exec();
     const rgx = generateRegexQuery(searchTerm);
     const request = await Request.find({
       $or: [
         {
-          'ads.location': { $in: locations }
+          "ads.location": { $in: locations },
         },
         {
-          'ads.location': { $in: managed_locations },
-          'company.name': { $regex: rgx }
+          "ads.location": { $in: managed_locations },
+          "company.name": { $regex: rgx },
         },
         {
-          'ads.location': { $in: managed_locations },
-          'ads.type': { $regex: rgx }
-        }
-      ]
+          "ads.location": { $in: managed_locations },
+          "ads.type": { $regex: rgx },
+        },
+      ],
     })
       .sort({ created_at: -1 })
       .skip(perPage * page - perPage)
       .limit(perPage)
-      .populate('ads.location', 'address')
+      .populate("ads.location", "address")
       .exec();
     const count = await Request.count({
       $or: [
         {
-          'ads.location': { $in: locations }
+          "ads.location": { $in: locations },
         },
         {
-          'ads.location': { $in: managed_locations },
-          'company.name': { $regex: rgx }
+          "ads.location": { $in: managed_locations },
+          "company.name": { $regex: rgx },
         },
         {
-          'ads.location': { $in: managed_locations },
-          'ads.type': { $regex: rgx }
-        }
-      ]
+          "ads.location": { $in: managed_locations },
+          "ads.type": { $regex: rgx },
+        },
+      ],
     });
-    res.render('ward/request/index', {
+    res.render("ward/request/index", {
       request,
       user,
       perPage,
       current: page,
       pages: Math.ceil(count / perPage),
-      pageName: 'request',
+      pageName: "request",
       header: {
-        navRoot: 'Yêu cầu cấp phép',
-        navCurrent: 'Thông tin chung'
-      }
+        navRoot: "Yêu cầu cấp phép",
+        navCurrent: "Thông tin chung",
+      },
     });
-   } catch (err) {
-     req.flash('error', err.message);
-     return res.redirect('/ward/request');
-   }
+  } catch (err) {
+    req.flash("error", err.message);
+    return res.redirect("/ward/request");
+  }
 };
 
 exports.getDetail = async (req, res) => {
@@ -158,9 +158,9 @@ exports.renderCreateNew = async (req, res) => {
     const locations = await Location.find({
       district: user.managed_district.name,
       ward: user.managed_ward,
-      accepted: true
+      accepted: true,
     }).exec();
-    const availableType = await Enum.findOne({ name: 'AdsType' }).exec();
+    const availableType = await Enum.findOne({ name: "AdsType" }).exec();
     const availableAdsType = availableType.values;
     res.render("ward/request/create", {
       locations,
@@ -261,8 +261,8 @@ exports.cancelRequest = async (req, res) => {
       "ads.location": { $in: managed_locations },
     });
     if (!request) throw new Error("Không tìm thấy yêu cầu cấp phép!");
-    if (request.status != 'pending')
-      throw new Error('Không thể xóa yêu cầu đã được xử lí!');
+    if (request.status != "pending")
+      throw new Error("Không thể xóa yêu cầu đã được xử lí!");
     await Request.findByIdAndDelete(req.params.id);
     req.flash("success", "Hủy yêu cầu cấp phép thành công!");
     return res.redirect("/ward/request");
