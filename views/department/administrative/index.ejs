@@ -22,6 +22,8 @@
         <th scope="col">Tên</th>
         <th scope="col">Danh sách phường</th>
         <th scope="col" class="text-center">Thêm phường</th>
+        <th scope="col" class="text-center">Xóa phường</th>
+        <th scope="col" class="text-center">Xóa quận</th>
       </tr>
     </thead>
     <tbody>
@@ -47,6 +49,25 @@
             onclick="showAddWardModal(this)"
           ></i>
         </td>
+        <td class="text-center">
+          <i
+            class="fs-4 bi bi-dash-square"
+            style="cursor: pointer"
+            data-selected-ward-list="<%= district.wards %>"
+            data-bs-toggle="modal"
+            data-bs-target="#deleteWard"
+            onclick="showDeleteWardModal(this)"
+          ></i>
+        </td>
+        <td class="text-center">
+          <i
+            role="button"
+            class="fs-4 bi bi-dash-square"
+            style="color: red; cursor: pointer"
+            data-bs-toggle="modal"
+            data-bs-target="#deleteDistrict"
+          ></i>
+        </td>
       </tr>
       <% }) %>
     </tbody>
@@ -61,7 +82,11 @@
   aria-hidden="true"
 >
   <div class="modal-dialog">
-    <form id="addDistrictForm" method="POST" action="/department/administrative/add-district">
+    <form
+      id="addDistrictForm"
+      method="POST"
+      action="/department/administrative/add-district"
+    >
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title fs-5" id="districtModalTitle">
@@ -110,7 +135,12 @@
   aria-hidden="true"
 >
   <div class="modal-dialog">
-    <form id="addWardForm" method="POST" action="/department/administrative/add-ward" novalidate>
+    <form
+      id="addWardForm"
+      method="POST"
+      action="/department/administrative/add-ward"
+      novalidate
+    >
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title fs-5" id="wardModalTitle">Thêm phường mới</h5>
@@ -134,7 +164,7 @@
               type="email"
               id="selected-district-id"
               name="districtId"
-              style="display: none;"
+              style="display: none"
             />
           </div>
           <div class="col mb-3">
@@ -163,5 +193,83 @@
         </div>
       </div>
     </form>
+  </div>
+</div>
+
+<!-- Delete ward Modal -->
+<div
+  class="modal fade"
+  id="deleteWard"
+  tabindex="-1"
+  aria-labelledby="deleteWardLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <form id="deleteWardForm" method="POST" novalidate>
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title fs-5" id="wardModalTitle">Xóa phường</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <div class="col mb-3">
+            <label for="wardsDelete" class="form-label"
+              >Chọn phường muốn xóa</label
+            >
+            <select
+              class="form-select wardsDelete"
+              name="wardsDelete"
+              aria-label=""
+            ></select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-outline-secondary"
+            data-bs-dismiss="modal"
+            id="closeBtn"
+          >
+            Close
+          </button>
+          <button type="submit" class="btn btn-primary">Xác nhận</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Delete Method Modal -->
+<div
+  class="modal fade"
+  id="deleteDistrict"
+  tabindex="-1"
+  aria-labelledby="deleteDistrictLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="deleteDistrictLabel">Xác nhận</h1>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">Bạn có chắc chắn muốn xóa quận này?</div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Đóng
+        </button>
+        <button type="button" class="btn btn-danger" id="delete-btn">Có</button>
+      </div>
+    </div>
   </div>
 </div>
