@@ -16,6 +16,19 @@ router.get("/locations", async (req, res) => {
   }
 });
 
+router.get("/locations/officer", async (req, res) => {
+  const user = req.session.user;
+  try {
+    const locations = await Location.find({
+      district: user.managed_district.name,
+      ward: user.managed_ward,
+    });
+    return res.json(locations);
+  } catch (err) {
+    return res.status(500).send(err.message);
+  }
+});
+
 router.get("/reports", async (req, res) => {
   try {
     const reports = await Report.find({}).exec();

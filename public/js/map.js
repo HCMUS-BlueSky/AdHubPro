@@ -1,25 +1,55 @@
 async function logLocations() {
-  const response = await fetch("/api/location");
+  const response = await fetch(
+    "https://cms-adhubpro.onrender.com/api/map/locations/officer"
+  );
   const locations = await response.json();
   return locations;
 }
 
-async function logAdsByLocation(locationID) {
-  const response = await fetch(`/api/map/ads/${locationID}`);
+async function logAds() {
+  const response = await fetch("https://cms-adhubpro.onrender.com/api/map/ads");
   const ads = await response.json();
   return ads;
 }
 
-async function logReports(adsID) {
-  const response = await fetch(`api/map/report/ads/${adsID}`);
+async function logAdsByLocation(locationID) {
+  const response = await fetch(
+    `https://cms-adhubpro.onrender.com/api/map/ads/${locationID}`
+  );
+  const ads = await response.json();
+  return ads;
+}
+
+async function logReports() {
+  const response = await fetch(
+    "https://cms-adhubpro.onrender.com/api/map/reports"
+  );
+  const reports = await response.json();
+  return reports;
+}
+
+async function logReportsByAds(adsID) {
+  const response = await fetch(
+    `https://cms-adhubpro.onrender.com/api/map/report/ads/${adsID}`
+  );
   const reports = await response.json();
   return reports;
 }
 
 async function logReportsByLocation(locationID) {
-  const response = await fetch(`api/map/report/location/${locationID}`);
+  const response = await fetch(
+    `https://cms-adhubpro.onrender.com/api/map/report/location/${locationID}`
+  );
   const reports = await response.json();
   return reports;
+}
+
+async function logReportMethod() {
+  const response = await fetch(
+    "https://cms-adhubpro.onrender.com/api/map/report_method"
+  );
+  const methods = await response.json();
+  return methods;
 }
 
 mapboxgl.accessToken =
@@ -61,7 +91,7 @@ const AdsCardFactory = (ads) => {
   elm.innerHTML = `
                   <div class="card-header text-center fw-bold fs-4 font-weight-bold py-3">${ads.type}</div>
                   <div class="card-body">
-                    <h5 class="card-title fw-bold">${ads.location.address}</h5>
+                    <h5 class="card-title text-muted">${ads.location.address}</h5>
                     <h5 class="card-text">Kích thước: ${ads.size}</h5>
                     <h5 class="card-text">Số lượng: ${ads.location.ads_count} trụ/bảng</h5>
                     <h5 class="card-text">Hình thức: ${ads.location.method}</h5>
@@ -153,12 +183,22 @@ const reportCardFactory = (report) => {
               report.method
             }</div>
               <div class="card-body">
-                <h5 class="card-text">Báo cáo bởi: ${report.reporter.name}</h5>
-                <h5 class="card-text">Nội dung báo cáo: ${report.content}</h5>
+                <h5 class="card-text">Báo cáo bởi: <b>${
+                  report.reporter.name
+                }</b></h5>
                 <h5 class="card-text">Thời gian ghi nhận: ${moment(
                   report.created_at
-                ).format("DD/MM/YYYY")}</h5>
-                <h5 class="card-text">Trạng thái: ${statusLabel}</h5>
+                ).format("l")}</h5>
+                <h5 class="card-text mb-3">Trạng thái: ${statusLabel}</h5>
+                <div class="d-flex justify-content-between">
+                  <i data-bs-toggle="modal" data-bs-target="#ads-report" class="ads-report-btn bi bi-question-circle"></i>
+                  <button type="button"
+                    class="btn btn-primary report-detail-btn"
+                    data-bs-toggle="modal"
+                    data-bs-target="#report-detail">
+                    Xem chi tiết
+                  </button>
+                </div>
               </div>
             </div>
           `;
@@ -172,25 +212,39 @@ const detailCardFactory = (ads) => {
             <!-- Carousel -->
             <div id="demo" class="carousel slide" data-bs-ride="carousel">
   
-              <!-- Indicators/dots -->
-              <div class="carousel-indicators">
-                <button type="button" data-bs-target="#demo" data-bs-slide-to="0" class="active"></button>
-                <button type="button" data-bs-target="#demo" data-bs-slide-to="1"></button>
-              </div>
-              
-              <!-- The slideshow/carousel -->
-              <div class="carousel-inner">
+            <!-- Indicators/dots -->
+            <div class="carousel-indicators">
+              ${
+                ads.images[0]
+                  ? '<button type="button" data-bs-target="#demo" data-bs-slide-to="0" class="active"></button>'
+                  : ""
+              }
+              ${
+                ads.images[1]
+                  ? '<button type="button" data-bs-target="#demo" data-bs-slide-to="1"></button>'
+                  : ""
+              }
+            </div>
+            
+            <!-- The slideshow/carousel -->
+            <div class="carousel-inner">
+              ${
+                ads.images[0]
+                  ? `
                 <div class="carousel-item active">
-                  <img src="${
-                    ads.images[0]
-                  }" alt="ads-1" class="d-block" style="width:100%;">
-                </div>
+                  <img src="${ads.images[0]}" alt="ads-1" class="d-block" style="width:100%;">
+                </div>`
+                  : ""
+              }
+              ${
+                ads.images[1]
+                  ? `
                 <div class="carousel-item">
-                  <img src="${
-                    ads.images[1]
-                  }" alt="ads-2" class="d-block" style="width:100%">
-                </div>
-              </div>
+                  <img src="${ads.images[1]}" alt="ads-2" class="d-block" style="width:100%">
+                </div>`
+                  : ""
+              }
+            </div>
               
               <!-- Left and right controls/icons -->
               <button class="carousel-control-prev" type="button" data-bs-target="#demo" data-bs-slide="prev">
@@ -203,19 +257,69 @@ const detailCardFactory = (ads) => {
             <div class="container-fluid mt-3">
               <p class="text-center">Ngày hết hạn hợp đồng: ${moment(
                 ads.expiration
-              ).format("MMMM Do YYYY")}</p>
+              ).format("l")}</p>
             </div>
           `;
   return elem;
 };
 
-const clearReportModal = () => {
-  document.querySelector("#name").value = "";
-  document.querySelector("#email").value = "";
-  document.querySelector("#phone").value = "";
-  document.querySelector('input[name="method"]:checked').value = "";
-  // tinymce.get("report-content").getContent() = "";
-  document.getElementById("file").value = "";
+const reportDetailCardFactory = (report) => {
+  const elem = document.createElement("div");
+  elem.innerHTML = `
+            <div class="container-fluid mb-3">
+            <p>Nội dung báo cáo: ${report.content}</p>
+
+            <p>Hình ảnh báo cáo: </p>
+            <!-- Carousel -->
+            <div id="demo" class="carousel slide" data-bs-ride="carousel">
+  
+            <!-- Indicators/dots -->
+            <div class="carousel-indicators">
+              ${
+                report.images[0]
+                  ? '<button type="button" data-bs-target="#demo" data-bs-slide-to="0" class="active"></button>'
+                  : ""
+              }
+              ${
+                report.images[1]
+                  ? '<button type="button" data-bs-target="#demo" data-bs-slide-to="1"></button>'
+                  : ""
+              }
+            </div>
+            
+            <!-- The slideshow/carousel -->
+            <div class="carousel-inner">
+              ${
+                report.images[0]
+                  ? `
+                <div class="carousel-item active">
+                  <img src="${report.images[0]}" alt="ads-1" class="d-block" style="width:100%;">
+                </div>`
+                  : ""
+              }
+              ${
+                report.images[1]
+                  ? `
+                <div class="carousel-item">
+                  <img src="${report.images[1]}" alt="ads-2" class="d-block" style="width:100%">
+                </div>`
+                  : ""
+              }
+            </div>
+              
+              <!-- Left and right controls/icons -->
+              <button class="carousel-control-prev" type="button" data-bs-target="#demo" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon"></span>
+              </button>
+              <button class="carousel-control-next" type="button" data-bs-target="#demo" data-bs-slide="next">
+                <span class="carousel-control-next-icon"></span>
+              </button>
+            </div>
+
+           
+          </div>
+          `;
+  return elem;
 };
 
 const clearSidebar = () => {
@@ -260,43 +364,69 @@ function toggleSidebar() {
   });
 }
 
-function addReportLayer(map) {
-  map.addLayer({
-    id: "report-point",
-    type: "circle",
-    source: "AdsLocations",
-    filter: ["==", ["get", "status"], "Đã quy hoạch"],
-    paint: {
-      "circle-radius": 15,
-      "circle-opacity": 0,
-      "circle-stroke-width": 2,
-      "circle-stroke-color": "red",
-    },
-  });
-}
-
-function addAdsLayer(map) {
-  map.addLayer({
-    id: "unclustered-point",
-    type: "circle",
-    source: "AdsLocations",
-    filter: ["!", ["has", "point_count"]],
-    paint: {
-      "circle-color": "#11b4da",
-      "circle-radius": 15,
-    },
-  });
+function addCustomLayer(map, type) {
+  if (type == "location") {
+    map.addLayer({
+      id: "location-point",
+      type: "circle",
+      source: "AdsLocations",
+      filter: [
+        "all",
+        ["!", ["has", "point_count"]],
+        ["==", ["get", "status"], "Chưa quy hoạch"],
+      ],
+      paint: {
+        "circle-color": "#11b4da",
+        "circle-radius": 15,
+      },
+    });
+  } else if (type == "planning") {
+    map.addLayer({
+      id: "planning-point",
+      type: "circle",
+      source: "AdsLocations",
+      filter: [
+        "all",
+        ["!", ["has", "point_count"]],
+        ["==", ["get", "status"], "Đã quy hoạch"],
+      ],
+      paint: {
+        "circle-color": "#E26EE5",
+        "circle-radius": 15,
+      },
+    });
+  } else if (type == "report") {
+    map.addLayer({
+      id: "report-point",
+      type: "circle",
+      source: "AdsLocations",
+      filter: ["==", ["get", "hasReport"], true],
+      paint: {
+        "circle-radius": 17,
+        // "circle-opacity": 0,
+        // "circle-stroke-width": 2,
+        // "circle-stroke-color": "red",
+        "circle-color": "red",
+      },
+    });
+  }
 }
 
 function addTextLayer(map, content) {
   let filterType = [];
-  if (content == "BC") {
-    filterType = ["==", ["get", "status"], "Đã quy hoạch"];
-  } else {
-    filterType = ["!", ["has", "point_count"]];
+  let idType = "";
+  if (content == "QC") {
+    filterType = ["==", ["get", "hasAds"], true];
+    idType = "text-ads-point";
+  } else if (content == "BC") {
+    filterType = ["==", ["get", "hasReport"], true];
+    idType = "text-report-point";
+  } else if (content == "ĐĐ") {
+    filterType = ["==", ["get", "hasAds"], false];
+    idType = "text-location-point";
   }
   map.addLayer({
-    id: "text-point",
+    id: idType,
     type: "symbol",
     source: "AdsLocations",
     filter: filterType,
@@ -310,11 +440,27 @@ function addTextLayer(map, content) {
 
 async function initMap() {
   const locations = await logLocations();
+  const ads = await logAds();
+  const reports = await logReports();
+
+  locations.forEach((location) => {
+    const adsInLocation = ads.find((el) => el.location === location._id);
+    const reportInLocation = reports.find(
+      (report) => report.location === location._id
+    );
+
+    location.hasAds = adsInLocation && adsInLocation.hasAds === undefined;
+    location.hasReport =
+      reportInLocation && reportInLocation.hasReport === undefined;
+  });
+
   const geojson = {
     type: "FeatureCollection",
     features: [],
   };
   locations.map((location) => {
+    const hasAds = location.hasAds || false;
+    const hasReport = location.hasReport || false;
     const feature = {
       type: "Feature",
       geometry: {
@@ -327,6 +473,8 @@ async function initMap() {
         type: location.type,
         address: location.address,
         status: location.accepted ? "Đã quy hoạch" : "Chưa quy hoạch",
+        hasAds: hasAds,
+        hasReport: hasReport,
       },
     };
     geojson.features.push(feature);
@@ -377,32 +525,55 @@ async function initMap() {
       },
     });
 
-    addAdsLayer(map);
+    addCustomLayer(map, "report");
+    addCustomLayer(map, "planning");
+    addCustomLayer(map, "location");
 
     const adsSwitch = document.querySelector("#adsSwitch");
     adsSwitch.addEventListener("change", () => {
       if (adsSwitch.checked) {
-        map.removeLayer("text-point");
-        addAdsLayer(map);
+        document.querySelector(".info-btn").disabled = false;
+        addCustomLayer(map, "planning");
+        addCustomLayer(map, "location");
+        addTextLayer(map, "ĐĐ");
         addTextLayer(map, "QC");
       } else {
-        map.removeLayer("unclustered-point");
-        map.removeLayer("text-point");
-        addTextLayer(map, "BC");
+        document.querySelector(".info-btn").disabled = true;
+        map.removeLayer("planning-point");
+        map.removeLayer("location-point");
+        map.removeLayer("text-ads-point");
+        map.removeLayer("text-location-point");
       }
     });
-
-    addReportLayer(map);
 
     const reportSwitch = document.querySelector("#reportSwitch");
     reportSwitch.addEventListener("change", () => {
       if (reportSwitch.checked) {
-        addReportLayer(map);
+        document.querySelector(".report-btn").disabled = false;
+        if (adsSwitch.checked) {
+          map.removeLayer("planning-point");
+          map.removeLayer("location-point");
+          map.removeLayer("text-ads-point");
+          map.removeLayer("text-location-point");
+          addCustomLayer(map, "report");
+          addCustomLayer(map, "planning");
+          addCustomLayer(map, "location");
+          addTextLayer(map, "BC");
+          addTextLayer(map, "ĐĐ");
+          addTextLayer(map, "QC");
+        } else {
+          addCustomLayer(map, "report");
+          addTextLayer(map, "BC");
+        }
       } else {
+        document.querySelector(".report-btn").disabled = true;
         map.removeLayer("report-point");
+        map.removeLayer("text-report-point");
       }
     });
 
+    addTextLayer(map, "BC");
+    addTextLayer(map, "ĐĐ");
     addTextLayer(map, "QC");
 
     map.on("click", "clusters", (e) => {
@@ -425,11 +596,15 @@ async function initMap() {
         });
     });
 
-    map.on("click", ["unclustered-point"], (e) => {
-      e.clickOnLayer = true;
-    });
+    map.on(
+      "click",
+      ["location-point", "planning-point", "report-point"],
+      (e) => {
+        e.clickOnLayer = true;
+      }
+    );
 
-    map.on("mouseenter", ["unclustered-point"], (e) => {
+    map.on("mouseenter", ["location-point", "planning-point"], (e) => {
       map.getCanvas().style.cursor = "pointer";
       const coordinates = e.features[0].geometry.coordinates.slice();
 
@@ -448,7 +623,11 @@ async function initMap() {
         .addTo(map);
     });
 
-    map.on("mouseleave", ["unclustered-point", "report-point"], () => {
+    map.on("mouseenter", ["report-point"], () => {
+      map.getCanvas().style.cursor = "pointer";
+    });
+
+    map.on("mouseleave", ["location-point", "planning-point"], () => {
       map.getCanvas().style.cursor = "";
       popup.remove();
     });
@@ -518,110 +697,179 @@ async function initMap() {
     }
   });
 
-  // Click on location
-  map.on("click", ["unclustered-point", "report-point"], async (e) => {
-    const features = e.features[0];
-    clearSidebar();
-    const adsInfo = await logAdsByLocation(features.properties._id);
-    const reportButton = document.querySelector(".report-btn");
-    const infoButton = document.querySelector(".info-btn");
+  // Click on location or ads
+  map.on(
+    "click",
+    ["location-point", "planning-point", "report-point"],
+    async (e) => {
+      const features = e.features[0];
+      clearSidebar();
+      const adsInfo = await logAdsByLocation(features.properties._id);
+      const reportButton = document.querySelector(".report-btn");
+      const infoButton = document.querySelector(".info-btn");
 
-    if (adsInfo.length !== 0) {
-      reportButton.classList.remove("active");
-      infoButton.classList.add("active");
-      removeOutSideBar(".report-card");
-      removeOutSideBar(".ads-card");
-      adsInfo.forEach((el) => {
-        let adsCard = AdsCardFactory(el);
-        addToSideBar(adsCard);
-      });
-
-      const newInfoButton = infoButton.cloneNode(true);
-      infoButton.parentNode.replaceChild(newInfoButton, infoButton);
-      newInfoButton.addEventListener("click", async () => {
-        newReportButton.classList.remove("active");
-        newInfoButton.classList.add("active");
+      if (adsInfo.length !== 0) {
+        const adsSwitch = document.querySelector("#adsSwitch");
+        reportButton.classList.remove("active");
+        infoButton.classList.add("active");
         removeOutSideBar(".report-card");
         removeOutSideBar(".ads-card");
-        adsInfo.forEach((el) => {
-          let adsCard = AdsCardFactory(el);
-          addToSideBar(adsCard);
+        if (adsSwitch.checked) {
+          adsInfo.forEach((el) => {
+            let adsCard = AdsCardFactory(el);
+            addToSideBar(adsCard);
+          });
+        }
+
+        const newInfoButton = infoButton.cloneNode(true);
+        infoButton.parentNode.replaceChild(newInfoButton, infoButton);
+        newInfoButton.addEventListener("click", async () => {
+          newReportButton.classList.remove("active");
+          newInfoButton.classList.add("active");
+          removeOutSideBar(".report-card");
+          removeOutSideBar(".ads-card");
+          adsInfo.forEach((el) => {
+            let adsCard = AdsCardFactory(el);
+            addToSideBar(adsCard);
+          });
+          const detailIcons = document.querySelectorAll(".bi-info-circle");
+
+          detailIcons.forEach((detail, index) => {
+            detail.addEventListener("click", () => {
+              const infoDetailModal =
+                document.querySelector(".modal-info-detail");
+              infoDetailModal.innerHTML = "";
+              const infoDetailCard = detailCardFactory(adsInfo[index]);
+              infoDetailModal.appendChild(infoDetailCard);
+            });
+          });
         });
-      });
 
-      const newReportButton = reportButton.cloneNode(true);
-      reportButton.parentNode.replaceChild(newReportButton, reportButton);
+        const newReportButton = reportButton.cloneNode(true);
+        reportButton.parentNode.replaceChild(newReportButton, reportButton);
 
-      newReportButton.addEventListener("click", async () => {
-        newInfoButton.classList.remove("active");
-        newReportButton.classList.add("active");
-        removeOutSideBar(".report-card");
-        removeOutSideBar(".ads-card");
-        const reportInfoArray = await Promise.all(
-          adsInfo.map(async (ads) => {
-            return await logReports(ads._id);
-          })
-        );
-        const reportInfoArrayFlat = reportInfoArray.flat();
-        reportInfoArrayFlat.forEach((report) => {
-          const reportCard = reportCardFactory(report);
-          addToSideBar(reportCard);
+        newReportButton.addEventListener("click", async () => {
+          newInfoButton.classList.remove("active");
+          newReportButton.classList.add("active");
+          removeOutSideBar(".report-card");
+          removeOutSideBar(".ads-card");
+          const reportInfoArray = await Promise.all(
+            adsInfo.map(async (ads) => {
+              return await logReportsByAds(ads._id);
+            })
+          );
+          const reportInfoArrayFlat = reportInfoArray.flat();
+          reportInfoArrayFlat.forEach((report) => {
+            const reportCard = reportCardFactory(report);
+            addToSideBar(reportCard);
+          });
+
+          // Report Detail
+          const reportDetailBtn =
+            document.querySelectorAll(".report-detail-btn");
+          reportDetailBtn.forEach((detail, index) => {
+            detail.addEventListener("click", () => {
+              const reportDetailModal = document.querySelector(
+                ".modal-report-detail"
+              );
+              reportDetailModal.innerHTML = "";
+              const reportDetailCard = reportDetailCardFactory(
+                reportInfoArrayFlat[index]
+              );
+              reportDetailModal.appendChild(reportDetailCard);
+            });
+          });
+
+          const adsReportBtn = document.querySelectorAll(".ads-report-btn");
+          adsReportBtn.forEach((detail, index) => {
+            detail.addEventListener("click", () => {
+              const adsReportModal =
+                document.querySelector(".modal-ads-report");
+              adsReportModal.innerHTML = "";
+              const adsDetailCard = detailCardFactory(
+                reportInfoArrayFlat[index].ads
+              );
+              adsReportModal.appendChild(adsDetailCard);
+            });
+          });
         });
-      });
 
-      const detailIcons = document.querySelectorAll(".bi-info-circle");
-      detailIcons.forEach((detail, index) => {
-        detail.addEventListener("click", () => {
-          const infoDetailModal = document.querySelector(".modal-info-detail");
-          infoDetailModal.innerHTML = "";
-          const infoDetailCard = detailCardFactory(adsInfo[index]);
-          infoDetailModal.appendChild(infoDetailCard);
+        const detailIcons = document.querySelectorAll(".bi-info-circle");
+        detailIcons.forEach((detail, index) => {
+          detail.addEventListener("click", () => {
+            const infoDetailModal =
+              document.querySelector(".modal-info-detail");
+            infoDetailModal.innerHTML = "";
+            const infoDetailCard = detailCardFactory(adsInfo[index]);
+            infoDetailModal.appendChild(infoDetailCard);
+          });
         });
-      });
-    } else {
-      const locationAdsCard = locationAdsCardFactory(features.properties);
-      addToSideBar(locationAdsCard);
-      const nonAdsCard = NonAdsCardFactory();
-      addToSideBar(nonAdsCard);
-      reportButton.classList.remove("active");
-      infoButton.classList.add("active");
+      } else {
+        const adsSwitch = document.querySelector("#adsSwitch");
+        if (adsSwitch.checked) {
+          const locationAdsCard = locationAdsCardFactory(features.properties);
+          addToSideBar(locationAdsCard);
+          const nonAdsCard = NonAdsCardFactory();
+          addToSideBar(nonAdsCard);
+        }
+        reportButton.classList.remove("active");
+        infoButton.classList.add("active");
 
-      const newInfoButton = infoButton.cloneNode(true);
-      infoButton.parentNode.replaceChild(newInfoButton, infoButton);
-      newInfoButton.addEventListener("click", async () => {
-        newReportButton.classList.remove("active");
-        newInfoButton.classList.add("active");
-        removeOutSideBar(".report-card");
-        removeOutSideBar(".non-ads-card");
-        removeOutSideBar(".location-ads-card");
-        const locationAdsCard = locationAdsCardFactory(features.properties);
-        addToSideBar(locationAdsCard);
-        const nonAdsCard = NonAdsCardFactory();
-        addToSideBar(nonAdsCard);
-      });
-
-      const newReportButton = reportButton.cloneNode(true);
-      reportButton.parentNode.replaceChild(newReportButton, reportButton);
-
-      newReportButton.addEventListener("click", async () => {
-        newInfoButton.classList.remove("active");
-        newReportButton.classList.add("active");
-        removeOutSideBar(".report-card");
-        removeOutSideBar(".non-ads-card");
-        removeOutSideBar(".location-ads-card");
-        const reportInfo = await logReportsByLocation(features.properties._id);
-        reportInfo.map((report) => {
-          const reportCard = reportCardFactory(report);
-          addToSideBar(reportCard);
+        const newInfoButton = infoButton.cloneNode(true);
+        infoButton.parentNode.replaceChild(newInfoButton, infoButton);
+        newInfoButton.addEventListener("click", async () => {
+          newReportButton.classList.remove("active");
+          newInfoButton.classList.add("active");
+          removeOutSideBar(".report-card");
+          removeOutSideBar(".non-ads-card");
+          removeOutSideBar(".location-ads-card");
+          const locationAdsCard = locationAdsCardFactory(features.properties);
+          addToSideBar(locationAdsCard);
+          const nonAdsCard = NonAdsCardFactory();
+          addToSideBar(nonAdsCard);
         });
-      });
+
+        const newReportButton = reportButton.cloneNode(true);
+        reportButton.parentNode.replaceChild(newReportButton, reportButton);
+
+        newReportButton.addEventListener("click", async () => {
+          newInfoButton.classList.remove("active");
+          newReportButton.classList.add("active");
+          removeOutSideBar(".report-card");
+          removeOutSideBar(".non-ads-card");
+          removeOutSideBar(".location-ads-card");
+          const reportInfo = await logReportsByLocation(
+            features.properties._id
+          );
+          reportInfo.map((report) => {
+            const reportCard = reportCardFactory(report);
+            addToSideBar(reportCard);
+          });
+
+          // Report Detail
+          const reportDetailBtn =
+            document.querySelectorAll(".report-detail-btn");
+          reportDetailBtn.forEach((detail, index) => {
+            detail.addEventListener("click", () => {
+              const reportDetailModal = document.querySelector(
+                ".modal-report-detail"
+              );
+              reportDetailModal.innerHTML = "";
+              const reportDetailCard = reportDetailCardFactory(
+                reportInfo[index]
+              );
+              reportDetailModal.appendChild(reportDetailCard);
+            });
+          });
+        });
+      }
+
+      const sidebar = document.getElementById("sidebar");
+      if (sidebar.classList.contains("collapsed")) {
+        toggleSidebar();
+      }
     }
-
-    const sidebar = document.getElementById("sidebar");
-    if (sidebar.classList.contains("collapsed")) {
-      toggleSidebar();
-    }
-  });
+  );
 
   // Add geolocate control to the map.
   map.addControl(
