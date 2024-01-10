@@ -1,0 +1,203 @@
+<!-- Right Part -->
+<div class="col p-3 border-start">
+  <%- include('../../partials/header.ejs') %>
+  <hr />
+  <div class="card bg-light mb-3">
+    <form
+      class="card-body p-4"
+      method="POST"
+      id="form"
+      enctype="multipart/form-data"
+    >
+      <h2 class="fw-semibold mb-3">Yêu cầu cấp phép</h2>
+      <h4>Thông tin bảng quảng cáo</h4>
+      <div class="row mt-3">
+        <div class="col-8">
+          <label for="location-select" class="form-label"
+            >Địa điểm<span class="text-danger"> *</span></label
+          >
+          <input
+            type="text"
+            class="form-control location-select"
+            required
+            name="location-select"
+            aria-describedby="helpId"
+            readonly="readonly"
+            value="<%= ads.location.address %>"
+          />
+        </div>
+      </div>
+      <div class="row mt-3">
+        <div class="col-6">
+          <label for="ads-select" class="form-label"
+            >Bảng quảng cáo<span class="text-danger"> *</span></label
+          >
+          <input
+            type="text"
+            class="form-control ads-select"
+            required
+            name="ads-select"
+            aria-describedby="helpId"
+            readonly="readonly"
+            value="<%= ads.type %>"
+          />
+        </div>
+      </div>
+      <div class="row my-3">
+        <div class="col-8">
+          <div class="form-group">
+            <label for="ads-description" class="form-label"
+              >Nội dung quảng cáo<span class="text-danger"> *</span></label
+            >
+            <textarea
+              class="form-control"
+              id="ads-description"
+              rows="3"
+              name="description"
+            ></textarea>
+          </div>
+        </div>
+        <div class="col-4">
+          <label for="ads-image" class="form-label">Hình ảnh minh họa</label>
+          <input
+            class="form-control"
+            type="file"
+            id="ads-image"
+            name="images"
+            multiple
+          />
+        </div>
+      </div>
+      <h4>Thông tin công ty</h4>
+      <div class="row mb-3">
+        <div class="col-6">
+          <label for="companyName" class="form-label"
+            >Tên công ty<span class="text-danger"> *</span></label
+          >
+          <input
+            type="text"
+            class="form-control"
+            id="companyName"
+            name="company_name"
+            placeholder=""
+          />
+        </div>
+        <div class="col-6">
+          <label for="companyEmail" class="form-label"
+            >Email<span class="text-danger"> *</span></label
+          >
+          <input
+            type="email"
+            class="form-control"
+            id="companyEmail"
+            name="company_email"
+            placeholder="abc@gmail.com"
+          />
+        </div>
+      </div>
+      <div class="row mt-3">
+        <div class="col-8">
+          <label for="companyAddress" class="form-label"
+            >Địa chỉ<span class="text-danger"> *</span></label
+          >
+          <input
+            type="text"
+            class="form-control"
+            id="companyAddress"
+            name="company_address"
+            placeholder=""
+          />
+        </div>
+        <div class="col-4">
+          <label for="companyPhone" class="form-label"
+            >Số điện thoại<span class="text-danger"> *</span></label
+          >
+          <input
+            type="text"
+            class="form-control"
+            id="companyPhone"
+            name="company_phone"
+            placeholder=""
+          />
+        </div>
+      </div>
+      <div class="row mt-3">
+        <div class="col-6">
+          <label for="date" class="form-label"
+            >Thời hạn hợp đồng<span class="text-danger"> *</span></label
+          >
+          <div class="input-group input-daterange" id="date">
+            <input
+              type="date"
+              class="form-control text-secondary"
+              name="effective"
+            />
+            <div class="input-group-text">to</div>
+            <input
+              type="date"
+              class="form-control text-secondary"
+              name="expiration"
+            />
+          </div>
+        </div>
+      </div>
+      <div class="d-flex justify-content-center mt-3">
+        <a href="/ward/ads">
+          <button type="button" class="btn btn-secondary me-4">Trở về</button>
+        </a>
+        <a>
+          <button
+            type="button"
+            class="btn btn-primary"
+            data-bs-toggle="modal"
+            data-bs-target="#confirmModal"
+          >
+            Gửi yêu cầu
+          </button>
+        </a>
+      </div>
+    </form>
+    <!--Alert-->
+    <div
+      class="modal fade"
+      id="confirmModal"
+      tabindex="-1"
+      aria-labelledby="confirmModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="confirmModalLabel">Xác nhận</h1>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            Bạn có chắc chắn muốn gửi yêu cầu cấp phép này?
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Đóng
+            </button>
+            <button type="button" class="btn btn-primary" id="submit-btn">
+              Xác nhận
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  document.getElementById("submit-btn").addEventListener("click", () => {
+    form.submit();
+  });
+</script>
