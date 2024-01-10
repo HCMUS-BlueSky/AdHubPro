@@ -118,7 +118,7 @@ const AdsCardFactory = (ads) => {
   elm.innerHTML = `
                   <div class="card-header text-center fw-bold fs-4 font-weight-bold py-3">${ads.type}</div>
                   <div class="card-body">
-                    <h5 class="card-title fw-bold">${ads.location.address}</h5>
+                    <h5 class="card-title text-muted">${ads.location.address}</h5>
                     <h5 class="card-text">Kích thước: ${ads.size}</h5>
                     <h5 class="card-text">Số lượng: ${ads.location.ads_count} trụ/bảng</h5>
                     <h5 class="card-text">Hình thức: ${ads.location.method}</h5>
@@ -226,11 +226,13 @@ const reportCardFactory = (report) => {
               report.method
             }</div>
               <div class="card-body">
-                <h5 class="card-text">Báo cáo bởi: ${report.reporter.name}</h5>
+                <h5 class="card-text">Báo cáo bởi: <b>${
+                  report.reporter.name
+                }</b></h5>
                 <h5 class="card-text">Nội dung báo cáo: ${report.content}</h5>
                 <h5 class="card-text">Thời gian ghi nhận: ${moment(
                   report.created_at
-                ).format("MMMM Do YYYY")}</h5>
+                ).format("l")}</h5>
                 <h5 class="card-text">Trạng thái: ${statusLabel}</h5>
                 <div class="d-flex justify-content-end">
                 <button type="button"
@@ -253,25 +255,39 @@ const detailCardFactory = (ads) => {
             <!-- Carousel -->
             <div id="demo" class="carousel slide" data-bs-ride="carousel">
   
-              <!-- Indicators/dots -->
-              <div class="carousel-indicators">
-                <button type="button" data-bs-target="#demo" data-bs-slide-to="0" class="active"></button>
-                <button type="button" data-bs-target="#demo" data-bs-slide-to="1"></button>
-              </div>
-              
-              <!-- The slideshow/carousel -->
-              <div class="carousel-inner">
+            <!-- Indicators/dots -->
+            <div class="carousel-indicators">
+              ${
+                ads.images[0]
+                  ? '<button type="button" data-bs-target="#demo" data-bs-slide-to="0" class="active"></button>'
+                  : ""
+              }
+              ${
+                ads.images[1]
+                  ? '<button type="button" data-bs-target="#demo" data-bs-slide-to="1"></button>'
+                  : ""
+              }
+            </div>
+            
+            <!-- The slideshow/carousel -->
+            <div class="carousel-inner">
+              ${
+                ads.images[0]
+                  ? `
                 <div class="carousel-item active">
-                  <img src="${
-                    ads.images[0]
-                  }" alt="ads-1" class="d-block" style="width:100%;">
-                </div>
+                  <img src="${ads.images[0]}" alt="ads-1" class="d-block" style="width:100%;">
+                </div>`
+                  : ""
+              }
+              ${
+                ads.images[1]
+                  ? `
                 <div class="carousel-item">
-                  <img src="${
-                    ads.images[1]
-                  }" alt="ads-2" class="d-block" style="width:100%">
-                </div>
-              </div>
+                  <img src="${ads.images[1]}" alt="ads-2" class="d-block" style="width:100%">
+                </div>`
+                  : ""
+              }
+            </div>
               
               <!-- Left and right controls/icons -->
               <button class="carousel-control-prev" type="button" data-bs-target="#demo" data-bs-slide="prev">
@@ -284,7 +300,7 @@ const detailCardFactory = (ads) => {
             <div class="container-fluid mt-3">
               <p class="text-center">Ngày hết hạn hợp đồng: ${moment(
                 ads.expiration
-              ).format("MMMM Do YYYY")}</p>
+              ).format("l")}</p>
             </div>
           `;
   return elem;
@@ -861,6 +877,7 @@ async function initMap() {
             })
           );
           const reportInfoArrayFlat = reportInfoArray.flat();
+          console.log(reportInfoArray);
           reportInfoArrayFlat.forEach((report) => {
             const reportCard = reportCardFactory(report);
             addToSideBar(reportCard);
