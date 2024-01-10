@@ -257,7 +257,29 @@ const genProcessingTemplate = (report) => {
                   <td
                     align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;"
                   >
+          <div
+          style="font-family:Montserrat, Segoe UI, Roboto, Open Sans, Helvetica Neue;font-size:14px;font-weight:500;line-height:1;text-align:left;color:#555555;"
+        >Nội dung báo cáo:</div>
+      
+                  </td>
+                </tr>
+              
+                <tr>
+                  <td
+                    align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;"
+                  >
                     
+        <div
+          style="font-family:Montserrat, Segoe UI, Roboto, Open Sans, Helvetica Neue;font-size:14px;font-weight:700;line-height:22px;text-align:left;color:#555555;"
+        >${report.content}</div>
+      
+                  </td>
+                </tr>
+              
+                <tr>
+                  <td
+                    align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;"
+                  >            
         <div
           style="font-family:Montserrat, Segoe UI, Roboto, Open Sans, Helvetica Neue;font-size:14px;font-weight:500;line-height:1;text-align:left;color:#555555;"
         >Nội dung xử lí báo cáo:</div>
@@ -562,7 +584,29 @@ const genFinishedTemplate = (report) => {
                   <td
                     align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;"
                   >
+        <div
+          style="font-family:Montserrat, Segoe UI, Roboto, Open Sans, Helvetica Neue;font-size:14px;font-weight:500;line-height:1;text-align:left;color:#555555;"
+        >Nội dung báo cáo:</div>
+      
+                  </td>
+                </tr>
+              
+                <tr>
+                  <td
+                    align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;"
+                  >
                     
+        <div
+          style="font-family:Montserrat, Segoe UI, Roboto, Open Sans, Helvetica Neue;font-size:14px;font-weight:700;line-height:22px;text-align:left;color:#555555;"
+        >${report.content}</div>
+      
+                  </td>
+                </tr>
+              
+                <tr>
+                  <td
+                    align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;"
+                  >              
         <div
           style="font-family:Montserrat, Segoe UI, Roboto, Open Sans, Helvetica Neue;font-size:14px;font-weight:500;line-height:1;text-align:left;color:#555555;"
         >Nội dung xử lí báo cáo:</div>
