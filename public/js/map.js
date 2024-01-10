@@ -1,6 +1,9 @@
 async function logLocations() {
+  // const response = await fetch(
+  //   "https://cms-adhubpro.onrender.com/api/map/locations/officer"
+  // );
   const response = await fetch(
-    "https://cms-adhubpro.onrender.com/api/map/locations/officer"
+    "http://localhost:4000/api/map/locations/officer"
   );
   const locations = await response.json();
   return locations;

@@ -27,7 +27,7 @@ router.get("/locations/officer", async (req, res) => {
     } else if (user.role == "ward_officer") {
       filter = {
         district: user.managed_district.name,
-        ward: user.managed_ward.name,
+        ward: user.managed_ward,
       };
     }
     const locations = await Location.find(filter);
