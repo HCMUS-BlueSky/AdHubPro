@@ -229,19 +229,19 @@ const reportCardFactory = (report) => {
                 <h5 class="card-text">Báo cáo bởi: <b>${
                   report.reporter.name
                 }</b></h5>
-                <h5 class="card-text">Nội dung báo cáo: ${report.content}</h5>
                 <h5 class="card-text">Thời gian ghi nhận: ${moment(
                   report.created_at
                 ).format("l")}</h5>
-                <h5 class="card-text">Trạng thái: ${statusLabel}</h5>
-                <div class="d-flex justify-content-end">
-                <button type="button"
-                  class="btn btn-primary report-detail-btn"
-                  data-bs-toggle="modal"
-                  data-bs-target="#report-detail">
-                  Xem chi tiết
-                </button>
-              </div>
+                <h5 class="card-text mb-3">Trạng thái: ${statusLabel}</h5>
+                <div class="d-flex justify-content-between">
+                  <i data-bs-toggle="modal" data-bs-target="#ads-report" class="ads-report-btn bi bi-question-circle"></i>
+                  <button type="button"
+                    class="btn btn-primary report-detail-btn"
+                    data-bs-toggle="modal"
+                    data-bs-target="#report-detail">
+                    Xem chi tiết
+                  </button>
+                </div>
               </div>
             </div>
           `;
@@ -306,21 +306,25 @@ const detailCardFactory = (ads) => {
   return elem;
 };
 
-const reportDetailCardFactory = (ads) => {
+const reportDetailCardFactory = (report) => {
   const elem = document.createElement("div");
   elem.innerHTML = `
+            <div class="container-fluid mb-3">
+            <p>Nội dung báo cáo: ${report.content}</p>
+
+            <p>Hình ảnh báo cáo: </p>
             <!-- Carousel -->
             <div id="demo" class="carousel slide" data-bs-ride="carousel">
   
             <!-- Indicators/dots -->
             <div class="carousel-indicators">
               ${
-                ads.images[0]
+                report.images[0]
                   ? '<button type="button" data-bs-target="#demo" data-bs-slide-to="0" class="active"></button>'
                   : ""
               }
               ${
-                ads.images[1]
+                report.images[1]
                   ? '<button type="button" data-bs-target="#demo" data-bs-slide-to="1"></button>'
                   : ""
               }
@@ -329,18 +333,18 @@ const reportDetailCardFactory = (ads) => {
             <!-- The slideshow/carousel -->
             <div class="carousel-inner">
               ${
-                ads.images[0]
+                report.images[0]
                   ? `
                 <div class="carousel-item active">
-                  <img src="${ads.images[0]}" alt="ads-1" class="d-block" style="width:100%;">
+                  <img src="${report.images[0]}" alt="ads-1" class="d-block" style="width:100%;">
                 </div>`
                   : ""
               }
               ${
-                ads.images[1]
+                report.images[1]
                   ? `
                 <div class="carousel-item">
-                  <img src="${ads.images[1]}" alt="ads-2" class="d-block" style="width:100%">
+                  <img src="${report.images[1]}" alt="ads-2" class="d-block" style="width:100%">
                 </div>`
                   : ""
               }
@@ -354,6 +358,9 @@ const reportDetailCardFactory = (ads) => {
                 <span class="carousel-control-next-icon"></span>
               </button>
             </div>
+
+           
+          </div>
           `;
   return elem;
 };
@@ -670,16 +677,21 @@ async function initMap() {
     reportSwitch.addEventListener("change", () => {
       if (reportSwitch.checked) {
         document.querySelector(".report-btn").disabled = false;
-        map.removeLayer("planning-point");
-        map.removeLayer("location-point");
-        map.removeLayer("text-ads-point");
-        map.removeLayer("text-location-point");
-        addCustomLayer(map, "report");
-        addCustomLayer(map, "planning");
-        addCustomLayer(map, "location");
-        addTextLayer(map, "BC");
-        addTextLayer(map, "ĐĐ");
-        addTextLayer(map, "QC");
+        if (adsSwitch.checked) {
+          map.removeLayer("planning-point");
+          map.removeLayer("location-point");
+          map.removeLayer("text-ads-point");
+          map.removeLayer("text-location-point");
+          addCustomLayer(map, "report");
+          addCustomLayer(map, "planning");
+          addCustomLayer(map, "location");
+          addTextLayer(map, "BC");
+          addTextLayer(map, "ĐĐ");
+          addTextLayer(map, "QC");
+        } else {
+          addCustomLayer(map, "report");
+          addTextLayer(map, "BC");
+        }
       } else {
         document.querySelector(".report-btn").disabled = true;
         map.removeLayer("report-point");
@@ -847,6 +859,31 @@ async function initMap() {
             let adsCard = AdsCardFactory(el);
             addToSideBar(adsCard);
           });
+          const detailIcons = document.querySelectorAll(".bi-info-circle");
+
+          const reportButtons = document.querySelectorAll(
+            ".ads-card .btn-danger"
+          );
+
+          reportButtons.forEach((button, index) => {
+            button.addEventListener("click", () => {
+              handleReportModal(
+                "ads",
+                adsInfo[index].location._id,
+                adsInfo[index]
+              );
+            });
+          });
+
+          detailIcons.forEach((detail, index) => {
+            detail.addEventListener("click", () => {
+              const infoDetailModal =
+                document.querySelector(".modal-info-detail");
+              infoDetailModal.innerHTML = "";
+              const infoDetailCard = detailCardFactory(adsInfo[index]);
+              infoDetailModal.appendChild(infoDetailCard);
+            });
+          });
         });
 
         const reportButtons = document.querySelectorAll(
@@ -877,7 +914,6 @@ async function initMap() {
             })
           );
           const reportInfoArrayFlat = reportInfoArray.flat();
-          console.log(reportInfoArray);
           reportInfoArrayFlat.forEach((report) => {
             const reportCard = reportCardFactory(report);
             addToSideBar(reportCard);
@@ -896,6 +932,19 @@ async function initMap() {
                 reportInfoArrayFlat[index]
               );
               reportDetailModal.appendChild(reportDetailCard);
+            });
+          });
+
+          const adsReportBtn = document.querySelectorAll(".ads-report-btn");
+          adsReportBtn.forEach((detail, index) => {
+            detail.addEventListener("click", () => {
+              const adsReportModal =
+                document.querySelector(".modal-ads-report");
+              adsReportModal.innerHTML = "";
+              const adsDetailCard = detailCardFactory(
+                reportInfoArrayFlat[index].ads
+              );
+              adsReportModal.appendChild(adsDetailCard);
             });
           });
         });
