@@ -6,7 +6,6 @@ const reportController = require("../controllers/ward/reportController");
 const requestController = require("../controllers/ward/requestController");
 const upload = require("../middleware/multer");
 const router = express.Router();
-const path = require("path");
 
 router.use(pathFor("ward_officer"));
 
@@ -39,6 +38,7 @@ router.post(
   upload.array("images", 5),
   adsController.updateInfo
 );
+
 router.post(
   '/ads/create-request/:id',
   upload.array('images', 5),

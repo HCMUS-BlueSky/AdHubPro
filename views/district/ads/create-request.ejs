@@ -8,35 +8,48 @@
       method="POST"
       id="form"
       enctype="multipart/form-data"
+      novalidate
     >
       <h2 class="fw-semibold mb-3">Yêu cầu cấp phép</h2>
       <h4>Thông tin bảng quảng cáo</h4>
       <div class="row mt-3">
         <div class="col-8">
-          <label for="place" class="form-label"
+          <label for="location" class="form-label"
             >Địa điểm<span class="text-danger"> *</span></label
           >
-          <select
-            class="form-select location-select"
-            aria-label=""
+          <input
+            type="text"
+            class="form-control location-select"
+            readonly="readonly"
+            value="<%= ads.location.address %>"
+            disabled
+          />
+          <input
+            type="text"
+            class="form-control location-select"
+            required
             name="location"
-          >
-            <% locations.forEach(location => { %>
-            <option value="<%= location._id %>"><%= location.address %></option>
-            <% }) %>
-          </select>
+            aria-describedby="helpId"
+            readonly="readonly"
+            value="<%= ads.location._id %>"
+            style="display: none;"
+          />
         </div>
       </div>
       <div class="row mt-3">
         <div class="col-6">
-          <label for="ads-select" class="form-label"
+          <label for="ads" class="form-label"
             >Bảng quảng cáo<span class="text-danger"> *</span></label
           >
-          <select
-            class="form-select ads-select text-secondary w-100"
-            name="ads"
-            id="ads-select"
-          ></select>
+          <input
+            type="text"
+            class="form-control ads-select"
+            required
+            aria-describedby="helpId"
+            readonly="readonly"
+            value="<%= ads.type %>"
+            disabled
+          />
         </div>
       </div>
       <div class="row my-3">
@@ -138,7 +151,7 @@
         </div>
       </div>
       <div class="d-flex justify-content-center mt-3">
-        <a href="/district/request">
+        <a href="/district/ads">
           <button type="button" class="btn btn-secondary me-4">Trở về</button>
         </a>
         <a>
@@ -195,32 +208,5 @@
 <script>
   document.getElementById("submit-btn").addEventListener("click", () => {
     form.submit();
-  });
-</script>
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-    var locationSelect = document.querySelector(".location-select");
-    var adsSelect = document.querySelector(".ads-select");
-
-    locationSelect.addEventListener("change", async () => {
-      let locationOption = locationSelect.options[locationSelect.selectedIndex];
-      let location = locationOption.value;
-      const response = await fetch(`/utils/ads/${location}`);
-      const data = await response.json();
-      populateAds(data);
-    });
-
-    locationSelect.dispatchEvent(new Event("change"));
-
-    function populateAds(ads) {
-      adsSelect.innerHTML = "";
-
-      ads.forEach((el) => {
-        let option = document.createElement("option");
-        option.value = el._id;
-        option.innerHTML = el.type;
-        adsSelect.appendChild(option);
-      });
-    }
   });
 </script>

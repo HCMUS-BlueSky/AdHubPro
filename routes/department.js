@@ -10,7 +10,6 @@ const adsController = require("../controllers/department/adsController");
 const proposalController = require("../controllers/department/proposalController");
 const upload = require("../middleware/multer");
 const router = express.Router();
-const path = require("path");
 
 router.use(pathFor("department_officer"));
 

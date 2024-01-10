@@ -42,7 +42,11 @@
           element.location.address) %>
         </td>
         <td class=""><%= element.ads.type %></td>
-        <td class=""><%= element.company.name %></td>
+        <td class="">
+          <%= (element.company.name.length > 30 ?
+          element.company.name.substring(0, 30) + '...' :
+          element.company.name) %>
+        </td>
         <td class="">
           <% if (element.status === 'pending') { %>
             <span class="badge bg-warning w-100">Chờ duyệt</span> 

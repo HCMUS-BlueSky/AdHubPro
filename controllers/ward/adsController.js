@@ -239,10 +239,17 @@ exports.updateInfo = async (req, res) => {
 exports.renderCreateRequest = async (req, res) => {
   try {
     const user = req.session.user;
+    const managed_locations = await Location.find({
+      district: user.managed_district.name,
+      ward: user.managed_ward
+    })
+      .distinct('_id')
+      .exec();
     const ads = await Ads.findOne({
       _id: req.params.id,
+      location: { $in: managed_locations }
     })
-      .populate("location")
+      .populate('location')
       .exec();
     return res.render("ward/ads/create-request", {
       ads,
