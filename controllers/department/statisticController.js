@@ -1,5 +1,6 @@
 const Report = require("../../models/Report");
 const { Location } = require("../../models/Location");
+const RandLocation = require('../../models/RandLocation');
 const { generateRegexQuery } = require("regex-vietnamese");
 const District = require("../../models/District");
 const DOMPurify = require('isomorphic-dompurify');
@@ -9,11 +10,20 @@ exports.view = async (req, res) => {
   const selectedDistrict = "5";
   const selectedWard = "Không";
   try {
-    const selected_locations = await Location.find({
+    const selected_real_locations = await Location.find({
       district: "5",
     })
       .distinct("_id")
       .exec();
+    const selected_rand_locations = await RandLocation.find({
+      district: '5'
+    })
+      .distinct('_id')
+      .exec();
+    const selected_locations = [
+      ...selected_real_locations,
+      ...selected_rand_locations
+    ];
     const pendingReportsCount = await Report.find({
       status: "pending",
       location: { $in: selected_locations },
@@ -95,9 +105,16 @@ exports.filter = async (req, res) => {
         district: districtDoc.name,
       };
     }
-    const selected_locations = await Location.find(filterLocation)
-      .distinct("_id")
+    const selected_real_locations = await Location.find(filterLocation)
+      .distinct('_id')
       .exec();
+    const selected_rand_locations = await RandLocation.find(filterLocation)
+      .distinct('_id')
+      .exec();
+    const selected_locations = [
+      ...selected_real_locations,
+      ...selected_rand_locations
+    ];
     const pendingReportsCount = await Report.find({
       status: "pending",
       location: { $in: selected_locations },
@@ -276,23 +293,25 @@ exports.getDetail = async (req, res) => {
     const user = req.session.user;
     const report = await Report.findOne({ _id: req.params.id })
       .populate({
-        path: "location",
-        select: ["address", "ward", "district", "method"],
+        path: 'location',
+        select: ['address', 'ward', 'district', 'method']
       })
       .exec();
+    if (!report) throw new Error('Báo cáo không tồn tại!');
     report.content = DOMPurify.sanitize(report.content);
-    res.render("department/statistic/detail", {
+    res.render('department/statistic/detail', {
       report,
       user,
-      pageName: "statistic",
+      pageName: 'statistic',
       header: {
-        navRoot: "Thống kê",
-        navCurrent: "Thông tin chi tiết",
+        navRoot: 'Thống kê',
+        navCurrent: 'Thông tin chi tiết'
       },
-      layout: "layouts/department",
-      moment,
+      layout: 'layouts/department',
+      moment
     });
-  } catch (error) {
-    console.log(error);
+  } catch (err) {
+    req.flash('error', err.message);
+    return res.redirect('/department/statistic/overview');
   }
 };

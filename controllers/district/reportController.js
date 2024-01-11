@@ -1,5 +1,6 @@
 const Report = require("../../models/Report");
 const { Location } = require("../../models/Location");
+const RandLocation = require('../../models/RandLocation');
 const { generateRegexQuery } = require("regex-vietnamese");
 const moment = require("moment");
 const {
@@ -15,11 +16,20 @@ exports.view = async (req, res) => {
   let page = req.query.page || 1;
   try {
     const user = req.session.user;
-    const managed_locations = await Location.find({
-      district: user.managed_district.name,
+    const managed_real_locations = await Location.find({
+      district: user.managed_district.name
     })
-      .distinct("_id")
+      .distinct('_id')
       .exec();
+    const managed_rand_locations = await RandLocation.find({
+      district: user.managed_district.name
+    })
+      .distinct('_id')
+      .exec();
+    const managed_locations = [
+      ...managed_real_locations,
+      ...managed_rand_locations
+    ];
     const reports = await Report.find({ location: { $in: managed_locations } })
       .sort({ created_at: -1 })
       .skip(perPage * page - perPage)
@@ -69,15 +79,23 @@ exports.search = async (req, res) => {
     })
       .distinct("_id")
       .exec();
-    const managed_locations = await Location.find({
-      district: user.managed_district.name,
+    const managed_real_locations = await Location.find({
+      district: user.managed_district.name
     })
-      .distinct("_id")
+      .distinct('_id')
       .exec();
+    const managed_rand_locations = await RandLocation.find({
+      district: user.managed_district.name
+    })
+      .distinct('_id')
+      .exec();
+    const managed_locations = [
+      ...managed_real_locations,
+      ...managed_rand_locations
+    ];
     const district = await District.findOne({
       name: user.managed_district.name,
     });
-
     const rgx = generateRegexQuery(searchTerm);
     const reports = await Report.find({
       $or: [
@@ -147,12 +165,22 @@ exports.filter = async (req, res) => {
     const district = await District.findOne({
       name: user.managed_district.name,
     });
-    const managed_locations = await Location.find({
+    const managed_real_locations = await Location.find({
       ward: { $in: selectedWards },
-      district: user.managed_district.name,
+      district: user.managed_district.name
     })
-      .distinct("_id")
+      .distinct('_id')
       .exec();
+    const managed_rand_locations = await RandLocation.find({
+      ward: { $in: selectedWards },
+      district: user.managed_district.name
+    })
+      .distinct('_id')
+      .exec();
+    const managed_locations = [
+      ...managed_real_locations,
+      ...managed_rand_locations
+    ];
     const reports = await Report.find({ location: { $in: managed_locations } })
       .sort({ created_at: -1 })
       .skip(perPage * page - perPage)
@@ -186,11 +214,20 @@ exports.filter = async (req, res) => {
 exports.getDetail = async (req, res) => {
   try {
     const user = req.session.user;
-    const managed_locations = await Location.find({
-      district: user.managed_district.name,
+    const managed_real_locations = await Location.find({
+      district: user.managed_district.name
     })
-      .distinct("_id")
+      .distinct('_id')
       .exec();
+    const managed_rand_locations = await RandLocation.find({
+      district: user.managed_district.name
+    })
+      .distinct('_id')
+      .exec();
+    const managed_locations = [
+      ...managed_real_locations,
+      ...managed_rand_locations
+    ];
     const report = await Report.findOne({
       _id: req.params.id,
       location: { $in: managed_locations },
@@ -220,11 +257,20 @@ exports.getDetail = async (req, res) => {
 exports.renderProcessReport = async (req, res) => {
   try {
     const user = req.session.user;
-    const managed_locations = await Location.find({
-      district: user.managed_district.name,
+    const managed_real_locations = await Location.find({
+      district: user.managed_district.name
     })
-      .distinct("_id")
+      .distinct('_id')
       .exec();
+    const managed_rand_locations = await RandLocation.find({
+      district: user.managed_district.name
+    })
+      .distinct('_id')
+      .exec();
+    const managed_locations = [
+      ...managed_real_locations,
+      ...managed_rand_locations
+    ];
     const report = await Report.findOne({
       _id: req.params.id,
       location: { $in: managed_locations },
@@ -256,11 +302,20 @@ exports.processReport = async (req, res) => {
     )
       throw new Error("Dữ liệu truyền vào không hợp lệ!");
     const user = req.session.user;
-    const managed_locations = await Location.find({
-      district: user.managed_district.name,
+    const managed_real_locations = await Location.find({
+      district: user.managed_district.name
     })
-      .distinct("_id")
+      .distinct('_id')
       .exec();
+    const managed_rand_locations = await RandLocation.find({
+      district: user.managed_district.name
+    })
+      .distinct('_id')
+      .exec();
+    const managed_locations = [
+      ...managed_real_locations,
+      ...managed_rand_locations
+    ];
     const report = await Report.findOne({
       _id: req.params.id,
       location: { $in: managed_locations },
