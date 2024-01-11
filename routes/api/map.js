@@ -41,7 +41,7 @@ router.get("/locations/officer", async (req, res) => {
 router.get("/reports", async (req, res) => {
   try {
     const reports = await Report.find({})
-      .populate('location', 'latitude longitude')
+      .populate('location')
       .exec();
     return res.json(reports);
   } catch (err) {
@@ -96,7 +96,9 @@ router.get("/report/ads/:ads_id", async (req, res) => {
 router.get("/report/location/:location_id", async (req, res) => {
   const locationID = req.params.location_id;
   try {
-    const reports = await Report.find({ location: locationID }).exec();
+    const reports = await Report.find({ location: locationID })
+      .populate('location')
+      .exec();
     return res.json(reports);
   } catch (err) {
     return res.status(500).send(err.message);
@@ -266,10 +268,14 @@ router.post('/report-anywhere', upload.array('images', 2), async (req, res) => {
       onModel: "RandLocation",
       reporter: { name, email, phone }
     });
-    
-    const location = new RandLocation({ longitude, latitude, address, ward, district });
-    await location.save();
-    report.location = location._id;
+    const existed = await RandLocation.findOne({ longitude, latitude }).exec();
+    if (!existed) {
+      const location = new RandLocation({ longitude, latitude, address, ward, district });
+      await location.save();
+      report.location = location._id;
+    } else {
+      report.location = existed._id;
+    }
     
     if (req.files && req.files.length) {
       for (let file of req.files) {
