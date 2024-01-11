@@ -279,7 +279,10 @@ router.post('/report-anywhere', upload.array('images', 2), async (req, res) => {
     
     if (req.files && req.files.length) {
       for (let file of req.files) {
-        const url = await uploadFile(`reports/locations/${location._id}`, file);
+        const url = await uploadFile(
+          `reports/locations/${report.location}`,
+          file
+        );
         report.images.push(url);
       }
     }
