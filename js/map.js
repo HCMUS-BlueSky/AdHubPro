@@ -390,7 +390,7 @@ const clearReportModal = () => {
   document.querySelector('input[name="method"]:checked').checked = false;
   tinymce.get("report-content").setContent("");
   document.querySelector("#file").value = "";
-  grecaptcha.reset();
+  grecaptcha.reset(recaptcha1);
 };
 
 const clearRandomReportModal = () => {
@@ -402,7 +402,7 @@ const clearRandomReportModal = () => {
   document.querySelector('input[name="method"]:checked').checked = false;
   tinymce.get("random-report-content").setContent("");
   document.querySelector("#random-file").value = "";
-  grecaptcha.reset();
+  grecaptcha.reset(recaptcha2);
 };
 
 const handleReportModal = (typeReport, location_id, adsInfo) => {
@@ -471,7 +471,7 @@ const handleReportModal = (typeReport, location_id, adsInfo) => {
       } else {
         const errorMessage = await response.text();
         alert("Lỗi: " + errorMessage);
-        grecaptcha.reset();
+        grecaptcha.reset(recaptcha1);
       }
     } catch (error) {
       console.error("Error:", error);
@@ -541,7 +541,7 @@ const handleRandomReportModal = (result) => {
       } else {
         const errorMessage = await response.text();
         alert("Lỗi: " + errorMessage);
-        grecaptcha.reset();
+        grecaptcha.reset(recaptcha2);
       }
     } catch (error) {
       console.error("Error:", error);
@@ -665,6 +665,31 @@ function addTextLayer(map, content) {
   });
 }
 
+const addReportRandomLayer = (map) => {
+  map.addLayer({
+    id: "report-random-point",
+    type: "circle",
+    source: "RandomReports",
+    paint: {
+      "circle-radius": 17,
+      "circle-color": "red",
+    },
+  });
+};
+
+const addReportRandomTextLayer = (map) => {
+  map.addLayer({
+    id: "report-random-text-point",
+    type: "symbol",
+    source: "RandomReports",
+    layout: {
+      "text-field": "BC",
+      "text-font": ["DIN Offc Pro Medium", "Arial Unicode MS Bold"],
+      "text-size": 12,
+    },
+  });
+};
+
 async function initMap() {
   const locations = await logLocations();
   const ads = await logAds();
@@ -777,26 +802,8 @@ async function initMap() {
       },
     });
 
-    map.addLayer({
-      id: "report-random-point",
-      type: "circle",
-      source: "RandomReports",
-      paint: {
-        "circle-radius": 17,
-        "circle-color": "red",
-      },
-    });
-
-    map.addLayer({
-      id: "report-random-text-point",
-      type: "symbol",
-      source: "RandomReports",
-      layout: {
-        "text-field": "BC",
-        "text-font": ["DIN Offc Pro Medium", "Arial Unicode MS Bold"],
-        "text-size": 12,
-      },
-    });
+    addReportRandomLayer(map);
+    addReportRandomTextLayer(map);
 
     addCustomLayer(map, "report");
     addCustomLayer(map, "planning");
@@ -838,10 +845,14 @@ async function initMap() {
           addCustomLayer(map, "report");
           addTextLayer(map, "BC");
         }
+        addReportRandomLayer(map);
+        addReportRandomTextLayer(map);
       } else {
         document.querySelector(".report-btn").disabled = true;
         map.removeLayer("report-point");
         map.removeLayer("text-report-point");
+        map.removeLayer("report-random-point");
+        map.removeLayer("report-random-text-point");
       }
     });
 
