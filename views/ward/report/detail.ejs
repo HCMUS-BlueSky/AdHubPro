@@ -5,10 +5,12 @@
     <!-- <div class="card-header">Xử lý báo cáo</div> -->
     <div class="card-body p-4">
       <h4 class="card-title py-2"><%= report.location.address %></h4>
+      <% if (report.location.ward && report.location.district) { %>
       <p class="text-muted">
         Khu vực: Phường <%= report.location.ward %>, Quận <%=
         report.location.district %>
       </p>
+      <% } %>
       <div class="row border border-2 rounded">
         <div class="col-2">
           <p class="text-muted pt-3">Loại báo cáo:</p>
@@ -155,6 +157,7 @@
             <span class="carousel-control-next-icon"></span>
           </button>
         </div>
+        <% if (report.location.ward && report.location.district) { %>
         <div class="container-fluid mt-3">
           <p class="text-center">Địa điểm</p>
           <p class="text-center">
@@ -162,6 +165,7 @@
             report.location.district %>
           </p>
         </div>
+        <% } %>
       </div>
     </div>
   </div>

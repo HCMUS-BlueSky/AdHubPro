@@ -3,6 +3,7 @@ const { Location } = require("../../models/Location");
 const { Ads } = require("../../models/Ads");
 const Enum = require("../../models/Enum");
 const Report = require("../../models/Report");
+const RandLocation = require('../../models/RandLocation');
 const router = express.Router();
 const upload = require("../../middleware/multer");
 const uploadFile = require("../../utils/fileUpload");
@@ -190,11 +191,17 @@ router.post("/report", upload.array("images", 2), async (req, res) => {
 
 router.post('/report-anywhere', upload.array('images', 2), async (req, res) => {
   try {
-    const { type } = req.body;
-    if (!type || typeof type !== 'string')
-      throw new Error('Loại báo cáo không hợp lệ!');
-    const { name, email, phone, content, method, longitude, latitude } =
-      req.body;
+    const type = 'Điểm đặt quảng cáo';
+    const {
+      name,
+      email,
+      phone,
+      content,
+      method,
+      longitude,
+      latitude,
+      address
+    } = req.body;
     if (
       !name ||
       !content ||
@@ -203,13 +210,15 @@ router.post('/report-anywhere', upload.array('images', 2), async (req, res) => {
       !method ||
       !longitude ||
       !latitude ||
+      !address ||
       typeof name !== 'string' ||
       typeof email !== 'string' ||
       typeof content !== 'string' ||
       typeof phone !== 'string' ||
       typeof method !== 'string' ||
       typeof longitude !== 'string' ||
-      typeof latitude !== 'string'
+      typeof latitude !== 'string' ||
+      typeof address !== 'string'
     )
       throw new Error('Dữ liệu truyền vào không hợp lệ');
 
@@ -235,37 +244,28 @@ router.post('/report-anywhere', upload.array('images', 2), async (req, res) => {
     const recaptcha = await ggRes.json();
     if (!recaptcha.success) throw new Error('Captcha không đúng!');
 
-    if (type !== 'Điểm đặt quảng cáo' && type !== 'Bảng quảng cáo')
-      throw new Error('Loại báo cáo không hợp lệ!');
     const methodExisted = await Enum.exists({
       name: 'ReportMethod',
       values: method
     }).exec();
+
     if (!methodExisted) throw new Error('Hình thức báo cáo không hợp lệ!');
 
     const report = new Report({
       type,
       content,
       method,
+      onModel: "RandLocation",
       reporter: { name, email, phone }
     });
     
-    const location = new Location({ longitude, latitude });
+    const location = new RandLocation({ longitude, latitude, address });
     await location.save();
     report.location = location._id;
-    if (type === 'Bảng quảng cáo') {
-      const ads = req.body.ads;
-      if (!ads || typeof ads !== 'string')
-        throw new Error('Bảng quảng cáo không hợp lệ!');
-      const adsExisted = await Ads.exists({
-        _id: ads
-      }).exec();
-      if (!adsExisted) throw new Error('Bảng quảng cáo không hợp lệ!');
-      report.ads = ads;
-    }
+    
     if (req.files && req.files.length) {
       for (let file of req.files) {
-        const url = await uploadFile(`reports/locations/${location}`, file);
+        const url = await uploadFile(`reports/locations/${location._id}`, file);
         report.images.push(url);
       }
     }

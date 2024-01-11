@@ -12,6 +12,12 @@ const reportSchema = new mongoose.Schema(
       ref: 'Location',
       required: true
     },
+    onModel: {
+      type: String,
+      required: true,
+      enum: ['Location', 'RandLocation'],
+      default: 'Location'
+    },
     ads: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Ads'
