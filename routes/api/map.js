@@ -3,7 +3,7 @@ const { Location } = require("../../models/Location");
 const { Ads } = require("../../models/Ads");
 const Enum = require("../../models/Enum");
 const Report = require("../../models/Report");
-const RandLocation = require('../../models/RandLocation');
+const RandLocation = require("../../models/RandLocation");
 const router = express.Router();
 const upload = require("../../middleware/multer");
 const uploadFile = require("../../utils/fileUpload");
@@ -40,8 +40,39 @@ router.get("/locations/officer", async (req, res) => {
 
 router.get("/reports", async (req, res) => {
   try {
-    const reports = await Report.find({})
-      .populate('location')
+    const reports = await Report.find({}).populate("location").exec();
+    return res.json(reports);
+  } catch (err) {
+    return res.status(500).send(err.message);
+  }
+});
+
+router.get("/reports/officer", async (req, res) => {
+  const user = req.session.user;
+  try {
+    let filter;
+    if (user.role == "district_officer") {
+      filter = {
+        district: user.managed_district.name,
+      };
+    } else if (user.role == "ward_officer") {
+      filter = {
+        district: user.managed_district.name,
+        ward: user.managed_ward,
+      };
+    }
+    const managed_real_locations = await Location.find(filter)
+      .distinct("_id")
+      .exec();
+    const managed_rand_locations = await RandLocation.find(filter)
+      .distinct("_id")
+      .exec();
+    const managed_locations = [
+      ...managed_real_locations,
+      ...managed_rand_locations,
+    ];
+    const reports = await Report.find({ location: { $in: managed_locations } })
+      .populate("location")
       .exec();
     return res.json(reports);
   } catch (err) {
@@ -97,7 +128,7 @@ router.get("/report/location/:location_id", async (req, res) => {
   const locationID = req.params.location_id;
   try {
     const reports = await Report.find({ location: locationID })
-      .populate('location')
+      .populate("location")
       .exec();
     return res.json(reports);
   } catch (err) {
@@ -193,9 +224,9 @@ router.post("/report", upload.array("images", 2), async (req, res) => {
   }
 });
 
-router.post('/report-anywhere', upload.array('images', 2), async (req, res) => {
+router.post("/report-anywhere", upload.array("images", 2), async (req, res) => {
   try {
-    const type = 'Địa chỉ bất kỳ';
+    const type = "Địa chỉ bất kỳ";
     const {
       name,
       email,
@@ -206,7 +237,7 @@ router.post('/report-anywhere', upload.array('images', 2), async (req, res) => {
       latitude,
       address,
       ward,
-      district
+      district,
     } = req.body;
     if (
       !name ||
@@ -219,64 +250,70 @@ router.post('/report-anywhere', upload.array('images', 2), async (req, res) => {
       !address ||
       !ward ||
       !district ||
-      typeof name !== 'string' ||
-      typeof email !== 'string' ||
-      typeof content !== 'string' ||
-      typeof phone !== 'string' ||
-      typeof method !== 'string' ||
-      typeof longitude !== 'string' ||
-      typeof latitude !== 'string' ||
-      typeof address !== 'string' ||
-      typeof ward !== 'string' ||
-      typeof district !== 'string'
+      typeof name !== "string" ||
+      typeof email !== "string" ||
+      typeof content !== "string" ||
+      typeof phone !== "string" ||
+      typeof method !== "string" ||
+      typeof longitude !== "string" ||
+      typeof latitude !== "string" ||
+      typeof address !== "string" ||
+      typeof ward !== "string" ||
+      typeof district !== "string"
     )
-      throw new Error('Dữ liệu truyền vào không hợp lệ');
+      throw new Error("Dữ liệu truyền vào không hợp lệ");
 
     if (
-      !req.body['g-recaptcha-response'] ||
-      typeof req.body['g-recaptcha-response'] !== 'string'
+      !req.body["g-recaptcha-response"] ||
+      typeof req.body["g-recaptcha-response"] !== "string"
     )
-      throw new Error('Captcha không đúng!');
+      throw new Error("Captcha không đúng!");
 
     const params = new URLSearchParams({
       secret: process.env.RECAPTCHA_SECRET,
-      response: req.body['g-recaptcha-response'],
-      remoteip: req.ip
+      response: req.body["g-recaptcha-response"],
+      remoteip: req.ip,
     });
 
     const ggRes = await fetch(
-      'https://www.google.com/recaptcha/api/siteverify',
+      "https://www.google.com/recaptcha/api/siteverify",
       {
-        method: 'POST',
-        body: params
+        method: "POST",
+        body: params,
       }
     );
     const recaptcha = await ggRes.json();
-    if (!recaptcha.success) throw new Error('Captcha không đúng!');
+    if (!recaptcha.success) throw new Error("Captcha không đúng!");
 
     const methodExisted = await Enum.exists({
-      name: 'ReportMethod',
-      values: method
+      name: "ReportMethod",
+      values: method,
     }).exec();
 
-    if (!methodExisted) throw new Error('Hình thức báo cáo không hợp lệ!');
+    if (!methodExisted) throw new Error("Hình thức báo cáo không hợp lệ!");
 
     const report = new Report({
       type,
       content,
       method,
       onModel: "RandLocation",
-      reporter: { name, email, phone }
+      reporter: { name, email, phone },
     });
     const existed = await RandLocation.findOne({ longitude, latitude }).exec();
     if (!existed) {
-      const location = new RandLocation({ longitude, latitude, address, ward, district });
+      const location = new RandLocation({
+        longitude,
+        latitude,
+        address,
+        ward,
+        district,
+      });
       await location.save();
       report.location = location._id;
     } else {
       report.location = existed._id;
     }
-    
+
     if (req.files && req.files.length) {
       for (let file of req.files) {
         const url = await uploadFile(

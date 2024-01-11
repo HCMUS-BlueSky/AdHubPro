@@ -31,8 +31,15 @@ async function logAdsByLocation(locationID) {
 
 async function logReports() {
   const response = await fetch(
-    "https://cms-adhubpro.onrender.com/api/map/reports"
+    "https://cms-adhubpro.onrender.com/api/map/reports/officer",
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "same-origin",
+    }
   );
+  // const response = await fetch("http://localhost:4000/api/map/reports/officer");
   const reports = await response.json();
   return reports;
 }
