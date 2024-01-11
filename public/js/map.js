@@ -1,16 +1,16 @@
 async function logLocations() {
-  const response = await fetch(
-    "https://cms-adhubpro.onrender.com/api/map/locations/officer",
-    {
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "same-origin",
-    }
-  );
   // const response = await fetch(
-  //   "http://localhost:4000/api/map/locations/officer"
+  //   "https://cms-adhubpro.onrender.com/api/map/locations/officer",
+  //   {
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //     credentials: "same-origin",
+  //   }
   // );
+  const response = await fetch(
+    "http://localhost:4000/api/map/locations/officer"
+  );
   const locations = await response.json();
   return locations;
 }
@@ -450,6 +450,31 @@ function addTextLayer(map, content) {
   });
 }
 
+const addReportRandomLayer = (map) => {
+  map.addLayer({
+    id: "report-random-point",
+    type: "circle",
+    source: "RandomReports",
+    paint: {
+      "circle-radius": 17,
+      "circle-color": "red",
+    },
+  });
+};
+
+const addReportRandomTextLayer = (map) => {
+  map.addLayer({
+    id: "report-random-text-point",
+    type: "symbol",
+    source: "RandomReports",
+    layout: {
+      "text-field": "BC",
+      "text-font": ["DIN Offc Pro Medium", "Arial Unicode MS Bold"],
+      "text-size": 12,
+    },
+  });
+};
+
 async function initMap() {
   const locations = await logLocations();
   const ads = await logAds();
@@ -458,7 +483,7 @@ async function initMap() {
   locations.forEach((location) => {
     const adsInLocation = ads.find((el) => el.location === location._id);
     const reportInLocation = reports.find(
-      (report) => report.location === location._id
+      (report) => report.location._id === location._id
     );
 
     location.hasAds = adsInLocation && adsInLocation.hasAds === undefined;
@@ -492,10 +517,36 @@ async function initMap() {
     geojson.features.push(feature);
   });
 
+  const radomReportjson = {
+    type: "FeatureCollection",
+    features: [],
+  };
+  reports.map((report) => {
+    if (report.onModel == "RandLocation") {
+      const feature = {
+        type: "Feature",
+        geometry: {
+          type: "Point",
+          coordinates: [report.location.longitude, report.location.latitude],
+        },
+        properties: {
+          _id: report._id,
+          location: report.location._id,
+        },
+      };
+      radomReportjson.features.push(feature);
+    }
+  });
+
   map.on("load", () => {
     const popup = new mapboxgl.Popup({
       closeButton: false,
       closeOnClick: false,
+    });
+
+    map.addSource("RandomReports", {
+      type: "geojson",
+      data: radomReportjson,
     });
 
     map.addSource("AdsLocations", {
@@ -537,6 +588,9 @@ async function initMap() {
       },
     });
 
+    addReportRandomLayer(map);
+    addReportRandomTextLayer(map);
+
     addCustomLayer(map, "report");
     addCustomLayer(map, "planning");
     addCustomLayer(map, "location");
@@ -577,10 +631,14 @@ async function initMap() {
           addCustomLayer(map, "report");
           addTextLayer(map, "BC");
         }
+        addReportRandomLayer(map);
+        addReportRandomTextLayer(map);
       } else {
         document.querySelector(".report-btn").disabled = true;
         map.removeLayer("report-point");
         map.removeLayer("text-report-point");
+        map.removeLayer("report-random-point");
+        map.removeLayer("report-random-text-point");
       }
     });
 
@@ -610,7 +668,12 @@ async function initMap() {
 
     map.on(
       "click",
-      ["location-point", "planning-point", "report-point"],
+      [
+        "location-point",
+        "planning-point",
+        "report-point",
+        "report-random-point",
+      ],
       (e) => {
         e.clickOnLayer = true;
       }
@@ -635,7 +698,7 @@ async function initMap() {
         .addTo(map);
     });
 
-    map.on("mouseenter", ["report-point"], () => {
+    map.on("mouseenter", ["report-point", "report-random-point"], () => {
       map.getCanvas().style.cursor = "pointer";
     });
 
@@ -882,6 +945,55 @@ async function initMap() {
       }
     }
   );
+
+  map.on("click", ["report-random-point"], async (e) => {
+    const features = e.features[0];
+    clearSidebar();
+    const reportButton = document.querySelector(".report-btn");
+    const infoButton = document.querySelector(".info-btn");
+
+    reportButton.classList.remove("active");
+    infoButton.classList.add("active");
+
+    const newInfoButton = infoButton.cloneNode(true);
+    infoButton.parentNode.replaceChild(newInfoButton, infoButton);
+
+    const newReportButton = reportButton.cloneNode(true);
+    reportButton.parentNode.replaceChild(newReportButton, reportButton);
+
+    newReportButton.addEventListener("click", async () => {
+      newInfoButton.classList.remove("active");
+      newReportButton.classList.add("active");
+      removeOutSideBar(".report-card");
+      removeOutSideBar(".non-ads-card");
+      removeOutSideBar(".location-ads-card");
+      const reportInfo = await logReportsByLocation(
+        features.properties.location
+      );
+      reportInfo.map((report) => {
+        const reportCard = reportCardFactory(report);
+        addToSideBar(reportCard);
+      });
+
+      // Report Detail
+      const reportDetailBtn = document.querySelectorAll(".report-detail-btn");
+      reportDetailBtn.forEach((detail, index) => {
+        detail.addEventListener("click", () => {
+          const reportDetailModal = document.querySelector(
+            ".modal-report-detail"
+          );
+          reportDetailModal.innerHTML = "";
+          const reportDetailCard = reportDetailCardFactory(reportInfo[index]);
+          reportDetailModal.appendChild(reportDetailCard);
+        });
+      });
+    });
+
+    const sidebar = document.getElementById("sidebar");
+    if (sidebar.classList.contains("collapsed")) {
+      toggleSidebar();
+    }
+  });
 
   // Add geolocate control to the map.
   map.addControl(
