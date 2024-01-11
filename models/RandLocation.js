@@ -16,6 +16,12 @@ const randLocationSchema = new mongoose.Schema(
       type: String,
       required: true,
       trim: true
+    },
+    ward: {
+      type: String
+    },
+    district: {
+      type: String
     }
   },
   {

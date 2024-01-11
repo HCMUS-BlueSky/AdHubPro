@@ -191,7 +191,7 @@ router.post("/report", upload.array("images", 2), async (req, res) => {
 
 router.post('/report-anywhere', upload.array('images', 2), async (req, res) => {
   try {
-    const type = 'Điểm đặt quảng cáo';
+    const type = 'Địa chỉ bất kỳ';
     const {
       name,
       email,
@@ -200,7 +200,9 @@ router.post('/report-anywhere', upload.array('images', 2), async (req, res) => {
       method,
       longitude,
       latitude,
-      address
+      address,
+      ward,
+      district
     } = req.body;
     if (
       !name ||
@@ -211,6 +213,8 @@ router.post('/report-anywhere', upload.array('images', 2), async (req, res) => {
       !longitude ||
       !latitude ||
       !address ||
+      !ward ||
+      !district ||
       typeof name !== 'string' ||
       typeof email !== 'string' ||
       typeof content !== 'string' ||
@@ -218,7 +222,9 @@ router.post('/report-anywhere', upload.array('images', 2), async (req, res) => {
       typeof method !== 'string' ||
       typeof longitude !== 'string' ||
       typeof latitude !== 'string' ||
-      typeof address !== 'string'
+      typeof address !== 'string' ||
+      typeof ward !== 'string' ||
+      typeof district !== 'string'
     )
       throw new Error('Dữ liệu truyền vào không hợp lệ');
 
@@ -259,7 +265,7 @@ router.post('/report-anywhere', upload.array('images', 2), async (req, res) => {
       reporter: { name, email, phone }
     });
     
-    const location = new RandLocation({ longitude, latitude, address });
+    const location = new RandLocation({ longitude, latitude, address, ward, district });
     await location.save();
     report.location = location._id;
     
