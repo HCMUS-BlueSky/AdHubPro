@@ -46,7 +46,7 @@ exports.view = async (req, res) => {
       {
         $match: {
           created_at: {
-            $gte: new Date(`${currentYear}-01-01`),
+            $gte: new Date(`${currentYear}`),
             $lt: new Date(`${currentYear + 1}-01-01`),
           },
           location: { $in: selected_locations },
