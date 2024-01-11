@@ -576,19 +576,19 @@ function addTextLayer(map, content) {
 
 async function initMap() {
   const locations = await logLocations();
-  const ads = await logAds();
-  const reports = await logReports();
+  // const ads = await logAds();
+  // const reports = await logReports();
 
-  locations.forEach((location) => {
-    const adsInLocation = ads.find((el) => el.location === location._id);
-    const reportInLocation = reports.find(
-      (report) => report.location === location._id
-    );
+  // locations.forEach((location) => {
+  //   const adsInLocation = ads.find((el) => el.location === location._id);
+  //   const reportInLocation = reports.find(
+  //     (report) => report.location === location._id
+  //   );
 
-    location.hasAds = adsInLocation && adsInLocation.hasAds === undefined;
-    location.hasReport =
-      reportInLocation && reportInLocation.hasReport === undefined;
-  });
+  //   location.hasAds = adsInLocation && adsInLocation.hasAds === undefined;
+  //   location.hasReport =
+  //     reportInLocation && reportInLocation.hasReport === undefined;
+  // });
 
   const geojson = {
     type: "FeatureCollection",
