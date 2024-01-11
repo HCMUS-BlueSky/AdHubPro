@@ -217,58 +217,61 @@ const reportCardFactory = (report) => {
 
 const detailCardFactory = (ads) => {
   const elem = document.createElement("div");
-  elem.innerHTML = `
-            <!-- Carousel -->
-            <div id="demo" class="carousel slide" data-bs-ride="carousel">
-  
-            <!-- Indicators/dots -->
-            <div class="carousel-indicators">
-              ${
-                ads.images[0]
-                  ? '<button type="button" data-bs-target="#demo" data-bs-slide-to="0" class="active"></button>'
-                  : ""
-              }
-              ${
-                ads.images[1]
-                  ? '<button type="button" data-bs-target="#demo" data-bs-slide-to="1"></button>'
-                  : ""
-              }
-            </div>
-            
-            <!-- The slideshow/carousel -->
-            <div class="carousel-inner">
-              ${
-                ads.images[0]
-                  ? `
-                <div class="carousel-item active">
-                  <img src="${ads.images[0]}" alt="ads-1" class="d-block" style="width:100%;">
-                </div>`
-                  : ""
-              }
-              ${
-                ads.images[1]
-                  ? `
-                <div class="carousel-item">
-                  <img src="${ads.images[1]}" alt="ads-2" class="d-block" style="width:100%">
-                </div>`
-                  : ""
-              }
-            </div>
-              
-              <!-- Left and right controls/icons -->
-              <button class="carousel-control-prev" type="button" data-bs-target="#demo" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon"></span>
-              </button>
-              <button class="carousel-control-next" type="button" data-bs-target="#demo" data-bs-slide="next">
-                <span class="carousel-control-next-icon"></span>
-              </button>
-            </div>
-            <div class="container-fluid mt-3">
-              <p class="text-center">Ngày hết hạn hợp đồng: ${moment(
-                ads.expiration
-              ).format("l")}</p>
-            </div>
-          `;
+  if (ads.expiration) {
+    elem.innerHTML = `
+    <!-- Carousel -->
+    <div id="demo" class="carousel slide" data-bs-ride="carousel">
+    <!-- Indicators/dots -->
+    <div class="carousel-indicators">
+      ${
+        ads.images[0]
+          ? '<button type="button" data-bs-target="#demo" data-bs-slide-to="0" class="active"></button>'
+          : ""
+      }
+      ${
+        ads.images[1]
+          ? '<button type="button" data-bs-target="#demo" data-bs-slide-to="1"></button>'
+          : ""
+      }
+    </div>
+    
+    <!-- The slideshow/carousel -->
+    <div class="carousel-inner">
+      ${
+        ads.images[0]
+          ? `
+        <div class="carousel-item active">
+          <img src="${ads.images[0]}" alt="ads-1" class="d-block" style="width:100%;">
+        </div>`
+          : ""
+      }
+      ${
+        ads.images[1]
+          ? `
+        <div class="carousel-item">
+          <img src="${ads.images[1]}" alt="ads-2" class="d-block" style="width:100%">
+        </div>`
+          : ""
+      }
+    </div>
+      
+      <!-- Left and right controls/icons -->
+      <button class="carousel-control-prev" type="button" data-bs-target="#demo" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon"></span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#demo" data-bs-slide="next">
+        <span class="carousel-control-next-icon"></span>
+      </button>
+    </div>
+    <div class="container-fluid mt-3">
+      <p class="text-center">Ngày hết hạn hợp đồng: ${moment(
+        ads.expiration
+      ).format("l")}</p>
+    </div>
+  `;
+  } else {
+    elem.innerHTML = "Chưa có thông tin";
+  }
   return elem;
 };
 

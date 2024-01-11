@@ -1,5 +1,16 @@
 async function logLocations() {
-  const response = await fetch("/api/map/locations");
+  // const response = await fetch(
+  //   "https://cms-adhubpro.onrender.com/api/map/locations/officer",
+  //   {
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //     credentials: "same-origin",
+  //   }
+  // );
+  const response = await fetch(
+    "http://localhost:4000/api/map/locations/officer"
+  );
   const locations = await response.json();
   return locations;
 }
@@ -166,9 +177,7 @@ async function initMap() {
 
     addAdsLayer(map);
 
-    addReportLayer(map);
-
-    addTextLayer(map, "QC");
+    addTextLayer(map, "ĐĐ");
 
     map.on("click", "clusters", (e) => {
       e.clickOnLayer = true;
