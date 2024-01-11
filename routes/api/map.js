@@ -40,7 +40,9 @@ router.get("/locations/officer", async (req, res) => {
 
 router.get("/reports", async (req, res) => {
   try {
-    const reports = await Report.find({}).exec();
+    const reports = await Report.find({})
+      .populate('location', 'latitude longitude')
+      .exec();
     return res.json(reports);
   } catch (err) {
     return res.status(500).send(err.message);
