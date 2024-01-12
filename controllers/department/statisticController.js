@@ -1,9 +1,9 @@
 const Report = require("../../models/Report");
 const { Location } = require("../../models/Location");
-const RandLocation = require('../../models/RandLocation');
+const RandLocation = require("../../models/RandLocation");
 const { generateRegexQuery } = require("regex-vietnamese");
 const District = require("../../models/District");
-const DOMPurify = require('isomorphic-dompurify');
+const DOMPurify = require("isomorphic-dompurify");
 const moment = require("moment");
 
 exports.view = async (req, res) => {
@@ -16,13 +16,13 @@ exports.view = async (req, res) => {
       .distinct("_id")
       .exec();
     const selected_rand_locations = await RandLocation.find({
-      district: '5'
+      district: "5",
     })
-      .distinct('_id')
+      .distinct("_id")
       .exec();
     const selected_locations = [
       ...selected_real_locations,
-      ...selected_rand_locations
+      ...selected_rand_locations,
     ];
     const pendingReportsCount = await Report.find({
       status: "pending",
@@ -41,12 +41,12 @@ exports.view = async (req, res) => {
       processinggReportsCount,
       doneReportsCount,
     ];
-    const currentYear = new Date().getFullYear() - 1;
+    const currentYear = new Date().getFullYear();
     const reportsMonthlyCount = await Report.aggregate([
       {
         $match: {
           created_at: {
-            $gte: new Date(`${currentYear}`),
+            $gte: new Date(`${currentYear}-01-01`),
             $lt: new Date(`${currentYear + 1}-01-01`),
           },
           location: { $in: selected_locations },
@@ -106,14 +106,14 @@ exports.filter = async (req, res) => {
       };
     }
     const selected_real_locations = await Location.find(filterLocation)
-      .distinct('_id')
+      .distinct("_id")
       .exec();
     const selected_rand_locations = await RandLocation.find(filterLocation)
-      .distinct('_id')
+      .distinct("_id")
       .exec();
     const selected_locations = [
       ...selected_real_locations,
-      ...selected_rand_locations
+      ...selected_rand_locations,
     ];
     const pendingReportsCount = await Report.find({
       status: "pending",
@@ -132,7 +132,7 @@ exports.filter = async (req, res) => {
       processinggReportsCount,
       doneReportsCount,
     ];
-    const currentYear = new Date().getFullYear() - 1;
+    const currentYear = new Date().getFullYear();
     const reportsMonthlyCount = await Report.aggregate([
       {
         $match: {
@@ -293,25 +293,25 @@ exports.getDetail = async (req, res) => {
     const user = req.session.user;
     const report = await Report.findOne({ _id: req.params.id })
       .populate({
-        path: 'location',
-        select: ['address', 'ward', 'district', 'method']
+        path: "location",
+        select: ["address", "ward", "district", "method"],
       })
       .exec();
-    if (!report) throw new Error('Báo cáo không tồn tại!');
+    if (!report) throw new Error("Báo cáo không tồn tại!");
     report.content = DOMPurify.sanitize(report.content);
-    res.render('department/statistic/detail', {
+    res.render("department/statistic/detail", {
       report,
       user,
-      pageName: 'statistic',
+      pageName: "statistic",
       header: {
-        navRoot: 'Thống kê',
-        navCurrent: 'Thông tin chi tiết'
+        navRoot: "Thống kê",
+        navCurrent: "Thông tin chi tiết",
       },
-      layout: 'layouts/department',
-      moment
+      layout: "layouts/department",
+      moment,
     });
   } catch (err) {
-    req.flash('error', err.message);
-    return res.redirect('/department/statistic/overview');
+    req.flash("error", err.message);
+    return res.redirect("/department/statistic/overview");
   }
 };
